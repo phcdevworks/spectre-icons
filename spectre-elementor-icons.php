@@ -16,6 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'SPECTRE_ELEMENTOR_ICONS_FILE', __FILE__ );
 define( 'SPECTRE_ELEMENTOR_ICONS_PATH', __DIR__ );
 define( 'SPECTRE_ELEMENTOR_ICONS_URL', plugin_dir_url( __FILE__ ) );
+define( 'SPECTRE_ELEMENTOR_ICONS_MANIFEST_PATH', SPECTRE_ELEMENTOR_ICONS_PATH . '/assets/manifests' );
+define( 'SPECTRE_ELEMENTOR_ICONS_MANIFEST_URL', SPECTRE_ELEMENTOR_ICONS_URL . 'assets/manifests/' );
 
 require_once SPECTRE_ELEMENTOR_ICONS_PATH . '/includes/class-spectre-elementor-icons-settings.php';
 require_once SPECTRE_ELEMENTOR_ICONS_PATH . '/includes/class-spectre-elementor-icons-library-manager.php';
@@ -71,7 +73,7 @@ function spectre_elementor_icons_enqueue_editor_assets() {
 			'spectre-lucide' => [
 				'prefix'   => 'lucide-',
 				'selector' => 'i.lucide',
-				'json'     => SPECTRE_ELEMENTOR_ICONS_URL . 'assets/iconpacks/lucide/icons.json',
+				'json'     => SPECTRE_ELEMENTOR_ICONS_MANIFEST_URL . 'spectre-lucide.json',
 			],
 		]
 	);
