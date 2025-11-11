@@ -1,0 +1,21 @@
+.spectre-icon--rendered {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.spectre-icon--rendered svg {
+	width: 100%;
+	height: 100%;
+	display: block;
+	stroke: currentColor;
+	fill: none;
+}
+
+.spectre-icon--rendered svg path,
+.spectre-icon--rendered svg circle,
+.spectre-icon--rendered svg rect,
+.spectre-icon--rendered svg line,
+.spectre-icon--rendered svg polyline {
+	stroke: currentColor;
+}
