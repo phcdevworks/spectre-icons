@@ -17,12 +17,12 @@ define( 'SPECTRE_ELEMENTOR_ICONS_FILE', __FILE__ );
 define( 'SPECTRE_ELEMENTOR_ICONS_PATH', __DIR__ );
 
 require_once SPECTRE_ELEMENTOR_ICONS_PATH . '/includes/class-spectre-elementor-icons-settings.php';
-require_once SPECTRE_ELEMENTOR_ICONS_PATH . '/includes/class-spectre-elementor-icons-tab-manager.php';
+require_once SPECTRE_ELEMENTOR_ICONS_PATH . '/includes/class-spectre-elementor-icons-library-manager.php';
 
 add_action(
 	'plugins_loaded',
 	static function () {
 		$settings = Spectre_Elementor_Icons_Settings::instance();
-		Spectre_Elementor_Icons_Tab_Manager::instance( $settings );
+		Spectre_Elementor_Icons_Library_Manager::instance( $settings );
 	}
 );

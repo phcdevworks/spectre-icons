@@ -60,8 +60,6 @@ if ( ! class_exists( 'Spectre_Elementor_Icons_Settings' ) ) :
 		 * Setup hooks.
 		 */
 		private function __construct() {
-			$this->tabs = apply_filters( 'spectre_elementor_icon_tabs', $this->get_default_tabs() );
-
 			add_action( 'admin_menu', [ $this, 'register_menu' ] );
 			add_action( 'admin_init', [ $this, 'register_settings' ] );
 		}
@@ -112,25 +110,12 @@ if ( ! class_exists( 'Spectre_Elementor_Icons_Settings' ) ) :
 		}
 
 		/**
-		 * Provide default Elementor tabs.
+		 * Inject the dynamic list of Spectre libraries.
 		 *
-		 * @return array
+		 * @param array $tabs Spectre library metadata.
 		 */
-		private function get_default_tabs() {
-			return [
-				'fa-solid'   => [
-					'label'       => __( 'Font Awesome Solid', 'spectre-elementor-icons' ),
-					'description' => __( 'Solid weight Font Awesome icons.', 'spectre-elementor-icons' ),
-				],
-				'fa-regular' => [
-					'label'       => __( 'Font Awesome Regular', 'spectre-elementor-icons' ),
-					'description' => __( 'Regular weight Font Awesome icons.', 'spectre-elementor-icons' ),
-				],
-				'fa-brands'  => [
-					'label'       => __( 'Font Awesome Brands', 'spectre-elementor-icons' ),
-					'description' => __( 'Brand icons provided by Font Awesome.', 'spectre-elementor-icons' ),
-				],
-			];
+		public function set_tabs( array $tabs ) {
+			$this->tabs = $tabs;
 		}
 
 		/**
@@ -182,6 +167,11 @@ if ( ! class_exists( 'Spectre_Elementor_Icons_Settings' ) ) :
 		 * Render the checkbox UI for the tabs.
 		 */
 		public function render_tabs_field() {
+			if ( empty( $this->tabs ) ) {
+				echo '<p>' . esc_html__( 'No Spectre icon libraries are available yet.', 'spectre-elementor-icons' ) . '</p>';
+				return;
+			}
+
 			$options = $this->get_tab_preferences();
 
 			echo '<div class="spectre-elementor-tabs-grid">';
