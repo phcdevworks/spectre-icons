@@ -1,0 +1,12 @@
+{
+	"recommendations": [
+		"bmewburn.vscode-intelephense-client",
+		"xdebug.php-debug",
+		"github.copilot",
+		"github.copilot-chat",
+		"editorconfig.editorconfig",
+		"esbenp.prettier-vscode",
+		"PKief.material-icon-theme",
+		"GitHub.github-vscode-theme"
+	]
+}

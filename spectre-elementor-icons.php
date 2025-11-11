@@ -15,9 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'SPECTRE_ELEMENTOR_ICONS_FILE', __FILE__ );
 define( 'SPECTRE_ELEMENTOR_ICONS_PATH', __DIR__ );
+define( 'SPECTRE_ELEMENTOR_ICONS_URL', plugin_dir_url( __FILE__ ) );
 
 require_once SPECTRE_ELEMENTOR_ICONS_PATH . '/includes/class-spectre-elementor-icons-settings.php';
 require_once SPECTRE_ELEMENTOR_ICONS_PATH . '/includes/class-spectre-elementor-icons-library-manager.php';
+require_once SPECTRE_ELEMENTOR_ICONS_PATH . '/includes/class-spectre-elementor-icons-lucide.php';
+require_once SPECTRE_ELEMENTOR_ICONS_PATH . '/includes/spectre-elementor-icon-libraries.php';
 
 add_action(
 	'plugins_loaded',
