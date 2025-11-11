@@ -41,6 +41,10 @@
 		addLoadedClass(element);
 
 		if (style) {
+			Array.from(element.classList)
+				.filter((className) => className.startsWith('spectre-icon--style-'))
+				.forEach((className) => element.classList.remove(className));
+
 			element.classList.add('spectre-icon--style-' + style);
 		}
 	};
@@ -60,13 +64,20 @@
 			return;
 		}
 
-		const slug = slugClass.replace(settings.prefix, '');
+		const slug = slugClass.replace(settings.prefix, '').trim();
 
-		if (!slug || element.dataset.spectreIconProcessed === libraryId) {
+		if (!slug) {
+			return;
+		}
+		const previousSlug = element.dataset.spectreIconSlug;
+		const previousLibrary = element.dataset.spectreIconLibrary;
+
+		if (previousSlug === slug && previousLibrary === libraryId) {
 			return;
 		}
 
-		element.dataset.spectreIconProcessed = libraryId;
+		element.dataset.spectreIconSlug = slug;
+		element.dataset.spectreIconLibrary = libraryId;
 
 		const cacheKey = `${libraryId}::${slug}`;
 
@@ -102,15 +113,48 @@
 		});
 	};
 
+	const processIconPickerModal = () => {
+		// Target the Elementor icons panel specifically
+		const iconsPanels = document.querySelectorAll('.elementor-icons-manager__tab__item__content, .elementor-control-icons-list');
+		iconsPanels.forEach((panel) => processElement(panel));
+	};
+
 	const startObserver = () => {
 		const observer = new MutationObserver((mutations) => {
 			mutations.forEach((mutation) => {
-				mutation.addedNodes.forEach(processElement);
+				if (mutation.type === 'childList') {
+					mutation.addedNodes.forEach(processElement);
+				}
+
+				if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+					processElement(mutation.target);
+				}
 			});
 		});
 
-		observer.observe(document.body, { childList: true, subtree: true });
+		observer.observe(document.body, {
+			childList: true,
+			subtree: true,
+			attributes: true,
+			attributeFilter: ['class'],
+		});
 		observers.push(observer);
+
+		// Additional observer for modals/dialogs that might be outside body initially
+		const dialogObserver = new MutationObserver(() => {
+			processIconPickerModal();
+		});
+
+		// Observe dialog container if it exists
+		setTimeout(() => {
+			const dialogContainer = document.querySelector('.dialog-widget-content, .elementor-templates-modal, #elementor-panel');
+			if (dialogContainer) {
+				dialogObserver.observe(dialogContainer, {
+					childList: true,
+					subtree: true,
+				});
+			}
+		}, 500);
 	};
 
 	const init = () => {
@@ -127,6 +171,20 @@
 
 		// Process any existing nodes (e.g., icon control default preview).
 		processElement(document.body);
+
+		// Hook into Elementor's panel rendering for icon picker
+		if (window.elementor) {
+			elementor.on('panel:init', () => {
+				setTimeout(() => processElement(document.body), 100);
+			});
+
+			// When icon library modal opens
+			jQuery(document).on('elementor:init', () => {
+				elementor.channels.editor.on('section:activated', () => {
+					setTimeout(() => processElement(document.body), 100);
+				});
+			});
+		}
 	};
 
 	init();
