@@ -118,19 +118,15 @@ if ( ! class_exists( 'Spectre_Elementor_Icons_Settings' ) ) :
 		 */
 		private function get_default_tabs() {
 			return [
-				'elementor-icons' => [
-					'label'       => __( 'Elementor Icons', 'spectre-elementor-icons' ),
-					'description' => __( 'Native Elementor SVG icons.', 'spectre-elementor-icons' ),
-				],
-				'fa-solid'       => [
+				'fa-solid'   => [
 					'label'       => __( 'Font Awesome Solid', 'spectre-elementor-icons' ),
 					'description' => __( 'Solid weight Font Awesome icons.', 'spectre-elementor-icons' ),
 				],
-				'fa-regular'     => [
+				'fa-regular' => [
 					'label'       => __( 'Font Awesome Regular', 'spectre-elementor-icons' ),
 					'description' => __( 'Regular weight Font Awesome icons.', 'spectre-elementor-icons' ),
 				],
-				'fa-brands'      => [
+				'fa-brands'  => [
 					'label'       => __( 'Font Awesome Brands', 'spectre-elementor-icons' ),
 					'description' => __( 'Brand icons provided by Font Awesome.', 'spectre-elementor-icons' ),
 				],

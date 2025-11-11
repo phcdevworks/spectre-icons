@@ -52,6 +52,7 @@ if ( ! class_exists( 'Spectre_Elementor_Icons_Tab_Manager' ) ) :
 		private function __construct( Spectre_Elementor_Icons_Settings $settings ) {
 			$this->settings = $settings;
 
+			add_filter( 'elementor/icons_manager/native', [ $this, 'filter_native_tabs' ], 20 );
 			add_filter( 'elementor/icons_manager/native_tabs', [ $this, 'filter_native_tabs' ], 20 );
 		}
 
