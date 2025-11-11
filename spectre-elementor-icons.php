@@ -33,16 +33,29 @@ add_action(
 /**
  * Enqueue Elementor editor assets for Spectre icon previews.
  */
-function spectre_elementor_icons_enqueue_editor_assets() {
-	$script_handle = 'spectre-elementor-icons-admin';
-	$style_handle  = 'spectre-elementor-icons-admin-style';
-
-	wp_enqueue_style(
-		$style_handle,
+function spectre_elementor_icons_register_styles() {
+	wp_register_style(
+		'spectre-elementor-icons-shared',
 		SPECTRE_ELEMENTOR_ICONS_URL . 'assets/css/spectre-elementor-icons-admin.css',
 		[],
 		'0.1.0'
 	);
+}
+add_action( 'init', 'spectre_elementor_icons_register_styles' );
+
+/**
+ * Front-end styles for inline SVG icons.
+ */
+function spectre_elementor_icons_enqueue_frontend_styles() {
+	wp_enqueue_style( 'spectre-elementor-icons-shared' );
+}
+add_action( 'wp_enqueue_scripts', 'spectre_elementor_icons_enqueue_frontend_styles' );
+add_action( 'elementor/frontend/after_enqueue_styles', 'spectre_elementor_icons_enqueue_frontend_styles' );
+
+function spectre_elementor_icons_enqueue_editor_assets() {
+	$script_handle = 'spectre-elementor-icons-admin';
+
+	wp_enqueue_style( 'spectre-elementor-icons-shared' );
 
 	wp_register_script(
 		$script_handle,

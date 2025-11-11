@@ -196,6 +196,7 @@ if ( ! class_exists( 'Spectre_Elementor_Icons_Lucide' ) ) :
 				}
 			}
 
+			$defaults['class'][] = 'spectre-icon--rendered';
 			$defaults['class'][] = 'spectre-lucide-icon';
 			$defaults['class'][] = 'spectre-lucide-icon--' . sanitize_html_class( $slug );
 
