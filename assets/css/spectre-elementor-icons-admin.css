@@ -2,28 +2,40 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	width: 1em;
+	height: 1em;
 }
 
 .spectre-icon--rendered svg {
 	width: 100%;
 	height: 100%;
 	display: block;
+	fill: currentColor;
 }
 
+/* Outline style icons (Lucide) */
 .spectre-icon--style-outline svg {
 	fill: none;
 	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
 }
 
-.spectre-icon--style-outline svg path,
-.spectre-icon--style-outline svg circle,
-.spectre-icon--style-outline svg rect,
-.spectre-icon--style-outline svg line,
-.spectre-icon--style-outline svg polyline {
-	stroke: currentColor;
-}
-
+/* Filled style icons (Font Awesome) */
 .spectre-icon--style-filled svg {
 	fill: currentColor;
-	stroke: currentColor;
+	stroke: none;
+}
+
+/* Ensure proper sizing in Elementor */
+.elementor-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.elementor-icon .spectre-icon--rendered {
+	width: 100%;
+	height: 100%;
 }
