@@ -172,19 +172,35 @@
 		// Process any existing nodes (e.g., icon control default preview).
 		processElement(document.body);
 
-		// Hook into Elementor's panel rendering for icon picker
-		if (window.elementor) {
-			elementor.on('panel:init', () => {
-				setTimeout(() => processElement(document.body), 100);
-			});
+		// Wait for Elementor to fully initialize
+		const waitForElementor = setInterval(() => {
+			if (window.elementor && elementor.config) {
+				clearInterval(waitForElementor);
 
-			// When icon library modal opens
-			jQuery(document).on('elementor:init', () => {
-				elementor.channels.editor.on('section:activated', () => {
-					setTimeout(() => processElement(document.body), 100);
+				// Hook into Elementor's panel rendering for icon picker
+				elementor.on('panel:init', () => {
+					setTimeout(() => {
+						processElement(document.body);
+						processIconPickerModal();
+					}, 100);
 				});
-			});
-		}
+
+				// When icon library modal opens
+				if (typeof jQuery !== 'undefined') {
+					jQuery(document).on('elementor:init', () => {
+						elementor.channels.editor.on('section:activated', () => {
+							setTimeout(() => {
+								processElement(document.body);
+								processIconPickerModal();
+							}, 100);
+						});
+					});
+				}
+			}
+		}, 100);
+
+		// Failsafe: stop checking after 10 seconds
+		setTimeout(() => clearInterval(waitForElementor), 10000);
 	};
 
 	init();
