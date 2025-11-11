@@ -25,7 +25,7 @@ if ( ! function_exists( 'spectre_elementor_get_icon_library_definitions' ) ) :
 				'class_prefix'     => 'lucide-',
 				'label_icon'       => 'eicon-star',
 				'style'            => 'outline',
-				'preview_selector' => 'i.lucide',
+				'preview_selector' => 'i[class*="lucide-"]',
 			],
 			'spectre-fontawesome' => [
 				'label'            => __( 'Font Awesome', 'spectre-elementor-icons' ),
@@ -35,7 +35,7 @@ if ( ! function_exists( 'spectre_elementor_get_icon_library_definitions' ) ) :
 				'class_prefix'     => 'sfa-',
 				'label_icon'       => 'eicon-font',
 				'style'            => 'filled',
-				'preview_selector' => 'i.sfa',
+				'preview_selector' => 'i[class*="sfa-"]',
 			],
 		];
 
