@@ -26,6 +26,7 @@
 
 		libraryPromises[ libraryId ] = fetch( settings.json, { credentials: 'same-origin' } )
 			.then( ( response ) => ( response.ok ? response.json() : {} ) )
+			.then( ( payload ) => ( payload && payload.icons ? payload.icons : payload ) )
 			.catch( () => ( {} ) );
 
 		return libraryPromises[ libraryId ];
@@ -57,20 +58,22 @@
 
 		const slug = slugClass.replace( settings.prefix, '' );
 
-		if ( ! slug || element.dataset.spectreIconProcessed === '1' ) {
+		if ( ! slug || element.dataset.spectreIconProcessed === libraryId ) {
 			return;
 		}
 
-		element.dataset.spectreIconProcessed = '1';
+		element.dataset.spectreIconProcessed = libraryId;
 
-		if ( iconCache[ slug ] ) {
-			injectSvg( element, iconCache[ slug ] );
+		const cacheKey = `${ libraryId }::${ slug }`;
+
+		if ( iconCache[ cacheKey ] ) {
+			injectSvg( element, iconCache[ cacheKey ] );
 			return;
 		}
 
 		loadLibrary( libraryId ).then( ( icons ) => {
-			iconCache[ slug ] = icons[ slug ] || '';
-			injectSvg( element, iconCache[ slug ] );
+			iconCache[ cacheKey ] = icons[ slug ] || '';
+			injectSvg( element, iconCache[ cacheKey ] );
 		} );
 	};
 

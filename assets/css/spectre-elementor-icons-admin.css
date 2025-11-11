@@ -1,5 +1,5 @@
 .spectre-icon--rendered {
-	display: flex;
+	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 }
@@ -8,14 +8,22 @@
 	width: 100%;
 	height: 100%;
 	display: block;
-	stroke: currentColor;
-	fill: none;
 }
 
-.spectre-icon--rendered svg path,
-.spectre-icon--rendered svg circle,
-.spectre-icon--rendered svg rect,
-.spectre-icon--rendered svg line,
-.spectre-icon--rendered svg polyline {
+.spectre-icon--style-outline svg {
+	fill: none;
+	stroke: currentColor;
+}
+
+.spectre-icon--style-outline svg path,
+.spectre-icon--style-outline svg circle,
+.spectre-icon--style-outline svg rect,
+.spectre-icon--style-outline svg line,
+.spectre-icon--style-outline svg polyline {
+	stroke: currentColor;
+}
+
+.spectre-icon--style-filled svg {
+	fill: currentColor;
 	stroke: currentColor;
 }
