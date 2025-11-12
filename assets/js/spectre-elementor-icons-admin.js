@@ -3,16 +3,15 @@
 
 	const config = window.SpectreElementorIconsConfig || {};
 	const libraries = config.libraries || {};
-	const observers = [];
 
 	const libraryPromises = {};
 	const iconCache = {};
 
 	const hasLibraries = Object.keys(libraries).length > 0;
 
-	const addLoadedClass = (element) => {
-		element.classList.add('spectre-icon--rendered');
-	};
+	if (!hasLibraries) {
+		return;
+	}
 
 	const loadLibrary = (libraryId) => {
 		if (libraryPromises[libraryId]) {
@@ -38,9 +37,10 @@
 		}
 
 		element.innerHTML = svgString;
-		addLoadedClass(element);
+		element.classList.add('spectre-icon--rendered');
 
 		if (style) {
+			// Remove old style classes
 			Array.from(element.classList)
 				.filter((className) => className.startsWith('spectre-icon--style-'))
 				.forEach((className) => element.classList.remove(className));
@@ -69,6 +69,8 @@
 		if (!slug) {
 			return;
 		}
+
+		// Check if already processed
 		const previousSlug = element.dataset.spectreIconSlug;
 		const previousLibrary = element.dataset.spectreIconLibrary;
 
@@ -93,7 +95,7 @@
 	};
 
 	const processElement = (node) => {
-		if (node.nodeType !== Node.ELEMENT_NODE) {
+		if (!node || node.nodeType !== Node.ELEMENT_NODE) {
 			return;
 		}
 
@@ -111,12 +113,6 @@
 			const matches = node.querySelectorAll ? node.querySelectorAll(settings.selector) : [];
 			matches.forEach((match) => renderIcon(match, libraryId));
 		});
-	};
-
-	const processIconPickerModal = () => {
-		// Target the Elementor icons panel specifically
-		const iconsPanels = document.querySelectorAll('.elementor-icons-manager__tab__item__content, .elementor-control-icons-list');
-		iconsPanels.forEach((panel) => processElement(panel));
 	};
 
 	const startObserver = () => {
@@ -138,70 +134,16 @@
 			attributes: true,
 			attributeFilter: ['class'],
 		});
-		observers.push(observer);
+	};
 
-		// Additional observer for modals/dialogs that might be outside body initially
-		const dialogObserver = new MutationObserver(() => {
-			processIconPickerModal();
+	// Initialize when DOM is ready
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', () => {
+			startObserver();
+			processElement(document.body);
 		});
-
-		// Observe dialog container if it exists
-		setTimeout(() => {
-			const dialogContainer = document.querySelector('.dialog-widget-content, .elementor-templates-modal, #elementor-panel');
-			if (dialogContainer) {
-				dialogObserver.observe(dialogContainer, {
-					childList: true,
-					subtree: true,
-				});
-			}
-		}, 500);
-	};
-
-	const init = () => {
-		if (!hasLibraries) {
-			return;
-		}
-
-		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', init);
-			return;
-		}
-
+	} else {
 		startObserver();
-
-		// Process any existing nodes (e.g., icon control default preview).
 		processElement(document.body);
-
-		// Wait for Elementor to fully initialize
-		const waitForElementor = setInterval(() => {
-			if (window.elementor && elementor.config) {
-				clearInterval(waitForElementor);
-
-				// Hook into Elementor's panel rendering for icon picker
-				elementor.on('panel:init', () => {
-					setTimeout(() => {
-						processElement(document.body);
-						processIconPickerModal();
-					}, 100);
-				});
-
-				// When icon library modal opens
-				if (typeof jQuery !== 'undefined') {
-					jQuery(document).on('elementor:init', () => {
-						elementor.channels.editor.on('section:activated', () => {
-							setTimeout(() => {
-								processElement(document.body);
-								processIconPickerModal();
-							}, 100);
-						});
-					});
-				}
-			}
-		}, 100);
-
-		// Failsafe: stop checking after 10 seconds
-		setTimeout(() => clearInterval(waitForElementor), 10000);
-	};
-
-	init();
+	}
 })();
