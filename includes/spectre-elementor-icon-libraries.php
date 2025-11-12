@@ -10,6 +10,10 @@ if (! defined('ABSPATH')) {
 	exit;
 }
 
+// Load WordPress function stubs for development environment
+if (file_exists(dirname(__DIR__) . '/stubs/wordpress-stubs.php')) {
+	require_once dirname(__DIR__) . '/stubs/wordpress-stubs.php';
+}
 
 if (! function_exists('spectre_elementor_get_icon_library_definitions')) :
 	/**
@@ -112,8 +116,8 @@ if (! function_exists('spectre_elementor_register_manifest_libraries')) :
 				continue;
 			}
 
-			// Get the manifest URL for fetchJson
-			$manifest_url = plugin_dir_url(SPECTRE_ELEMENTOR_ICONS_FILE) . 'assets/manifests/' . $definition['manifest'];
+			// Elementor expects a flat list of icon slugs (without prefixes).
+			$formatted_icons = array_values($icon_slugs);
 
 			$libraries[$slug] = [
 				'label'       => $definition['label'],
@@ -124,8 +128,7 @@ if (! function_exists('spectre_elementor_register_manifest_libraries')) :
 					'labelIcon'       => $definition['label_icon'],
 					'displayPrefix'   => $definition['display_prefix'],
 					'prefix'          => $definition['class_prefix'],
-					'icons'           => $icon_slugs,
-					'fetchJson'       => $manifest_url,
+					'icons'           => $formatted_icons,
 					'native'          => false,
 					'render_callback' => ['Spectre_Elementor_Icons_Manifest_Renderer', 'render_icon'],
 					'ver'             => '0.1.0',

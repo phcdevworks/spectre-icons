@@ -12,6 +12,7 @@
 
 	const libraryPromises = {};
 	const iconCache = {};
+	const observedRoots = new WeakSet();
 
 	const loadLibrary = (libraryId) => {
 		if (libraryPromises[libraryId]) {
@@ -96,9 +97,50 @@
 		});
 	};
 
-	const processElement = (node) => {
-		if (!node || node.nodeType !== Node.ELEMENT_NODE) {
+	const observeRoot = (root) => {
+		if (!root || observedRoots.has(root)) {
 			return;
+		}
+
+		const observer = new MutationObserver((mutations) => {
+			mutations.forEach((mutation) => {
+				if (mutation.type === 'childList') {
+					mutation.addedNodes.forEach(processElement);
+				}
+
+				if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+					processElement(mutation.target);
+				}
+			});
+		});
+
+		observer.observe(root, {
+			childList: true,
+			subtree: true,
+			attributes: true,
+			attributeFilter: ['class'],
+		});
+
+		observedRoots.add(root);
+	};
+
+	const processElement = (node) => {
+		if (!node) {
+			return;
+		}
+
+		if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+			node.childNodes.forEach(processElement);
+			return;
+		}
+
+		if (node.nodeType !== Node.ELEMENT_NODE) {
+			return;
+		}
+
+		if (node.shadowRoot) {
+			observeRoot(node.shadowRoot);
+			processElement(node.shadowRoot);
 		}
 
 		libraryIds.forEach((libraryId) => {
@@ -121,29 +163,8 @@
 		});
 	};
 
-	const startObserver = () => {
-		const observer = new MutationObserver((mutations) => {
-			mutations.forEach((mutation) => {
-				if (mutation.type === 'childList') {
-					mutation.addedNodes.forEach(processElement);
-				}
-
-				if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-					processElement(mutation.target);
-				}
-			});
-		});
-
-		observer.observe(document.body, {
-			childList: true,
-			subtree: true,
-			attributes: true,
-			attributeFilter: ['class'],
-		});
-	};
-
 	const init = () => {
-		startObserver();
+		observeRoot(document.body);
 		processElement(document.body);
 	};
 
