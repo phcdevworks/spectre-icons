@@ -77,6 +77,9 @@ if (! function_exists('spectre_elementor_register_manifest_libraries')) :
 				continue;
 			}
 
+			// Get the manifest URL for fetchJson
+			$manifest_url = plugin_dir_url(SPECTRE_ELEMENTOR_ICONS_FILE) . 'assets/manifests/' . $definition['manifest'];
+
 			$libraries[$slug] = [
 				'label'       => $definition['label'],
 				'description' => $definition['description'],
@@ -87,6 +90,7 @@ if (! function_exists('spectre_elementor_register_manifest_libraries')) :
 					'displayPrefix'   => $definition['display_prefix'],
 					'prefix'          => $definition['class_prefix'],
 					'icons'           => $icon_slugs,
+					'fetchJson'       => $manifest_url,
 					'native'          => false,
 					'render_callback' => ['Spectre_Elementor_Icons_Manifest_Renderer', 'render_icon'],
 					'ver'             => '0.1.0',
