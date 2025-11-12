@@ -14,11 +14,6 @@ if (! defined('ABSPATH')) {
 	exit;
 }
 
-// Load WordPress function stubs for development environment
-if (file_exists(__DIR__ . '/stubs/wordpress-stubs.php')) {
-	require_once __DIR__ . '/stubs/wordpress-stubs.php';
-}
-
 define('SPECTRE_ELEMENTOR_ICONS_FILE', __FILE__);
 define('SPECTRE_ELEMENTOR_ICONS_PATH', __DIR__);
 define('SPECTRE_ELEMENTOR_ICONS_URL', plugin_dir_url(__FILE__));

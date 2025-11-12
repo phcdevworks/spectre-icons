@@ -10,10 +10,6 @@ if (! defined('ABSPATH')) {
 	exit;
 }
 
-// Load WordPress function stubs for development environment
-if (file_exists(dirname(__DIR__) . '/stubs/wordpress-stubs.php')) {
-	require_once dirname(__DIR__) . '/stubs/wordpress-stubs.php';
-}
 
 if (! function_exists('spectre_elementor_get_icon_library_definitions')) :
 	/**

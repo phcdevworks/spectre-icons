@@ -110,8 +110,7 @@
 		"elementor"
 	],
 	"intelephense.environment.includePaths": [
-		"${workspaceFolder}",
-		"${workspaceFolder}/stubs"
+		"${workspaceFolder}"
 	],
 	"intelephense.files.maxSize": 5000000,
 	"intelephense.diagnostics.undefinedFunctions": true,
