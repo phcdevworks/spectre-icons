@@ -9,6 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Load WordPress function stubs for development environment
+if (file_exists(dirname(__DIR__) . '/stubs/wordpress-stubs.php')) {
+	require_once dirname(__DIR__) . '/stubs/wordpress-stubs.php';
+}
+
 if ( ! class_exists( 'Spectre_Elementor_Icons_Settings' ) ) :
 	/**
 	 * Handles the WordPress settings page and stored preferences.
