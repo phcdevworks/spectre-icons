@@ -170,17 +170,23 @@ if (! class_exists('Spectre_Elementor_Icons_Manifest_Renderer')) :
 
 			$value = is_array($icon['value']) ? implode(' ', $icon['value']) : (string) $icon['value'];
 			$value = strtolower(trim($value));
+
+			// Elementor sends: "displayPrefix selector" (e.g., "lucide lucide-home")
+			// We need to extract just the icon slug (e.g., "home")
 			$parts = preg_split('/\s+/', $value);
+
+			// Last part is usually the full selector (e.g., "lucide-home")
 			$maybe = array_pop($parts);
 
 			$prefix = isset($library['class_prefix']) ? $library['class_prefix'] : '';
+
+			// Remove the prefix to get the bare slug
 			if ($prefix && 0 === strpos($maybe, $prefix)) {
 				$maybe = substr($maybe, strlen($prefix));
 			}
 
 			return sanitize_key($maybe);
 		}
-
 		/**
 		 * Normalize HTML attributes for the wrapper span.
 		 *
