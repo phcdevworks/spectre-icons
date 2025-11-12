@@ -20,60 +20,26 @@ if (! function_exists('spectre_elementor_get_icon_library_definitions')) :
 	{
 		$definitions = [
 			'spectre-lucide'      => [
-				'label'            => __('Lucide Icons', 'spectre-elementor-icons'),
-				'description'      => __('Open-source Lucide outline icons.', 'spectre-elementor-icons'),
-				'manifest'         => 'spectre-lucide.json',
-				'display_prefix'   => 'lucide',
-				'class_prefix'     => 'lucide-',
-				'label_icon'       => 'eicon-star',
-				'style'            => 'outline',
-				'preview_selector' => 'i[class*="lucide-"]',
+				'label'          => __('Lucide Icons', 'spectre-elementor-icons'),
+				'description'    => __('Open-source Lucide outline icons.', 'spectre-elementor-icons'),
+				'manifest'       => 'spectre-lucide.json',
+				'display_prefix' => 'lucide',
+				'class_prefix'   => 'lucide-',
+				'label_icon'     => 'eicon-star',
+				'style'          => 'outline',
 			],
 			'spectre-fontawesome' => [
-				'label'            => __('Font Awesome', 'spectre-elementor-icons'),
-				'description'      => __('Font Awesome Free (solid, regular, brands).', 'spectre-elementor-icons'),
-				'manifest'         => 'spectre-fontawesome.json',
-				'display_prefix'   => 'sfa',
-				'class_prefix'     => 'sfa-',
-				'label_icon'       => 'eicon-font',
-				'style'            => 'filled',
-				'preview_selector' => 'i[class*="sfa-"]',
+				'label'          => __('Font Awesome', 'spectre-elementor-icons'),
+				'description'    => __('Font Awesome Free (solid, regular, brands).', 'spectre-elementor-icons'),
+				'manifest'       => 'spectre-fontawesome.json',
+				'display_prefix' => 'sfa',
+				'class_prefix'   => 'sfa-',
+				'label_icon'     => 'eicon-font',
+				'style'          => 'filled',
 			],
 		];
 
 		return apply_filters('spectre_elementor_icon_library_definitions', $definitions);
-	}
-endif;
-
-if (! function_exists('spectre_elementor_get_icon_preview_config')) :
-	/**
-	 * Build the preview configuration consumed by the editor JS.
-	 *
-	 * @return array
-	 */
-	function spectre_elementor_get_icon_preview_config()
-	{
-		$config      = [];
-		$definitions = spectre_elementor_get_icon_library_definitions();
-
-		foreach ($definitions as $slug => $definition) {
-			$manifest_file = trailingslashit(SPECTRE_ELEMENTOR_ICONS_MANIFEST_PATH) . ltrim($definition['manifest'], '/\\');
-
-			if (! file_exists($manifest_file)) {
-				continue;
-			}
-
-			$config[$slug] = [
-				'prefix'   => $definition['class_prefix'],
-				'selector' => ! empty($definition['preview_selector'])
-					? $definition['preview_selector']
-					: 'i.' . sanitize_html_class($definition['display_prefix']),
-				'json'     => trailingslashit(SPECTRE_ELEMENTOR_ICONS_MANIFEST_URL) . ltrim($definition['manifest'], '/\\'),
-				'style'    => $definition['style'],
-			];
-		}
-
-		return apply_filters('spectre_elementor_icon_preview_libraries', $config);
 	}
 endif;
 
