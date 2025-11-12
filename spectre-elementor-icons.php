@@ -49,3 +49,18 @@ function spectre_elementor_icons_enqueue_styles()
 add_action('wp_enqueue_scripts', 'spectre_elementor_icons_enqueue_styles');
 add_action('elementor/frontend/after_enqueue_styles', 'spectre_elementor_icons_enqueue_styles');
 add_action('elementor/editor/after_enqueue_styles', 'spectre_elementor_icons_enqueue_styles');
+
+/**
+ * Enqueue JavaScript to inject SVGs into icon picker preview
+ */
+function spectre_elementor_icons_enqueue_editor_scripts()
+{
+	wp_enqueue_script(
+		'spectre-icon-picker-injector',
+		SPECTRE_ELEMENTOR_ICONS_URL . 'assets/js/icon-picker-svg-injector.js',
+		['jquery', 'elementor-editor'],
+		'0.1.0',
+		true
+	);
+}
+add_action('elementor/editor/after_enqueue_scripts', 'spectre_elementor_icons_enqueue_editor_scripts');
