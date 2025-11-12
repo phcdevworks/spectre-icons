@@ -101,12 +101,13 @@
 		"zip",
 		"zlib",
 		"wordpress",
+		"wordpress-globals",
 		"woocommerce",
 		"acf-pro",
-		"wordpress-globals",
 		"wp-cli",
 		"genesis",
-		"polylang"
+		"polylang",
+		"elementor"
 	],
 	"intelephense.environment.includePaths": [
 		"${workspaceFolder}"

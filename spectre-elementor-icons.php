@@ -51,16 +51,68 @@ add_action('elementor/frontend/after_enqueue_styles', 'spectre_elementor_icons_e
 add_action('elementor/editor/after_enqueue_styles', 'spectre_elementor_icons_enqueue_styles');
 
 /**
+ * Editor-only assets for inline SVG previews.
+ */
+function spectre_elementor_icons_enqueue_editor_assets()
+{
+	$libraries = spectre_elementor_get_icon_preview_config();
+
+	if (empty($libraries)) {
+		return;
+	}
+
+	$script_handle = 'spectre-elementor-icons-admin';
+
+	wp_register_script(
+		$script_handle,
+		SPECTRE_ELEMENTOR_ICONS_URL . 'assets/js/spectre-elementor-icons-admin.js',
+		[],
+		'0.1.0',
+		true
+	);
+
+	wp_localize_script(
+		$script_handle,
+		'SpectreElementorIconsConfig',
+		[
+			'libraries' => $libraries,
+		]
+	);
+
+	wp_enqueue_script($script_handle);
+}
+add_action('elementor/editor/after_enqueue_scripts', 'spectre_elementor_icons_enqueue_editor_assets');
+
+/**
  * Enqueue JavaScript to inject SVGs into icon picker preview
  */
 function spectre_elementor_icons_enqueue_editor_scripts()
 {
 	wp_enqueue_script(
-		'spectre-icon-picker-injector',
-		SPECTRE_ELEMENTOR_ICONS_URL . 'assets/js/icon-picker-svg-injector.js',
-		['jquery', 'elementor-editor'],
+		'spectre-elementor-icons-admin',
+		SPECTRE_ELEMENTOR_ICONS_URL . 'assets/js/spectre-elementor-icons-admin.js',
+		['jquery'],
 		'0.1.0',
 		true
 	);
+
+	// Pass config to JS
+	$definitions = spectre_elementor_get_icon_library_definitions();
+	$config = [];
+
+	foreach ($definitions as $slug => $definition) {
+		$config[$slug] = [
+			'prefix' => $definition['class_prefix'],
+			'selector' => $definition['preview_selector'],
+			'json' => SPECTRE_ELEMENTOR_ICONS_MANIFEST_URL . $definition['manifest'],
+			'style' => $definition['style'],
+		];
+	}
+
+	wp_localize_script('spectre-elementor-icons-admin', 'SpectreElementorIconsConfig', [
+		'libraries' => $config
+	]);
 }
 add_action('elementor/editor/after_enqueue_scripts', 'spectre_elementor_icons_enqueue_editor_scripts');
+add_action('wp_enqueue_scripts', 'spectre_elementor_icons_enqueue_editor_scripts');
+add_action('elementor/frontend/after_enqueue_scripts', 'spectre_elementor_icons_enqueue_editor_scripts');

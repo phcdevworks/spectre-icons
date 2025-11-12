@@ -74,20 +74,23 @@ if (! class_exists('Spectre_Elementor_Icons_Manifest_Renderer')) :
 		 */
 		public static function render_icon($icon, $attributes = [], $tag = 'span')
 		{
+			error_log('RENDER_ICON CALLED: ' . print_r($icon, true));
+
 			$library = isset($icon['library']) ? $icon['library'] : '';
 
 			if (empty($library) || empty(self::$libraries[$library])) {
+				error_log('RENDER FAILED: Library empty or not registered - ' . $library);
 				return '';
 			}
 
 			$slug = self::extract_slug($icon, self::$libraries[$library]);
 
 			if (empty($slug)) {
+				error_log('RENDER FAILED: Could not extract slug from: ' . print_r($icon, true));
 				return '';
 			}
 
 			$icons = self::get_icons($library);
-
 			if (empty($icons[$slug])) {
 				return '';
 			}
