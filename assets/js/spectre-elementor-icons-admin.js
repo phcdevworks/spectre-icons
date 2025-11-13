@@ -75,8 +75,9 @@
 		}
 
 		const cacheKey = `${libraryId}::${slug}`;
+		const hasExistingSvg = element.querySelector('svg');
 
-		if (element.dataset.spectreIconKey === cacheKey) {
+		if (element.dataset.spectreIconKey === cacheKey && hasExistingSvg) {
 			return;
 		}
 
