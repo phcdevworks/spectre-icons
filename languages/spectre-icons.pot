@@ -1,0 +1,76 @@
+# Copyright (C) 2025 Spectre Plugins by PHCDevworks
+# This file is distributed under the same license as the Spectre Icons plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Spectre Icons 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/spectre-icons\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-11-13T03:15:26+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: spectre-icons\n"
+
+#. Plugin Name of the plugin
+#: spectre-icons.php
+#: includes/elementor/class-spectre-icons-elementor-settings.php:82
+#: includes/elementor/class-spectre-icons-elementor-settings.php:83
+msgid "Spectre Icons"
+msgstr ""
+
+#. Description of the plugin
+#: spectre-icons.php
+msgid "Modular Spectre icon libraries for WordPress builders. Includes Elementor integration."
+msgstr ""
+
+#. Author of the plugin
+#: spectre-icons.php
+msgid "Spectre Plugins by PHCDevworks"
+msgstr ""
+
+#: includes/elementor/class-spectre-icons-elementor-settings.php:106
+msgid "Icon Picker Tabs"
+msgstr ""
+
+#: includes/elementor/class-spectre-icons-elementor-settings.php:108
+msgid "Toggle which tabs stay visible within Elementor’s icon picker."
+msgstr ""
+
+#: includes/elementor/class-spectre-icons-elementor-settings.php:115
+msgid "Available Tabs"
+msgstr ""
+
+#: includes/elementor/class-spectre-icons-elementor-settings.php:198
+msgid "No Spectre icon libraries are available yet."
+msgstr ""
+
+#: includes/elementor/class-spectre-icons-elementor-settings.php:267
+msgid "Spectre Icons — Elementor"
+msgstr ""
+
+#: includes/elementor/class-spectre-icons-elementor-settings.php:273
+msgid "Save Tab Visibility"
+msgstr ""
+
+#: includes/elementor/icon-libraries.php:29
+msgid "Lucide Icons"
+msgstr ""
+
+#: includes/elementor/icon-libraries.php:30
+msgid "Open-source Lucide outline icons."
+msgstr ""
+
+#: includes/elementor/icon-libraries.php:39
+msgid "Font Awesome"
+msgstr ""
+
+#: includes/elementor/icon-libraries.php:40
+msgid "Font Awesome Free (solid, regular, brands)."
+msgstr ""
+
+#: includes/elementor/integration-hooks.php:109
+msgid "Spectre Icons Elementor needs generated manifest files. Run \"php bin/generate-icon-manifests.php\" and upload the JSON files under assets/manifests/."
+msgstr ""
