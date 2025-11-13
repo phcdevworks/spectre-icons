@@ -39,11 +39,13 @@ add_action(
  */
 function spectre_elementor_icons_enqueue_styles()
 {
+	$version = spectre_elementor_icons_get_asset_version('assets/css/spectre-elementor-icons-admin.css');
+
 	wp_enqueue_style(
 		'spectre-elementor-icons',
 		SPECTRE_ELEMENTOR_ICONS_URL . 'assets/css/spectre-elementor-icons-admin.css',
 		[],
-		'0.1.0'
+		$version
 	);
 }
 add_action('wp_enqueue_scripts', 'spectre_elementor_icons_enqueue_styles');
@@ -68,13 +70,14 @@ function spectre_elementor_icons_enqueue_icon_scripts()
 	}
 
 	$handle = 'spectre-elementor-icons-admin';
+	$script_version = spectre_elementor_icons_get_asset_version('assets/js/spectre-elementor-icons-admin.js');
 
 	if (! wp_script_is($handle, 'registered')) {
 		wp_register_script(
 			$handle,
 			SPECTRE_ELEMENTOR_ICONS_URL . 'assets/js/spectre-elementor-icons-admin.js',
 			[],
-			'0.1.0',
+			$script_version,
 			true
 		);
 	}
@@ -135,4 +138,23 @@ function spectre_elementor_icons_manifests_available()
 	$has_manifests = ! empty($config);
 
 	return $has_manifests;
+}
+
+/**
+ * Generate a cache-busting version string for plugin assets.
+ *
+ * @param string $relative_path Relative path from plugin root.
+ *
+ * @return string
+ */
+function spectre_elementor_icons_get_asset_version($relative_path)
+{
+	$default_version = '0.1.0';
+	$path = trailingslashit(SPECTRE_ELEMENTOR_ICONS_PATH) . ltrim($relative_path, '/\\');
+
+	if (! file_exists($path)) {
+		return $default_version;
+	}
+
+	return (string) filemtime($path);
 }
