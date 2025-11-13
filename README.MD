@@ -35,7 +35,7 @@ Installation (as a regular plugin)
 Developer quick start (in this dev container)
 
 - Generate manifests: `php bin/generate-icon-manifests.php`
-- PHP lint of all files: `find . -name '*.php' -print -exec php -l {} \;`
+- PHP lint of all files: `bin/lint-php.sh`
 
 Project layout
 
