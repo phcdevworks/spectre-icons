@@ -51,68 +51,88 @@ add_action('elementor/frontend/after_enqueue_styles', 'spectre_elementor_icons_e
 add_action('elementor/editor/after_enqueue_styles', 'spectre_elementor_icons_enqueue_styles');
 
 /**
- * Editor-only assets for inline SVG previews.
+ * Enqueue JavaScript that injects inline SVGs wherever Elementor renders icons.
  */
-function spectre_elementor_icons_enqueue_editor_assets()
+function spectre_elementor_icons_enqueue_icon_scripts()
 {
+	static $script_enqueued = false;
+
+	if ($script_enqueued) {
+		return;
+	}
+
 	$libraries = spectre_elementor_get_icon_preview_config();
 
 	if (empty($libraries)) {
 		return;
 	}
 
-	$script_handle = 'spectre-elementor-icons-admin';
+	$handle = 'spectre-elementor-icons-admin';
 
-	wp_register_script(
-		$script_handle,
-		SPECTRE_ELEMENTOR_ICONS_URL . 'assets/js/spectre-elementor-icons-admin.js',
-		[],
-		'0.1.0',
-		true
-	);
+	if (! wp_script_is($handle, 'registered')) {
+		wp_register_script(
+			$handle,
+			SPECTRE_ELEMENTOR_ICONS_URL . 'assets/js/spectre-elementor-icons-admin.js',
+			[],
+			'0.1.0',
+			true
+		);
+	}
 
 	wp_localize_script(
-		$script_handle,
+		$handle,
 		'SpectreElementorIconsConfig',
 		[
 			'libraries' => $libraries,
 		]
 	);
 
-	wp_enqueue_script($script_handle);
+	wp_enqueue_script($handle);
+	$script_enqueued = true;
 }
-add_action('elementor/editor/after_enqueue_scripts', 'spectre_elementor_icons_enqueue_editor_assets');
+add_action('elementor/editor/after_enqueue_scripts', 'spectre_elementor_icons_enqueue_icon_scripts');
+add_action('wp_enqueue_scripts', 'spectre_elementor_icons_enqueue_icon_scripts');
+add_action('elementor/frontend/after_enqueue_scripts', 'spectre_elementor_icons_enqueue_icon_scripts');
 
 /**
- * Enqueue JavaScript to inject SVGs into icon picker preview
+ * Display an admin warning when no manifests are available, as icons cannot render without them.
  */
-function spectre_elementor_icons_enqueue_editor_scripts()
+function spectre_elementor_icons_missing_manifest_notice()
 {
-	wp_enqueue_script(
-		'spectre-elementor-icons-admin',
-		SPECTRE_ELEMENTOR_ICONS_URL . 'assets/js/spectre-elementor-icons-admin.js',
-		['jquery'],
-		'0.1.0',
-		true
-	);
-
-	// Pass config to JS
-	$definitions = spectre_elementor_get_icon_library_definitions();
-	$config = [];
-
-	foreach ($definitions as $slug => $definition) {
-		$config[$slug] = [
-			'prefix' => $definition['class_prefix'],
-			'selector' => $definition['preview_selector'],
-			'json' => SPECTRE_ELEMENTOR_ICONS_MANIFEST_URL . $definition['manifest'],
-			'style' => $definition['style'],
-		];
+	if (! current_user_can('manage_options')) {
+		return;
 	}
 
-	wp_localize_script('spectre-elementor-icons-admin', 'SpectreElementorIconsConfig', [
-		'libraries' => $config
-	]);
+	$is_settings_screen = isset($_GET['page']) && 'spectre-elementor-icons' === $_GET['page']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$is_elementor_editor = isset($_GET['action']) && 'elementor' === $_GET['action']; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+	if (! $is_settings_screen && ! $is_elementor_editor) {
+		return;
+	}
+
+	if (! spectre_elementor_icons_manifests_available()) {
+		echo '<div class="notice notice-error"><p>';
+		esc_html_e('Spectre Elementor Icons needs generated manifest files. Run "php bin/generate-icon-manifests.php" and upload the JSON files under assets/manifests/.', 'spectre-elementor-icons');
+		echo '</p></div>';
+	}
 }
-add_action('elementor/editor/after_enqueue_scripts', 'spectre_elementor_icons_enqueue_editor_scripts');
-add_action('wp_enqueue_scripts', 'spectre_elementor_icons_enqueue_editor_scripts');
-add_action('elementor/frontend/after_enqueue_scripts', 'spectre_elementor_icons_enqueue_editor_scripts');
+add_action('admin_notices', 'spectre_elementor_icons_missing_manifest_notice');
+
+/**
+ * Utility: determine if at least one icon manifest exists.
+ *
+ * @return bool
+ */
+function spectre_elementor_icons_manifests_available()
+{
+	static $has_manifests = null;
+
+	if (null !== $has_manifests) {
+		return $has_manifests;
+	}
+
+	$config = spectre_elementor_get_icon_preview_config();
+	$has_manifests = ! empty($config);
+
+	return $has_manifests;
+}

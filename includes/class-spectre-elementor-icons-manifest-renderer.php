@@ -73,23 +73,23 @@ if (! class_exists('Spectre_Elementor_Icons_Manifest_Renderer')) :
 		 *
 		 * @return string
 		 */
-		public static function render_icon($icon, $attributes = [], $tag = 'span')
-		{
-			error_log('RENDER_ICON CALLED: ' . print_r($icon, true));
+			public static function render_icon($icon, $attributes = [], $tag = 'span')
+			{
+				self::log_debug('RENDER_ICON CALLED: ' . print_r($icon, true));
 
 			$library = isset($icon['library']) ? $icon['library'] : '';
 
-			if (empty($library) || empty(self::$libraries[$library])) {
-				error_log('RENDER FAILED: Library empty or not registered - ' . $library);
-				return '';
-			}
+				if (empty($library) || empty(self::$libraries[$library])) {
+					self::log_debug('RENDER FAILED: Library empty or not registered - ' . $library);
+					return '';
+				}
 
 			$slug = self::extract_slug($icon, self::$libraries[$library]);
 
-			if (empty($slug)) {
-				error_log('RENDER FAILED: Could not extract slug from: ' . print_r($icon, true));
-				return '';
-			}
+				if (empty($slug)) {
+					self::log_debug('RENDER FAILED: Could not extract slug from: ' . print_r($icon, true));
+					return '';
+				}
 
 			$icons = self::get_icons($library);
 			if (empty($icons[$slug])) {
@@ -200,8 +200,8 @@ if (! class_exists('Spectre_Elementor_Icons_Manifest_Renderer')) :
 		 *
 		 * @return array
 		 */
-		private static function prepare_attributes($attributes, $slug, $library)
-		{
+			private static function prepare_attributes($attributes, $slug, $library)
+			{
 			if (empty($attributes['class'])) {
 				$attributes['class'] = [];
 			}
@@ -222,6 +222,18 @@ if (! class_exists('Spectre_Elementor_Icons_Manifest_Renderer')) :
 			$attributes['data-spectre-library'] = $library;
 
 			return $attributes;
+			}
+
+			/**
+			 * Helper to send debug output only when WP_DEBUG is enabled.
+			 *
+			 * @param string $message Debug message.
+			 */
+			private static function log_debug($message)
+			{
+				if (defined('WP_DEBUG') && WP_DEBUG) {
+					error_log('[Spectre Icons] ' . $message); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				}
+			}
 		}
-	}
-endif;
+	endif;
