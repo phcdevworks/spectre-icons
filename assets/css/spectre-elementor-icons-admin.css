@@ -15,8 +15,9 @@
 
 /* Outline style icons (Lucide) */
 .spectre-icon--style-outline svg {
-	fill: none;
-	stroke: currentColor;
+	/* Elementor core forces .elementor-icon svg { fill: currentColor } so override aggressively */
+	fill: none !important;
+	stroke: currentColor !important;
 	stroke-width: 2;
 	stroke-linecap: round;
 	stroke-linejoin: round;

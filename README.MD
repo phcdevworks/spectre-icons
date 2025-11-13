@@ -64,6 +64,21 @@ Adding or updating icons
    - `style` (e.g., `outline` or `filled`)
    - `preview_selector` (CSS selector that matches your icon placeholders, e.g., `i[class*="your-prefix-"]`)
 
+Testing a new icon pack
+
+1. Follow the steps above to create the manifest and library definition.
+2. In WordPress, go to **Settings → Spectre Icons** and enable the new library tab.
+3. Open the Elementor editor, perform a hard refresh once (the plugin now cache-busts its assets automatically), and open the icon library modal. You should see a new tab with live SVG previews.
+4. Drop the icon into a widget and confirm the inline SVG renders both inside the editor canvas and on the frontend preview.
+5. Repeat with a few icons of different styles to verify classes, sizing, and colors inherit correctly.
+
+Release checklist
+
+- Regenerate manifests (`php bin/generate-icon-manifests.php`) and verify they are committed.
+- Lint PHP (`find . -name '*.php' -print -exec php -l {} \;`) and spot-check the Elementor editor to ensure icons inject properly.
+- Update plugin headers/version as needed and mention any new packs or fixes in the changelog/readme.
+- Zip the plugin (or deploy via your usual process), install it on a staging site, and walk through the picker + frontend once more before tagging the release.
+
 Troubleshooting
 
 - Icons don’t render in the picker or frontend
@@ -71,6 +86,7 @@ Troubleshooting
   - Open your browser dev tools → Network to confirm the JSON files are fetched (200 OK)
   - In WordPress, verify Settings → Spectre Icons has your libraries enabled
   - Confirm your placeholder elements (in Elementor) receive the class with the correct prefix, e.g., `lucide-home` or `sfa-user`
+  - Perform a hard refresh of the Elementor editor; the plugin cache-busts its JS/CSS automatically, but some CDNs may need a manual purge
 - PHP logs show “RENDER FAILED”
   - These are debug notices from `Manifest_Renderer`; make sure WP_DEBUG is enabled only in development. The log indicates we could not extract a slug or the library isn’t registered — typically a missing manifest or a wrong prefix
 - Seeing duplicate script enqueues
