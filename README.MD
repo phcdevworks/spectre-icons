@@ -1,6 +1,6 @@
-# Spectre Elementor Icons
+# Spectre Icons
 
-Adds Spectre-managed icon libraries to Elementor’s icon picker and renders them as inline SVGs on the frontend and in the editor.
+Adds Spectre-managed icon libraries to WordPress builders. This repo currently ships the Elementor integration, but the core naming/layout now leaves room for additional builders.
 
 What you get
 
@@ -29,7 +29,7 @@ Installation (as a regular plugin)
      - `php bin/generate-icon-manifests.php`
    - This creates `assets/manifests/spectre-lucide.json` and `assets/manifests/spectre-fontawesome.json`
 2. Zip the folder (or symlink) and install it in WordPress as a plugin
-3. Activate “Spectre Elementor Icons”
+3. Activate “Spectre Icons”
 4. Go to Settings → Spectre Icons and toggle which icon tabs should appear
 
 Developer quick start (in this dev container)
@@ -39,13 +39,14 @@ Developer quick start (in this dev container)
 
 Project layout
 
-- `spectre-elementor-icons.php` — plugin bootstrap and asset enqueues
-- `includes/` — main classes and library registration
-  - `class-spectre-elementor-icons-library-manager.php` — wires libraries into Elementor based on settings
-  - `class-spectre-elementor-icons-manifest-renderer.php` — loads JSON manifests and renders inline SVG
-  - `class-spectre-elementor-icons-settings.php` — admin UI and saved preferences for tab visibility
-  - `spectre-elementor-icon-libraries.php` — defines Spectre libraries (Lucide, Font Awesome) and registers them
-  - `class-spectre-elementor-icons-lucide.php` — optional direct Lucide helpers (file-based)
+- `spectre-icons.php` — plugin bootstrap, shared helpers, and integration loader
+- `includes/elementor/` — Elementor-specific services
+  - `class-spectre-icons-elementor-library-manager.php` — wires libraries into Elementor based on settings
+  - `class-spectre-icons-elementor-manifest-renderer.php` — loads JSON manifests and renders inline SVG
+  - `class-spectre-icons-elementor-settings.php` — admin UI and saved preferences for tab visibility
+  - `class-spectre-icons-elementor-lucide.php` — optional direct Lucide helpers (file-based)
+  - `icon-libraries.php` — defines Spectre libraries (Lucide, Font Awesome) and registers them
+  - `integration-hooks.php` — Elementor bootstrap + asset enqueues
 - `assets/iconpacks/` — raw SVGs organized by pack
 - `assets/manifests/` — generated JSON maps of slug → svg
 - `assets/js/spectre-elementor-icons-admin.js` — injects real SVGs into Elementor’s picker preview and on the page
@@ -56,7 +57,7 @@ Adding or updating icons
 
 1. Drop new SVGs under the appropriate folder in `assets/iconpacks/` (Lucide or Font Awesome, or add a new folder for a new pack)
 2. Re-run: `php bin/generate-icon-manifests.php`
-3. (If a new pack) add a definition to `includes/spectre-elementor-icon-libraries.php` with:
+3. (If a new pack) add a definition to `includes/elementor/icon-libraries.php` with:
    - `manifest` (the generated JSON filename)
    - `display_prefix` (short identifier shown by Elementor)
    - `class_prefix` (CSS class prefix used to identify the chosen icon slug)

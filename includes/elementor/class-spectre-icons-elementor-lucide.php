@@ -3,7 +3,7 @@
 /**
  * Lucide icon helper utilities.
  *
- * @package SpectreElementorIcons
+ * @package SpectreIcons
  */
 
 if (! defined('ABSPATH')) {
@@ -11,11 +11,11 @@ if (! defined('ABSPATH')) {
 }
 
 
-if (! class_exists('Spectre_Elementor_Icons_Lucide')) :
+if (! class_exists('Spectre_Icons_Elementor_Lucide')) :
 	/**
 	 * Provides icon data and rendering helpers for the Lucide pack.
 	 */
-	final class Spectre_Elementor_Icons_Lucide
+	final class Spectre_Icons_Elementor_Lucide
 	{
 
 		/**
@@ -39,7 +39,7 @@ if (! class_exists('Spectre_Elementor_Icons_Lucide')) :
 		 */
 		private static function get_icons_dir()
 		{
-			return SPECTRE_ELEMENTOR_ICONS_PATH . '/assets/iconpacks/lucide';
+			return SPECTRE_ICONS_PATH . '/assets/iconpacks/lucide';
 		}
 
 		/**

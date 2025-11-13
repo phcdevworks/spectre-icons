@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	const config = window.SpectreElementorIconsConfig || {};
+	const config = window.SpectreIconsElementorConfig || window.SpectreElementorIconsConfig || {};
 	const libraries = config.libraries || {};
 
 	const libraryIds = Object.keys(libraries);

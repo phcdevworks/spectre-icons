@@ -3,7 +3,7 @@
 /**
  * Renders icons based on generated JSON manifests.
  *
- * @package SpectreElementorIcons
+ * @package SpectreIcons
  */
 
 if (! defined('ABSPATH')) {
@@ -11,11 +11,11 @@ if (! defined('ABSPATH')) {
 }
 
 
-if (! class_exists('Spectre_Elementor_Icons_Manifest_Renderer')) :
+if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 	/**
 	 * Handles manifest loading and inline SVG rendering.
 	 */
-	final class Spectre_Elementor_Icons_Manifest_Renderer
+	final class Spectre_Icons_Elementor_Manifest_Renderer
 	{
 
 		/**

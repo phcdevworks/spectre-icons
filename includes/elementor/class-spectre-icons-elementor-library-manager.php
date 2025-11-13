@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Coordinates custom Spectre icon libraries with Elementor.
+ * Coordinates Spectre icon libraries with Elementor.
  *
- * @package SpectreElementorIcons
+ * @package SpectreIcons
  */
 
 if (! defined('ABSPATH')) {
@@ -11,24 +11,24 @@ if (! defined('ABSPATH')) {
 }
 
 
-if (! class_exists('Spectre_Elementor_Icons_Library_Manager')) :
+if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 	/**
 	 * Loads Spectre libraries and registers them with Elementor.
 	 */
-	final class Spectre_Elementor_Icons_Library_Manager
+	final class Spectre_Icons_Elementor_Library_Manager
 	{
 
 		/**
 		 * Singleton instance.
 		 *
-		 * @var Spectre_Elementor_Icons_Library_Manager|null
+		 * @var Spectre_Icons_Elementor_Library_Manager|null
 		 */
 		private static $instance = null;
 
 		/**
 		 * Settings handler.
 		 *
-		 * @var Spectre_Elementor_Icons_Settings
+		 * @var Spectre_Icons_Elementor_Settings
 		 */
 		private $settings;
 
@@ -42,11 +42,11 @@ if (! class_exists('Spectre_Elementor_Icons_Library_Manager')) :
 		/**
 		 * Retrieve the singleton.
 		 *
-		 * @param Spectre_Elementor_Icons_Settings $settings Settings dependency.
+		 * @param Spectre_Icons_Elementor_Settings $settings Settings dependency.
 		 *
-		 * @return Spectre_Elementor_Icons_Library_Manager
+		 * @return Spectre_Icons_Elementor_Library_Manager
 		 */
-		public static function instance(Spectre_Elementor_Icons_Settings $settings)
+		public static function instance(Spectre_Icons_Elementor_Settings $settings)
 		{
 			if (null === self::$instance) {
 				self::$instance = new self($settings);
@@ -58,9 +58,9 @@ if (! class_exists('Spectre_Elementor_Icons_Library_Manager')) :
 		/**
 		 * Wire up filters.
 		 *
-		 * @param Spectre_Elementor_Icons_Settings $settings Settings dependency.
+		 * @param Spectre_Icons_Elementor_Settings $settings Settings dependency.
 		 */
-		private function __construct(Spectre_Elementor_Icons_Settings $settings)
+		private function __construct(Spectre_Icons_Elementor_Settings $settings)
 		{
 			$this->settings  = $settings;
 			$this->libraries = $this->load_libraries();
@@ -77,7 +77,8 @@ if (! class_exists('Spectre_Elementor_Icons_Library_Manager')) :
 		 */
 		private function load_libraries()
 		{
-			$libraries = apply_filters('spectre_elementor_icon_libraries', []);
+			$libraries = apply_filters('spectre_icons_elementor_icon_libraries', []);
+			$libraries = apply_filters('spectre_elementor_icon_libraries', $libraries);
 
 			if (empty($libraries) || ! is_array($libraries)) {
 				return [];
