@@ -13,6 +13,7 @@
 	const libraryPromises = {};
 	const iconCache = {};
 	const observedRoots = new WeakSet();
+	const scopedRefreshTimers = new WeakMap();
 
 	const loadLibrary = (libraryId) => {
 		if (libraryPromises[libraryId]) {
@@ -51,6 +52,22 @@
 			.forEach((className) => element.classList.remove(className));
 
 		element.classList.add('spectre-icon--style-' + style);
+	};
+
+	const isScopeActive = (scope) => {
+		if (!scope) {
+			return false;
+		}
+
+		if (scope.nodeType === Node.DOCUMENT_NODE) {
+			return true;
+		}
+
+		if (typeof scope.isConnected === 'boolean') {
+			return scope.isConnected;
+		}
+
+		return document.body ? document.body.contains(scope) : true;
 	};
 
 	const renderIcon = (element, libraryId) => {
@@ -139,6 +156,18 @@
 			return;
 		}
 
+		if ('elementor-icons-manager-modal' === node.id || (node.matches && node.matches('#elementor-icons-manager-modal'))) {
+			ensureModalRefreshLoop();
+		} else if (node.querySelector && node.querySelector('#elementor-icons-manager-modal')) {
+			ensureModalRefreshLoop();
+		}
+
+		if ('elementor-panel' === node.id || (node.matches && node.matches('#elementor-panel'))) {
+			ensurePanelRefreshLoop();
+		} else if (node.closest && node.closest('#elementor-panel')) {
+			ensurePanelRefreshLoop();
+		}
+
 		if (node.shadowRoot) {
 			observeRoot(node.shadowRoot);
 			processElement(node.shadowRoot);
@@ -164,9 +193,63 @@
 		});
 	};
 
+	const refreshLibrariesInScope = (scope) => {
+		if (!scope || !scope.querySelectorAll) {
+			return;
+		}
+
+		libraryIds.forEach((libraryId) => {
+			const settings = libraries[libraryId];
+
+			if (!settings || !settings.selector) {
+				return;
+			}
+
+			const matches = scope.querySelectorAll(settings.selector);
+			matches.forEach((match) => renderIcon(match, libraryId));
+		});
+	};
+
+	const startScopedRefresh = (scope, interval = 400) => {
+		if (!scope || scopedRefreshTimers.has(scope)) {
+			return;
+		}
+
+		const timer = setInterval(() => {
+			if (!isScopeActive(scope)) {
+				clearInterval(timer);
+				scopedRefreshTimers.delete(scope);
+				return;
+			}
+
+			refreshLibrariesInScope(scope);
+		}, interval);
+
+		scopedRefreshTimers.set(scope, timer);
+	};
+
+	const ensureModalRefreshLoop = () => {
+		const modal = document.getElementById('elementor-icons-manager-modal');
+
+		if (modal) {
+			startScopedRefresh(modal, 200);
+		}
+	};
+
+	const ensurePanelRefreshLoop = () => {
+		const panel = document.getElementById('elementor-panel');
+
+		if (panel) {
+			startScopedRefresh(panel, 500);
+		}
+	};
+
 	const init = () => {
 		observeRoot(document.body);
 		processElement(document.body);
+		startScopedRefresh(document, 1500);
+		ensurePanelRefreshLoop();
+		refreshLibrariesInScope(document);
 	};
 
 	if (document.readyState === 'loading') {
@@ -174,4 +257,7 @@
 	} else {
 		init();
 	}
+
+	document.addEventListener('elementor/icons-manager/open', ensureModalRefreshLoop);
+	ensureModalRefreshLoop();
 })();
