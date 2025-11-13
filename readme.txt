@@ -36,6 +36,12 @@ Yes, the current integration targets Elementor. The architecture is modular, so 
 = Why do I need JSON manifests? =
 Manifests keep SVG markup out of PHP files and let the plugin load icons quickly without scanning directories on every request. Generate them with the provided CLI script whenever you update icon packs.
 
+= License =
+The Spectre Icons plugin code is GPL-2.0-or-later. Bundled icon packs retain their upstream licenses:
+
+* Lucide — ISC (MIT-compatible): https://github.com/lucide-icons/lucide
+* Font Awesome Free — CC BY 4.0 for icons / MIT for code: https://fontawesome.com/license/free
+
 == Changelog ==
 
 = 0.1.0 =

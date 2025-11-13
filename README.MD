@@ -52,6 +52,8 @@ Project layout
 - `assets/js/elementor/spectre-icons-elementor.js` — injects real SVGs into Elementor’s picker preview and on the page
 - `assets/css/admin/spectre-icons-admin.css` — baseline styles for the admin UI and rendered icon wrappers
 - `bin/generate-icon-manifests.php` — CLI to build manifests from SVG packs
+- `bin/lint-php.sh` — simple PHP syntax checker across the repo
+- `.wordpress-org/` — ready-to-ship plugin icons/banners for the WordPress.org directory
 
 Adding or updating icons
 
@@ -76,7 +78,7 @@ Testing a new icon pack
 Release checklist
 
 - Regenerate manifests (`php bin/generate-icon-manifests.php`) and verify they are committed.
-- Lint PHP (`find . -name '*.php' -print -exec php -l {} \;`) and spot-check the Elementor editor to ensure icons inject properly.
+- Lint PHP (`bin/lint-php.sh`) and spot-check the Elementor editor to ensure icons inject properly.
 - Update plugin headers/version as needed and mention any new packs or fixes in the changelog/readme.
 - Zip the plugin (or deploy via your usual process), install it on a staging site, and walk through the picker + frontend once more before tagging the release.
 
@@ -100,4 +102,18 @@ Notes for contributors
 - If you adjust the manifest schema, update the generator and JS accordingly
 
 License
-This repository contains third-party icon sets with their respective licenses. Please ensure usage complies with each icon pack’s terms. The plugin code is provided under a permissive license suitable for WordPress distribution.
+-------
+
+- Core plugin: GPL-2.0-or-later (see `LICENSE.md`)
+- Lucide icons: ISC (MIT-compatible) — https://github.com/lucide-icons/lucide
+- Font Awesome Free: CC BY 4.0 for icons / MIT for code — https://fontawesome.com/license/free
+
+WordPress.org Release Workflow
+------------------------------
+
+1. Ensure `.wordpress-org/` icons/banners are up to date before tagging.
+2. Run `bin/lint-php.sh` and regenerate the translation template:  
+   `php wp-cli.phar i18n make-pot . languages/spectre-icons.pot --exclude=bin,assets,wp-cli.phar,vendor`
+3. Regenerate icon manifests when assets change.
+4. Update `readme.txt` (Tested up to, changelog) and bump the plugin version header.
+5. Tag the release (e.g., `git tag 0.1.0`) and mirror the layout when pushing to WordPress.org SVN (`trunk/`, `tags/`, `/assets`).
