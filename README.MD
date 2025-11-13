@@ -49,8 +49,8 @@ Project layout
   - `integration-hooks.php` — Elementor bootstrap + asset enqueues
 - `assets/iconpacks/` — raw SVGs organized by pack
 - `assets/manifests/` — generated JSON maps of slug → svg
-- `assets/js/spectre-elementor-icons-admin.js` — injects real SVGs into Elementor’s picker preview and on the page
-- `assets/css/spectre-elementor-icons-admin.css` — baseline styles for consistent sizing and outline/filled modes
+- `assets/js/elementor/spectre-icons-elementor.js` — injects real SVGs into Elementor’s picker preview and on the page
+- `assets/css/admin/spectre-icons-admin.css` — baseline styles for the admin UI and rendered icon wrappers
 - `bin/generate-icon-manifests.php` — CLI to build manifests from SVG packs
 
 Adding or updating icons

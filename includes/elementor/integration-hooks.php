@@ -27,11 +27,11 @@ if (! function_exists('spectre_icons_elementor_enqueue_styles')) :
 	 */
 	function spectre_icons_elementor_enqueue_styles()
 	{
-		$version = spectre_icons_get_asset_version('assets/css/spectre-elementor-icons-admin.css');
+		$version = spectre_icons_get_asset_version('assets/css/admin/spectre-icons-admin.css');
 
 		wp_enqueue_style(
 			'spectre-icons-elementor',
-			SPECTRE_ICONS_URL . 'assets/css/spectre-elementor-icons-admin.css',
+			SPECTRE_ICONS_URL . 'assets/css/admin/spectre-icons-admin.css',
 			[],
 			$version
 		);
@@ -60,12 +60,12 @@ if (! function_exists('spectre_icons_elementor_enqueue_icon_scripts')) :
 		}
 
 		$handle         = 'spectre-icons-elementor-admin';
-		$script_version = spectre_icons_get_asset_version('assets/js/spectre-elementor-icons-admin.js');
+		$script_version = spectre_icons_get_asset_version('assets/js/elementor/spectre-icons-elementor.js');
 
 		if (! wp_script_is($handle, 'registered')) {
 			wp_register_script(
 				$handle,
-				SPECTRE_ICONS_URL . 'assets/js/spectre-elementor-icons-admin.js',
+				SPECTRE_ICONS_URL . 'assets/js/elementor/spectre-icons-elementor.js',
 				[],
 				$script_version,
 				true
