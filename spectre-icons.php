@@ -4,11 +4,11 @@
  * Plugin Name: Spectre Icons
  * Plugin URI: https://github.com/phcdevworks/spectre-icons
  * Description: Modular Spectre icon libraries for WordPress builders. Includes Elementor integration.
- * Version: 0.1.0
+ * Version: 1.0.0
  * Author: Spectre Plugins by PHCDevworks
  * Author URI: https://phcdevworks.com/
  * Requires at least: 6.0
- * Tested up to: 6.5
+ * Tested up to: 6.8.3
  * Requires PHP: 7.4
  * License: GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -25,7 +25,7 @@ if (! defined('ABSPATH')) {
 define('SPECTRE_ICONS_FILE', __FILE__);
 define('SPECTRE_ICONS_PATH', __DIR__);
 define('SPECTRE_ICONS_URL', plugin_dir_url(__FILE__));
-define('SPECTRE_ICONS_VERSION', '0.1.0');
+define('SPECTRE_ICONS_VERSION', '1.0.0');
 define('SPECTRE_ICONS_MANIFEST_PATH', SPECTRE_ICONS_PATH . '/assets/manifests');
 define('SPECTRE_ICONS_MANIFEST_URL', SPECTRE_ICONS_URL . 'assets/manifests/');
 

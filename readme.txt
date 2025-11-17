@@ -2,9 +2,9 @@
 Contributors: spectre
 Tags: icons, elementor, svg, library
 Requires at least: 6.0
-Tested up to: 6.5
+Tested up to: 6.8.3
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,10 +44,15 @@ The Spectre Icons plugin code is GPL-2.0-or-later. Bundled icon packs retain the
 
 == Changelog ==
 
+= 1.0.0 =
+* Ensure inline SVG icons inherit Elementor color controls (including Icon List).
+* Keep icon wrapper sizing responsive via `em` and preserve frontend enqueue.
+* Preparations for WordPress.org submission (version/tag bump).
+
 = 0.1.0 =
 * Initial release with Spectre Icons core, Elementor integration, and Lucide/Font Awesome libraries.
 
 == Upgrade Notice ==
 
-= 0.1.0 =
-First release—install to add Spectre-managed icon packs to Elementor.
+= 1.0.0 =
+SVG icons now inherit icon colors correctly across widgets; recommended update before submitting to WordPress.org.

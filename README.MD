@@ -116,4 +116,4 @@ WordPress.org Release Workflow
    `php wp-cli.phar i18n make-pot . languages/spectre-icons.pot --exclude=bin,assets,wp-cli.phar,vendor`
 3. Regenerate icon manifests when assets change.
 4. Update `readme.txt` (Tested up to, changelog) and bump the plugin version header.
-5. Tag the release (e.g., `git tag 0.1.0`) and mirror the layout when pushing to WordPress.org SVN (`trunk/`, `tags/`, `/assets`).
+5. Tag the release (e.g., `git tag 1.0.0`) and mirror the layout when pushing to WordPress.org SVN (`trunk/`, `tags/`, `/assets`).

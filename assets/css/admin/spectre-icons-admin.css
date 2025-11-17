@@ -4,13 +4,23 @@
 	justify-content: center;
 	width: 1em;
 	height: 1em;
+	color: inherit;
 }
 
 .spectre-icon--rendered svg {
 	width: 100%;
 	height: 100%;
 	display: block;
+	/* Ensure Elementor color controls propagate to the inline SVG */
+	color: inherit;
 	fill: currentColor;
+	stroke: currentColor;
+}
+
+/* Extra specificity for Elementor icon list items */
+.elementor-icon-list-icon .spectre-icon--rendered svg {
+	fill: currentColor;
+	stroke: currentColor;
 }
 
 /* Outline style icons (Lucide) */
