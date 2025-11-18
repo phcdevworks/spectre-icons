@@ -28,9 +28,17 @@
 /* Elementor social icons (respect icon + background colors) */
 .elementor-social-icon .spectre-icon--rendered,
 .elementor-social-icon .spectre-icon--rendered svg {
-	color: currentColor;
-	fill: currentColor;
-	stroke: currentColor;
+	/* Elementor exposes icon color via CSS var; use it so Official stays white and Custom works */
+	color: var(--e-social-icon-icon-color, currentColor);
+	fill: var(--e-social-icon-icon-color, currentColor);
+	stroke: var(--e-social-icon-icon-color, currentColor);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1em;
+	height: 1em;
+	line-height: 1;
+	vertical-align: middle;
 }
 
 .elementor-social-icon .spectre-icon--style-outline svg {
@@ -69,4 +77,10 @@
 .elementor-icon .spectre-icon--rendered {
 	width: 100%;
 	height: 100%;
+}
+
+/* Sidebar control (icon picker) sizing for social icons */
+.elementor-control-social_icon .spectre-icon--rendered {
+	width: 1.5em;
+	height: 1.5em;
 }
