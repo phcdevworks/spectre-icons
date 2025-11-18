@@ -18,9 +18,29 @@
 }
 
 /* Extra specificity for Elementor icon list items */
+.elementor-icon-list-icon .spectre-icon--rendered,
 .elementor-icon-list-icon .spectre-icon--rendered svg {
+	color: inherit;
 	fill: currentColor;
 	stroke: currentColor;
+}
+
+/* Elementor social icons (respect icon + background colors) */
+.elementor-social-icon .spectre-icon--rendered,
+.elementor-social-icon .spectre-icon--rendered svg {
+	color: currentColor;
+	fill: currentColor;
+	stroke: currentColor;
+}
+
+.elementor-social-icon .spectre-icon--style-outline svg {
+	fill: none !important;
+	stroke: currentColor !important;
+}
+
+.elementor-social-icon .spectre-icon--style-filled svg {
+	fill: currentColor;
+	stroke: none;
 }
 
 /* Outline style icons (Lucide) */
