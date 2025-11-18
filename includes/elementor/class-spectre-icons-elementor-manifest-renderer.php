@@ -72,7 +72,9 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		 * @return string
 		 */
 		public static function render_icon( $icon, $attributes = array(), $tag = 'span' ) {
-			self::log_debug( 'RENDER_ICON CALLED: ' . print_r( $icon, true ) );
+			unset( $tag );
+
+			self::log_debug( 'RENDER_ICON CALLED: ' . wp_json_encode( $icon ) );
 
 			$library = isset( $icon['library'] ) ? $icon['library'] : '';
 
@@ -84,7 +86,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 			$slug = self::extract_slug( $icon, self::$libraries[ $library ] );
 
 			if ( empty( $slug ) ) {
-				self::log_debug( 'RENDER FAILED: Could not extract slug from: ' . print_r( $icon, true ) );
+				self::log_debug( 'RENDER FAILED: Could not extract slug from: ' . wp_json_encode( $icon ) );
 				return '';
 			}
 
@@ -141,7 +143,11 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 			}
 
 			$path = self::$libraries[ $library ]['path'];
-			$json = file_exists( $path ) ? file_get_contents( $path ) : '';
+			$json = '';
+
+			if ( file_exists( $path ) && is_readable( $path ) ) {
+				$json = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- reading local manifest file.
+			}
 			$data = json_decode( $json, true );
 
 			if ( empty( $data['icons'] ) || ! is_array( $data['icons'] ) ) {

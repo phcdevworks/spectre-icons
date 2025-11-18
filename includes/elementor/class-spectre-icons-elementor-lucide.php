@@ -89,6 +89,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Lucide' ) ) :
 		 * @return string
 		 */
 		public static function render_icon( $icon, $attributes = array(), $tag = 'span' ) {
+			unset( $tag );
+
 			$slug = self::normalize_slug( $icon );
 
 			if ( ! $slug ) {
