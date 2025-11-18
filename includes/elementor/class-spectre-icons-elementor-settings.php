@@ -35,9 +35,9 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 *
 		 * @var array
 		 */
-		private $legacy_option_names = [
+		private $legacy_option_names = array(
 			'spectre_elementor_icon_tabs',
-		];
+		);
 
 		/**
 		 * Settings page slug.
@@ -51,7 +51,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 *
 		 * @var array
 		 */
-		private $tabs = [];
+		private $tabs = array();
 
 		/**
 		 * Retrieve the singleton.
@@ -70,8 +70,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 * Setup hooks.
 		 */
 		private function __construct() {
-			add_action( 'admin_menu', [ $this, 'register_menu' ] );
-			add_action( 'admin_init', [ $this, 'register_settings' ] );
+			add_action( 'admin_menu', array( $this, 'register_menu' ) );
+			add_action( 'admin_init', array( $this, 'register_settings' ) );
 		}
 
 		/**
@@ -83,7 +83,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 				__( 'Spectre Icons', 'spectre-icons' ),
 				'manage_options',
 				$this->settings_slug,
-				[ $this, 'render_settings_page' ]
+				array( $this, 'render_settings_page' )
 			);
 		}
 
@@ -94,11 +94,11 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 			register_setting(
 				$this->settings_slug,
 				$this->option_name,
-				[
+				array(
 					'type'              => 'array',
-					'sanitize_callback' => [ $this, 'sanitize_tabs' ],
+					'sanitize_callback' => array( $this, 'sanitize_tabs' ),
 					'default'           => $this->get_default_option_values(),
-				]
+				)
 			);
 
 			add_settings_section(
@@ -113,7 +113,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 			add_settings_field(
 				'spectre_icon_tabs_field',
 				__( 'Available Tabs', 'spectre-icons' ),
-				[ $this, 'render_tabs_field' ],
+				array( $this, 'render_tabs_field' ),
 				$this->settings_slug,
 				'spectre_icon_tabs_section'
 			);
@@ -134,7 +134,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 * @return array
 		 */
 		private function get_default_option_values() {
-			$defaults = [];
+			$defaults = array();
 
 			foreach ( $this->tabs as $slug => $tab ) {
 				$defaults[ $slug ] = true;
@@ -163,7 +163,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 			}
 
 			if ( ! is_array( $stored ) ) {
-				$stored = [];
+				$stored = array();
 			}
 
 			return wp_parse_args(
@@ -181,7 +181,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 */
 		public function sanitize_tabs( $value ) {
 			$value     = (array) $value;
-			$sanitized = [];
+			$sanitized = array();
 
 			foreach ( $this->tabs as $slug => $tab ) {
 				$sanitized[ $slug ] = ! empty( $value[ $slug ] );
