@@ -84,13 +84,11 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Lucide' ) ) :
 		 *
 		 * @param array  $icon       Icon structure from Elementor.
 		 * @param array  $attributes HTML attributes for the wrapper element.
-		 * @param string $tag        HTML tag Elementor requested (unused, SVG is returned).
+		 * @param string $tag        HTML tag Elementor requested (typically "i" or "span").
 		 *
 		 * @return string
 		 */
 		public static function render_icon( $icon, $attributes = array(), $tag = 'span' ) {
-			unset( $tag );
-
 			$slug = self::normalize_slug( $icon );
 
 			if ( ! $slug ) {
@@ -104,7 +102,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Lucide' ) ) :
 			}
 
 			$attributes = self::prepare_attributes( $attributes, $slug );
-			$attr_pairs = array();
+			$attr_pairs  = array();
+			$wrapper_tag = in_array( $tag, array( 'i', 'span' ), true ) ? $tag : 'span';
 
 			foreach ( $attributes as $key => $value ) {
 				if ( is_array( $value ) ) {
@@ -120,7 +119,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Lucide' ) ) :
 
 			$attr_string = $attr_pairs ? ' ' . implode( ' ', $attr_pairs ) : '';
 
-			return sprintf( '<span%s>%s</span>', $attr_string, $svg );
+			return sprintf( '<%1$s%2$s>%3$s</%1$s>', $wrapper_tag, $attr_string, $svg );
 		}
 
 		/**

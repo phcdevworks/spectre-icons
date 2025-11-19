@@ -14,7 +14,6 @@
 	const iconCache = {};
 	const observedRoots = new WeakSet();
 	const scopedRefreshTimers = new WeakMap();
-
 	const loadLibrary = (libraryId) => {
 		if (libraryPromises[libraryId]) {
 			return libraryPromises[libraryId];
@@ -191,6 +190,7 @@
 			const matches = node.querySelectorAll(settings.selector);
 			matches.forEach((match) => renderIcon(match, libraryId));
 		});
+
 	};
 
 	const refreshLibrariesInScope = (scope) => {

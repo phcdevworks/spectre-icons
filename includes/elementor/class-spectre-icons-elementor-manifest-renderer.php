@@ -67,13 +67,11 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		 *
 		 * @param array  $icon       Icon payload from Elementor.
 		 * @param array  $attributes HTML attributes.
-		 * @param string $tag        Requested HTML tag (unused; span returned).
+		 * @param string $tag        Requested HTML tag (Elementor typically passes "i" or "span").
 		 *
 		 * @return string
 		 */
 		public static function render_icon( $icon, $attributes = array(), $tag = 'span' ) {
-			unset( $tag );
-
 			self::log_debug( 'RENDER_ICON CALLED: ' . wp_json_encode( $icon ) );
 
 			$library = isset( $icon['library'] ) ? $icon['library'] : '';
@@ -123,7 +121,9 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 
 			$attr_string = $attr_pairs ? ' ' . implode( ' ', $attr_pairs ) : '';
 
-			return sprintf( '<span%s>%s</span>', $attr_string, $icons[ $slug ] );
+			$wrapper_tag = in_array( $tag, array( 'i', 'span' ), true ) ? $tag : 'span';
+
+			return sprintf( '<%1$s%2$s>%3$s</%1$s>', $wrapper_tag, $attr_string, $icons[ $slug ] );
 		}
 
 		/**
