@@ -26,12 +26,7 @@
 }
 
 /* Elementor social icons (respect icon + background colors) */
-.elementor-social-icon .spectre-icon--rendered,
-.elementor-social-icon .spectre-icon--rendered svg {
-	/* Elementor exposes icon color via CSS var; use it so Official stays white and Custom works */
-	color: var(--e-social-icon-icon-color, currentColor);
-	fill: var(--e-social-icon-icon-color, currentColor);
-	stroke: var(--e-social-icon-icon-color, currentColor);
+.elementor-social-icon .spectre-icon--rendered {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -41,22 +36,30 @@
 	vertical-align: middle;
 }
 
-/* Force white glyph when Elementor marks an item as "Official Color" */
-.elementor-social-icon.elementor-social-icon--official .spectre-icon--rendered,
-.elementor-social-icon.elementor-social-icon--official .spectre-icon--rendered svg {
-	color: #fff;
-	fill: #fff;
-	stroke: #fff;
+.elementor-social-icon .spectre-icon--rendered svg {
+	/* Inherit color from parent .elementor-social-icon which has the color set */
+	color: inherit !important;
+	fill: currentColor !important;
+	stroke: currentColor !important;
 }
 
+/* Force white glyph when Elementor marks an item as "Official Color" */
+.elementor-social-icon.elementor-social-icon--official .spectre-icon--rendered svg {
+	color: #fff !important;
+	fill: #fff !important;
+	stroke: #fff !important;
+}
+
+/* Override for outline icons in social widget */
 .elementor-social-icon .spectre-icon--style-outline svg {
 	fill: none !important;
 	stroke: currentColor !important;
 }
 
+/* Override for filled icons in social widget */
 .elementor-social-icon .spectre-icon--style-filled svg {
-	fill: currentColor;
-	stroke: none;
+	fill: currentColor !important;
+	stroke: none !important;
 }
 
 /* Outline style icons (Lucide) */
