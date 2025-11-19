@@ -1,6 +1,6 @@
 <?php
-
 /**
+
  * Lucide icon helper utilities.
  *
  * @package SpectreIcons
@@ -101,7 +101,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Lucide' ) ) :
 				return '';
 			}
 
-			$attributes = self::prepare_attributes( $attributes, $slug );
+			$attributes  = self::prepare_attributes( $attributes, $slug );
 			$attr_pairs  = array();
 			$wrapper_tag = in_array( $tag, array( 'i', 'span' ), true ) ? $tag : 'span';
 

@@ -1,6 +1,6 @@
 <?php
-
 /**
+
  * Coordinates Spectre icon libraries with Elementor.
  *
  * @package SpectreIcons
@@ -129,9 +129,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Library_Manager' ) ) :
 			$preferences = $this->settings->get_tab_preferences();
 
 			foreach ( $this->libraries as $slug => $library ) {
-				// Default to enabled if no preference set yet
+				// Default to enabled if no preference set yet.
 				$is_enabled = isset( $preferences[ $slug ] ) ? $preferences[ $slug ] : true;
-
 				if ( ! $is_enabled ) {
 					continue;
 				}

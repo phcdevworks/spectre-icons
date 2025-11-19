@@ -1,6 +1,6 @@
 <?php
-
 /**
+
  * Registers Spectre-provided icon libraries from generated manifests.
  *
  * @package SpectreIcons

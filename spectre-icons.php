@@ -1,6 +1,6 @@
 <?php
-
 /**
+
  * Plugin Name: Spectre Icons
  * Plugin URI: https://github.com/phcdevworks/spectre-icons
  * Description: Modular Spectre icon libraries for WordPress builders. Includes Elementor integration.

@@ -1,6 +1,6 @@
 <?php
-
 /**
+
  * Renders icons based on generated JSON manifests.
  *
  * @package SpectreIcons
@@ -95,7 +95,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 
 			$attributes = self::prepare_attributes( $attributes, $slug, $library );
 
-			// Add the icon class that Elementor expects
+			// Add the icon class that Elementor expects.
 			$prefix = self::$libraries[ $library ]['class_prefix'];
 			if ( ! isset( $attributes['class'] ) ) {
 				$attributes['class'] = array();
@@ -176,16 +176,16 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 			$value = is_array( $icon['value'] ) ? implode( ' ', $icon['value'] ) : (string) $icon['value'];
 			$value = strtolower( trim( $value ) );
 
-			// Elementor sends: "displayPrefix selector" (e.g., "lucide lucide-home")
-			// We need to extract just the icon slug (e.g., "home")
+			// Elementor sends: "displayPrefix selector" (e.g., "lucide lucide-home").
+			// We need to extract just the icon slug (e.g., "home").
 			$parts = preg_split( '/\s+/', $value );
 
-			// Last part is usually the full selector (e.g., "lucide-home")
+			// Last part is usually the full selector (e.g., "lucide-home").
 			$maybe = array_pop( $parts );
 
 			$prefix = isset( $library['class_prefix'] ) ? $library['class_prefix'] : '';
 
-			// Remove the prefix to get the bare slug
+			// Remove the prefix to get the bare slug.
 			if ( $prefix && 0 === strpos( $maybe, $prefix ) ) {
 				$maybe = substr( $maybe, strlen( $prefix ) );
 			}
@@ -224,15 +224,15 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 			return $attributes;
 		}
 
-			/**
-			 * Helper to send debug output only when WP_DEBUG is enabled.
-			 *
-			 * @param string $message Debug message.
-			 */
+		/**
+		 * Helper to send debug output only when WP_DEBUG is enabled.
+		 *
+		 * @param string $message Debug message.
+		 */
 		private static function log_debug( $message ) {
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				error_log( '[Spectre Icons] ' . $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			}
 		}
 	}
-	endif;
+endif;
