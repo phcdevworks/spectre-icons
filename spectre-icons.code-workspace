@@ -5,7 +5,7 @@
 		}
 	],
 	"settings": {
-		"workbench.colorTheme": "GitHub Dark Default",
+		"workbench.colorTheme": "Default Dark Modern",
 		"workbench.iconTheme": "material-icon-theme",
 		"workbench.editor.enablePreview": false,
 		"breadcrumbs.enabled": true,

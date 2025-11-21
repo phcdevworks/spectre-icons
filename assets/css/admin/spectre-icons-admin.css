@@ -43,11 +43,19 @@
 	stroke: currentColor !important;
 }
 
-/* Force white glyph when Elementor marks an item as "Official Color" */
-.elementor-social-icon.elementor-social-icon--official .spectre-icon--rendered svg {
+/* Force white icon when using Official Color branding (not custom colors) */
+.elementor-social-icons-wrapper:not([class*="elementor-social-icon-style-custom"]) .elementor-view-stacked .spectre-icon--rendered svg,
+.elementor-social-icons-wrapper:not([class*="elementor-social-icon-style-custom"]) .elementor-view-framed .spectre-icon--rendered svg {
 	color: #fff !important;
 	fill: #fff !important;
 	stroke: #fff !important;
+}
+
+/* When custom color is set via inline style, let it inherit */
+.elementor-social-icon[style*="color"] .spectre-icon--rendered svg {
+	color: inherit !important;
+	fill: currentColor !important;
+	stroke: currentColor !important;
 }
 
 /* Override for outline icons in social widget */
