@@ -6,7 +6,7 @@
 	],
 	"settings": {
 		"workbench.colorTheme": "Default Dark Modern",
-		"workbench.iconTheme": "material-icon-theme",
+		"workbench.iconTheme": "vs-seti",
 		"workbench.editor.enablePreview": false,
 		"breadcrumbs.enabled": true,
 		"intelephense.stubs": [
