@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Shared SVG sanitization utilities.
  *
  * @package SpectreIcons
  */
 
-if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
+if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 	/**
 	 * Removes disallowed SVG tags/attributes to prevent script injection.
 	 */
@@ -25,28 +26,28 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 		 *
 		 * @return string
 		 */
-		public static function sanitize( $svg ) {
-			if ( empty( $svg ) || ! is_string( $svg ) ) {
+		public static function sanitize($svg) {
+			if (empty($svg) || ! is_string($svg)) {
 				return '';
 			}
 
-			$svg = trim( $svg );
+			$svg = trim($svg);
 
-			if ( '' === $svg ) {
+			if ('' === $svg) {
 				return '';
 			}
 
-			if ( ! extension_loaded( 'dom' ) ) {
-				return self::fallback_strip_disallowed( $svg );
+			if (! extension_loaded('dom')) {
+				return self::fallback_strip_disallowed($svg);
 			}
 
 			$dom              = new DOMDocument();
-			$internal_errors  = libxml_use_internal_errors( true );
+			$internal_errors  = libxml_use_internal_errors(true);
 			$previous_loader  = null;
-			$loader_supported = function_exists( 'libxml_disable_entity_loader' );
+			$loader_supported = function_exists('libxml_disable_entity_loader');
 
-			if ( $loader_supported ) {
-				$previous_loader = libxml_disable_entity_loader( true ); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.libxml_disable_entity_loader_Deprecated
+			if ($loader_supported) {
+				$previous_loader = libxml_disable_entity_loader(true); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.libxml_disable_entity_loader_Deprecated
 			}
 
 			$loaded = $dom->loadXML(
@@ -55,28 +56,28 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			);
 
 			libxml_clear_errors();
-			libxml_use_internal_errors( $internal_errors );
+			libxml_use_internal_errors($internal_errors);
 
-			if ( $loader_supported ) {
-				libxml_disable_entity_loader( $previous_loader ); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.libxml_disable_entity_loader_Deprecated
+			if ($loader_supported) {
+				libxml_disable_entity_loader($previous_loader); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.libxml_disable_entity_loader_Deprecated
 			}
 
-			if ( ! $loaded || ! $dom->documentElement ) {
+			if (! $loaded || ! $dom->documentElement) {
 				return '';
 			}
 
-			self::sanitize_dom_node( $dom->documentElement );
+			self::sanitize_dom_node($dom->documentElement);
 
-			$output = $dom->saveXML( $dom->documentElement );
+			$output = $dom->saveXML($dom->documentElement);
 
-			if ( false === $output ) {
+			if (false === $output) {
 				return '';
 			}
 
 			// Minify whitespace similarly to the prior manifest generator.
-			$output = preg_replace( '/\s+/', ' ', $output );
+			$output = preg_replace('/\s+/', ' ', $output);
 
-			return trim( (string) $output );
+			return trim((string) $output);
 		}
 
 		/**
@@ -84,38 +85,38 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 		 *
 		 * @param DOMNode $node Current DOM node.
 		 */
-		private static function sanitize_dom_node( DOMNode $node ) {
-			if ( XML_ELEMENT_NODE === $node->nodeType ) {
-				$tag = strtolower( $node->nodeName );
+		private static function sanitize_dom_node(DOMNode $node) {
+			if (XML_ELEMENT_NODE === $node->nodeType) {
+				$tag = strtolower($node->nodeName);
 
-				if ( ! self::is_element_allowed( $tag ) ) {
-					self::remove_node( $node );
+				if (! self::is_element_allowed($tag)) {
+					self::remove_node($node);
 					return;
 				}
 
-				if ( $node->hasAttributes() ) {
-					for ( $i = $node->attributes->length - 1; $i >= 0; $i-- ) {
-						$attribute = $node->attributes->item( $i );
+				if ($node->hasAttributes()) {
+					for ($i = $node->attributes->length - 1; $i >= 0; $i--) {
+						$attribute = $node->attributes->item($i);
 
-						if ( ! $attribute ) {
+						if (! $attribute) {
 							continue;
 						}
 
-						$name = strtolower( $attribute->nodeName );
+						$name = strtolower($attribute->nodeName);
 
-						if ( ! self::is_attribute_allowed( $tag, $name ) || self::value_has_disallowed_protocol( $attribute->value ) ) {
-							$node->removeAttributeNode( $attribute );
+						if (! self::is_attribute_allowed($tag, $name) || self::value_has_disallowed_protocol($attribute->value)) {
+							$node->removeAttributeNode($attribute);
 						}
 					}
 				}
-			} elseif ( XML_COMMENT_NODE === $node->nodeType ) {
-				self::remove_node( $node );
+			} elseif (XML_COMMENT_NODE === $node->nodeType) {
+				self::remove_node($node);
 				return;
 			}
 
-			for ( $child = $node->firstChild; null !== $child; ) {
+			for ($child = $node->firstChild; null !== $child;) {
 				$next = $child->nextSibling;
-				self::sanitize_dom_node( $child );
+				self::sanitize_dom_node($child);
 				$child = $next;
 			}
 		}
@@ -127,10 +128,10 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 		 *
 		 * @return bool
 		 */
-		private static function is_element_allowed( $tag ) {
+		private static function is_element_allowed($tag) {
 			self::prime_allow_list();
 
-			return isset( self::$allowed_elements[ $tag ] );
+			return isset(self::$allowed_elements[$tag]);
 		}
 
 		/**
@@ -141,14 +142,14 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 		 *
 		 * @return bool
 		 */
-		private static function is_attribute_allowed( $tag, $attribute ) {
+		private static function is_attribute_allowed($tag, $attribute) {
 			self::prime_allow_list();
 
-			if ( isset( self::$allowed_elements[ $tag ][ $attribute ] ) ) {
+			if (isset(self::$allowed_elements[$tag][$attribute])) {
 				return true;
 			}
 
-			return isset( self::$allowed_elements['*'][ $attribute ] );
+			return isset(self::$allowed_elements['*'][$attribute]);
 		}
 
 		/**
@@ -156,12 +157,12 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 		 *
 		 * @param DOMNode $node DOM node to remove.
 		 */
-		private static function remove_node( DOMNode $node ) {
-			if ( null === $node->parentNode ) {
+		private static function remove_node(DOMNode $node) {
+			if (null === $node->parentNode) {
 				return;
 			}
 
-			$node->parentNode->removeChild( $node );
+			$node->parentNode->removeChild($node);
 		}
 
 		/**
@@ -171,21 +172,21 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 		 *
 		 * @return bool
 		 */
-		private static function value_has_disallowed_protocol( $value ) {
-			if ( ! is_string( $value ) ) {
+		private static function value_has_disallowed_protocol($value) {
+			if (! is_string($value)) {
 				return true;
 			}
 
-			$value = trim( $value );
+			$value = trim($value);
 
-			if ( '' === $value ) {
+			if ('' === $value) {
 				return false;
 			}
 
-			$lower_value = strtolower( $value );
+			$lower_value = strtolower($value);
 
-			foreach ( array( 'javascript:', 'data:', 'vbscript:' ) as $protocol ) {
-				if ( 0 === strpos( $lower_value, $protocol ) ) {
+			foreach (array('javascript:', 'data:', 'vbscript:') as $protocol) {
+				if (0 === strpos($lower_value, $protocol)) {
 					return true;
 				}
 			}
@@ -197,7 +198,7 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 		 * Build the allow list for SVG markup.
 		 */
 		private static function prime_allow_list() {
-			if ( null !== self::$allowed_elements ) {
+			if (null !== self::$allowed_elements) {
 				return;
 			}
 
@@ -248,7 +249,7 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 				)
 			);
 
-			self::$allowed_elements = array(
+			$allow_list = array(
 				'*'    => array(
 					'aria-hidden' => true,
 					'data-name'   => true,
@@ -258,9 +259,9 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 				'svg'  => array_merge(
 					$common_attributes,
 					array(
-						'xmlns'       => true,
-						'xmlns:xlink' => true,
-						'version'     => true,
+						'xmlns'               => true,
+						'xmlns:xlink'         => true,
+						'version'             => true,
 						'preserveAspectRatio' => true,
 					)
 				),
@@ -277,8 +278,8 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 				'ellipse'  => $shape_attributes,
 				'rect'     => $shape_attributes,
 				'line'     => $shape_attributes,
-				'title'    => array( 'id' => true ),
-				'desc'     => array( 'id' => true ),
+				'title'    => array('id' => true),
+				'desc'     => array('id' => true),
 				'defs'     => array(),
 				'linearGradient' => array(
 					'id'                => true,
@@ -300,8 +301,8 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 					'gradientTransform' => true,
 				),
 				'stop' => array(
-					'offset'    => true,
-					'stop-color' => true,
+					'offset'      => true,
+					'stop-color'  => true,
 					'stop-opacity' => true,
 				),
 				'use' => array(
@@ -310,6 +311,30 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 					'transform'  => true,
 				),
 			);
+
+			self::$allowed_elements = self::normalize_allow_list($allow_list);
+		}
+
+		/**
+		 * Normalize allow list keys to lowercase for comparisons.
+		 *
+		 * @param array $allow_list Raw allow list.
+		 *
+		 * @return array
+		 */
+		private static function normalize_allow_list(array $allow_list) {
+			$normalized = array();
+
+			foreach ($allow_list as $tag => $attributes) {
+				$tag_key                = strtolower($tag);
+				$normalized[$tag_key] = array();
+
+				foreach ($attributes as $attribute => $allowed) {
+					$normalized[$tag_key][strtolower($attribute)] = $allowed;
+				}
+			}
+
+			return $normalized;
 		}
 
 		/**
@@ -319,12 +344,12 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 		 *
 		 * @return string
 		 */
-		private static function fallback_strip_disallowed( $svg ) {
-			$svg = preg_replace( '#<(script|foreignObject|iframe|audio|video|canvas|embed|object).*?</\1>#is', '', $svg );
-			$svg = preg_replace( '#on[a-z]+\s*=\s*([\'"]).*?\1#i', '', $svg );
-			$svg = preg_replace( '/\s+/', ' ', $svg );
+		private static function fallback_strip_disallowed($svg) {
+			$svg = preg_replace('#<(script|foreignObject|iframe|audio|video|canvas|embed|object).*?</\1>#is', '', $svg);
+			$svg = preg_replace('#on[a-z]+\s*=\s*([\'"]).*?\1#i', '', $svg);
+			$svg = preg_replace('/\s+/', ' ', $svg);
 
-			return trim( (string) $svg );
+			return trim((string) $svg);
 		}
 	}
 endif;

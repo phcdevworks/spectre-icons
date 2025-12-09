@@ -1,16 +1,17 @@
 <?php
+
 /**
  * Settings controller for Spectre Icons Elementor.
  *
  * @package SpectreIcons
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
 	exit;
 }
 
 
-if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
+if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 	/**
 	 * Handles the WordPress settings page and stored preferences.
 	 */
@@ -59,7 +60,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 * @return Spectre_Icons_Elementor_Settings
 		 */
 		public static function instance() {
-			if ( null === self::$instance ) {
+			if (null === self::$instance) {
 				self::$instance = new self();
 			}
 
@@ -70,8 +71,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 * Setup hooks.
 		 */
 		private function __construct() {
-			add_action( 'admin_menu', array( $this, 'register_menu' ) );
-			add_action( 'admin_init', array( $this, 'register_settings' ) );
+			add_action('admin_menu', array($this, 'register_menu'));
+			add_action('admin_init', array($this, 'register_settings'));
 		}
 
 		/**
@@ -79,11 +80,11 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 */
 		public function register_menu() {
 			add_options_page(
-				__( 'Spectre Icons', 'spectre-icons' ),
-				__( 'Spectre Icons', 'spectre-icons' ),
+				__('Spectre Icons', 'spectre-icons'),
+				__('Spectre Icons', 'spectre-icons'),
 				'manage_options',
 				$this->settings_slug,
-				array( $this, 'render_settings_page' )
+				array($this, 'render_settings_page')
 			);
 		}
 
@@ -96,24 +97,24 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 				$this->option_name,
 				array(
 					'type'              => 'array',
-					'sanitize_callback' => array( $this, 'sanitize_tabs' ),
+					'sanitize_callback' => array($this, 'sanitize_tabs'),
 					'default'           => $this->get_default_option_values(),
 				)
 			);
 
 			add_settings_section(
 				'spectre_icon_tabs_section',
-				__( 'Icon Picker Tabs', 'spectre-icons' ),
+				__('Icon Picker Tabs', 'spectre-icons'),
 				function () {
-					echo '<p>' . esc_html__( 'Toggle which tabs stay visible within Elementor’s icon picker.', 'spectre-icons' ) . '</p>';
+					echo '<p>' . esc_html__('Toggle which tabs stay visible within Elementor’s icon picker.', 'spectre-icons') . '</p>';
 				},
 				$this->settings_slug
 			);
 
 			add_settings_field(
 				'spectre_icon_tabs_field',
-				__( 'Available Tabs', 'spectre-icons' ),
-				array( $this, 'render_tabs_field' ),
+				__('Available Tabs', 'spectre-icons'),
+				array($this, 'render_tabs_field'),
 				$this->settings_slug,
 				'spectre_icon_tabs_section'
 			);
@@ -124,7 +125,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 *
 		 * @param array $tabs Spectre library metadata.
 		 */
-		public function set_tabs( array $tabs ) {
+		public function set_tabs(array $tabs) {
 			$this->tabs = $tabs;
 		}
 
@@ -136,8 +137,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		private function get_default_option_values() {
 			$defaults = array();
 
-			foreach ( $this->tabs as $slug => $tab ) {
-				$defaults[ $slug ] = true;
+			foreach ($this->tabs as $slug => $tab) {
+				$defaults[$slug] = true;
 			}
 
 			return $defaults;
@@ -149,20 +150,20 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 * @return array
 		 */
 		public function get_tab_preferences() {
-			$stored = get_option( $this->option_name, null );
+			$stored = get_option($this->option_name, null);
 
-			if ( null === $stored ) {
-				foreach ( $this->legacy_option_names as $legacy_option ) {
-					$legacy_value = get_option( $legacy_option, null );
+			if (null === $stored) {
+				foreach ($this->legacy_option_names as $legacy_option) {
+					$legacy_value = get_option($legacy_option, null);
 
-					if ( null !== $legacy_value ) {
+					if (null !== $legacy_value) {
 						$stored = $legacy_value;
 						break;
 					}
 				}
 			}
 
-			if ( ! is_array( $stored ) ) {
+			if (! is_array($stored)) {
 				$stored = array();
 			}
 
@@ -179,12 +180,12 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 *
 		 * @return array
 		 */
-		public function sanitize_tabs( $value ) {
+		public function sanitize_tabs($value) {
 			$value     = (array) $value;
 			$sanitized = array();
 
-			foreach ( $this->tabs as $slug => $tab ) {
-				$sanitized[ $slug ] = ! empty( $value[ $slug ] );
+			foreach ($this->tabs as $slug => $tab) {
+				$sanitized[$slug] = ! empty($value[$slug]);
 			}
 
 			return $sanitized;
@@ -194,8 +195,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 * Render the checkbox UI for the tabs.
 		 */
 		public function render_tabs_field() {
-			if ( empty( $this->tabs ) ) {
-				echo '<p>' . esc_html__( 'No Spectre icon libraries are available yet.', 'spectre-icons' ) . '</p>';
+			if (empty($this->tabs)) {
+				echo '<p>' . esc_html__('No Spectre icon libraries are available yet.', 'spectre-icons') . '</p>';
 				return;
 			}
 
@@ -203,26 +204,25 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 
 			echo '<div class="spectre-icons-tabs-grid">';
 
-			foreach ( $this->tabs as $slug => $tab ) {
-				$field_id = 'spectre-tab-' . esc_attr( $slug );
-				$checked  = ! empty( $options[ $slug ] );
-				?>
-				<label for="<?php echo esc_attr( $field_id ); ?>" class="spectre-icons-tabs-grid__item">
+			foreach ($this->tabs as $slug => $tab) {
+				$field_id = 'spectre-tab-' . esc_attr($slug);
+				$checked  = ! empty($options[$slug]);
+?>
+				<label for="<?php echo esc_attr($field_id); ?>" class="spectre-icons-tabs-grid__item">
 					<input
 						type="checkbox"
-						name="<?php echo esc_attr( $this->option_name ); ?>[<?php echo esc_attr( $slug ); ?>]"
-						id="<?php echo esc_attr( $field_id ); ?>"
+						name="<?php echo esc_attr($this->option_name); ?>[<?php echo esc_attr($slug); ?>]"
+						id="<?php echo esc_attr($field_id); ?>"
 						value="1"
-						<?php checked( $checked ); ?>
-					/>
-					<span class="spectre-icons-tabs-grid__label"><?php echo esc_html( $tab['label'] ); ?></span>
-					<?php if ( ! empty( $tab['description'] ) ) : ?>
+						<?php checked($checked); ?> />
+					<span class="spectre-icons-tabs-grid__label"><?php echo esc_html($tab['label']); ?></span>
+					<?php if (! empty($tab['description'])) : ?>
 						<span class="spectre-icons-tabs-grid__description">
-							<?php echo esc_html( $tab['description'] ); ?>
+							<?php echo esc_html($tab['description']); ?>
 						</span>
 					<?php endif; ?>
 				</label>
-				<?php
+			<?php
 			}
 
 			echo '</div>';
@@ -259,22 +259,22 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 * Display the actual settings page.
 		 */
 		public function render_settings_page() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if (! current_user_can('manage_options')) {
 				return;
 			}
 			?>
 			<div class="wrap">
-				<h1><?php esc_html_e( 'Spectre Icons — Elementor', 'spectre-icons' ); ?></h1>
-				<?php settings_errors( $this->settings_slug ); ?>
+				<h1><?php esc_html_e('Spectre Icons — Elementor', 'spectre-icons'); ?></h1>
+				<?php settings_errors($this->settings_slug); ?>
 				<form method="post" action="options.php">
 					<?php
-					settings_fields( $this->settings_slug );
-					do_settings_sections( $this->settings_slug );
-					submit_button( __( 'Save Tab Visibility', 'spectre-icons' ) );
+					settings_fields($this->settings_slug);
+					do_settings_sections($this->settings_slug);
+					submit_button(__('Save Tab Visibility', 'spectre-icons'));
 					?>
 				</form>
 			</div>
-			<?php
+<?php
 		}
 
 		/**
