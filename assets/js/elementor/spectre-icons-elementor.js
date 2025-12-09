@@ -69,6 +69,22 @@
 		return document.body ? document.body.contains(scope) : true;
 	};
 
+	const isElementorEditorContext = () => {
+		if (!document || !document.body) {
+			return false;
+		}
+
+		const body = document.body;
+
+		if (body.classList.contains('elementor-editor-active') || body.classList.contains('elementor-editor')) {
+			return true;
+		}
+
+		const search = window.location.search || '';
+
+		return /\belementor-(preview|mode)=/.test(search);
+	};
+
 	const renderIcon = (element, libraryId) => {
 		const settings = libraries[libraryId];
 
@@ -244,12 +260,20 @@
 		}
 	};
 
+	const ensureEditorDocumentRefreshLoop = () => {
+		if (!isElementorEditorContext()) {
+			return;
+		}
+
+		startScopedRefresh(document, 1500);
+	};
+
 	const init = () => {
 		observeRoot(document.body);
 		processElement(document.body);
-		startScopedRefresh(document, 1500);
 		ensurePanelRefreshLoop();
 		refreshLibrariesInScope(document);
+		ensureEditorDocumentRefreshLoop();
 	};
 
 	if (document.readyState === 'loading') {

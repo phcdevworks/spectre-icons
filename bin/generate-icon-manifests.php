@@ -7,6 +7,8 @@
 
 declare(strict_types=1);
 
+require_once dirname( __DIR__ ) . '/includes/class-spectre-icons-svg-sanitizer.php';
+
 $root_path       = dirname( __DIR__ );
 $iconpacks_path  = $root_path . '/assets/iconpacks';
 $manifests_path  = $root_path . '/assets/manifests';
@@ -106,9 +108,12 @@ function generate_icons_from_directory( string $directory ): array {
 			continue;
 		}
 
-		$svg = preg_replace( '/<\?xml.*?\?>/i', '', $svg );
-		$svg = preg_replace( '/\s+/', ' ', $svg );
-		$svg = trim( $svg );
+		$svg = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		if ( '' === $svg ) {
+			printf( "Skipping %s (sanitization removed markup)\n", $file_path );
+			continue;
+		}
 
 		$icons[ $icon_slug ] = $svg;
 	}

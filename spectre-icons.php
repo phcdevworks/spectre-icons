@@ -43,10 +43,10 @@ if ( ! function_exists( 'spectre_icons_load_textdomain' ) ) :
 	add_action( 'init', 'spectre_icons_load_textdomain' );
 endif;
 
+require_once SPECTRE_ICONS_PATH . '/includes/class-spectre-icons-svg-sanitizer.php';
 require_once SPECTRE_ICONS_PATH . '/includes/elementor/class-spectre-icons-elementor-settings.php';
 require_once SPECTRE_ICONS_PATH . '/includes/elementor/class-spectre-icons-elementor-manifest-renderer.php';
 require_once SPECTRE_ICONS_PATH . '/includes/elementor/class-spectre-icons-elementor-library-manager.php';
-require_once SPECTRE_ICONS_PATH . '/includes/elementor/class-spectre-icons-elementor-lucide.php';
 require_once SPECTRE_ICONS_PATH . '/includes/elementor/icon-libraries.php';
 
 if ( ! function_exists( 'spectre_icons_get_asset_version' ) ) :

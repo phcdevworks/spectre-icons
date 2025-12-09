@@ -123,7 +123,14 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 
 			$wrapper_tag = in_array( $tag, array( 'i', 'span' ), true ) ? $tag : 'span';
 
-			return sprintf( '<%1$s%2$s>%3$s</%1$s>', $wrapper_tag, $attr_string, $icons[ $slug ] );
+			$svg = Spectre_Icons_SVG_Sanitizer::sanitize( $icons[ $slug ] );
+
+			if ( '' === $svg ) {
+				self::log_debug( 'RENDER FAILED: Sanitization stripped SVG for slug ' . $slug );
+				return '';
+			}
+
+			return sprintf( '<%1$s%2$s>%3$s</%1$s>', $wrapper_tag, $attr_string, $svg );
 		}
 
 		/**
