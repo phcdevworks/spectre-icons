@@ -74,14 +74,14 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 		}
 
 		/**
-		 * Register hooks into Elementor.
+		 * Optional helper: register hooks into Elementor.
 		 *
-		 * Call this once during plugin bootstrap after Elementor is loaded.
+		 * Call this once during plugin bootstrap after Elementor is loaded,
+		 * OR hook up register_additional_tabs() manually from your bootstrap.
 		 *
 		 * @return void
 		 */
 		public function register_hooks() {
-			// Elementor >= 2.6: additional icon tabs.
 			add_filter(
 				'elementor/icons_manager/additional_tabs',
 				array($this, 'register_additional_tabs')
@@ -94,6 +94,7 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 		 * @return void
 		 */
 		private function load_libraries() {
+			// icon-libraries.php should hook this filter.
 			$libraries = apply_filters('spectre_icons_elementor_icon_libraries', array());
 
 			if (! is_array($libraries)) {
@@ -180,7 +181,7 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 
 			// Basic checks to avoid Elementor-side errors.
 			if ('' === $config['label']) {
-				self::log_debug(sprintf('Library "%s" config missing "label".', $slug));
+				self::log_debug(sprintf('Library "%s" config missing \"label\".', $slug));
 				return null;
 			}
 
