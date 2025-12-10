@@ -1,355 +1,170 @@
 <?php
 
 /**
- * Shared SVG sanitization utilities.
+ * Sanitizes SVG markup safely for Spectre Icons.
+ *
+ * This ensures inline SVG from manifests cannot inject scripts,
+ * events, external loads, or unsafe DOM constructs.
  *
  * @package SpectreIcons
  */
 
+if (! defined('ABSPATH')) {
+	exit;
+}
+
 if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
-	/**
-	 * Removes disallowed SVG tags/attributes to prevent script injection.
-	 */
+
 	final class Spectre_Icons_SVG_Sanitizer {
 
 		/**
-		 * Allowed SVG elements mapped to their allowed attributes.
+		 * Allowed SVG tags.
 		 *
-		 * @var array<string, array<string, bool>>
+		 * @var string[]
 		 */
-		private static $allowed_elements;
+		private static $allowed_tags = array(
+			'svg',
+			'path',
+			'g',
+			'circle',
+			'rect',
+			'line',
+			'polyline',
+			'polygon',
+			'ellipse',
+			'defs',
+			'use',
+			'symbol',
+			'title',
+			'desc',
+			'group'
+		);
 
 		/**
-		 * Sanitize an arbitrary SVG snippet.
+		 * Allowed attributes for SVG elements.
 		 *
-		 * @param string $svg SVG markup.
+		 * @var string[]
+		 */
+		private static $allowed_attributes = array(
+			'class',
+			'fill',
+			'stroke',
+			'stroke-width',
+			'stroke-linecap',
+			'stroke-linejoin',
+			'd',
+			'cx',
+			'cy',
+			'r',
+			'x',
+			'y',
+			'width',
+			'height',
+			'viewBox',
+			'points',
+			'x1',
+			'y1',
+			'x2',
+			'y2',
+			'transform',
+			'xmlns',
+			'xmlns:xlink'
+		);
+
+		/**
+		 * Sanitize an SVG string.
 		 *
-		 * @return string
+		 * @param string $svg Raw SVG markup.
+		 * @return string Safe SVG markup (may be empty).
 		 */
 		public static function sanitize($svg) {
-			if (empty($svg) || ! is_string($svg)) {
+			if (! is_string($svg) || '' === trim($svg)) {
 				return '';
 			}
 
-			$svg = trim($svg);
-
-			if ('' === $svg) {
+			// Strip anything outside the <svg>…</svg> block.
+			if (preg_match('/<svg[\s\S]*?<\/svg>/i', $svg, $match)) {
+				$svg = $match[0];
+			} else {
 				return '';
 			}
 
-			if (! extension_loaded('dom')) {
-				return self::fallback_strip_disallowed($svg);
-			}
+			// Remove script tags, foreignObject, and other malicious containers.
+			$svg = preg_replace('/<\/?(script|foreignObject|iframe|object|embed)[^>]*>/i', '', $svg);
 
-			$dom              = new DOMDocument();
-			$internal_errors  = libxml_use_internal_errors(true);
-			$previous_loader  = null;
-			$loader_supported = function_exists('libxml_disable_entity_loader');
+			// Remove event handlers (anything starting with "on…").
+			$svg = preg_replace('/\son[a-z]+\s*=\s*"[^"]*"/i', '', $svg);
+			$svg = preg_replace("/\son[a-z]+\s*=\s*'[^']*'/i", '', $svg);
 
-			if ($loader_supported) {
-				$previous_loader = libxml_disable_entity_loader(true); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.libxml_disable_entity_loader_Deprecated
-			}
+			// Load via DOM to strip unwanted tags + attributes.
+			$dom = new DOMDocument();
 
-			$loaded = $dom->loadXML(
-				$svg,
-				LIBXML_NONET | LIBXML_COMPACT | LIBXML_NOERROR | LIBXML_NOWARNING
-			);
+			// Prevent entity expansion attacks.
+			$dom->resolveExternals   = false;
+			$dom->substituteEntities = false;
 
+			// Suppress warnings for malformed SVG.
+			libxml_use_internal_errors(true);
+			$dom->loadXML($svg, LIBXML_NONET | LIBXML_NOENT | LIBXML_NOWARNING | LIBXML_NOERROR);
 			libxml_clear_errors();
-			libxml_use_internal_errors($internal_errors);
 
-			if ($loader_supported) {
-				libxml_disable_entity_loader($previous_loader); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.libxml_disable_entity_loader_Deprecated
-			}
+			self::sanitize_node_deep($dom->documentElement);
 
-			if (! $loaded || ! $dom->documentElement) {
-				return '';
-			}
+			// Output clean XML.
+			$clean = $dom->saveXML($dom->documentElement);
 
-			self::sanitize_dom_node($dom->documentElement);
-
-			$output = $dom->saveXML($dom->documentElement);
-
-			if (false === $output) {
-				return '';
-			}
-
-			// Minify whitespace similarly to the prior manifest generator.
-			$output = preg_replace('/\s+/', ' ', $output);
-
-			return trim((string) $output);
+			return is_string($clean) ? $clean : '';
 		}
 
 		/**
-		 * Sanitize an individual DOM node recursively.
+		 * Recursively sanitize a DOM node.
 		 *
-		 * @param DOMNode $node Current DOM node.
+		 * @param DOMNode $node Node to sanitize.
+		 * @return void
 		 */
-		private static function sanitize_dom_node(DOMNode $node) {
-			if (XML_ELEMENT_NODE === $node->nodeType) {
-				$tag = strtolower($node->nodeName);
+		private static function sanitize_node_deep(DOMNode $node) {
 
-				if (! self::is_element_allowed($tag)) {
-					self::remove_node($node);
+			if ($node->nodeType === XML_ELEMENT_NODE) {
+
+				$tag = $node->nodeName;
+
+				// Remove tag entirely if not permitted.
+				if (! in_array($tag, self::$allowed_tags, true)) {
+					$node->parentNode->removeChild($node);
 					return;
 				}
 
+				// Remove disallowed attributes.
 				if ($node->hasAttributes()) {
-					for ($i = $node->attributes->length - 1; $i >= 0; $i--) {
-						$attribute = $node->attributes->item($i);
+					$remove = array();
 
-						if (! $attribute) {
-							continue;
-						}
+					foreach (iterator_to_array($node->attributes) as $attr) {
+						$name = $attr->nodeName;
 
-						$name = strtolower($attribute->nodeName);
-
-						if (! self::is_attribute_allowed($tag, $name) || self::value_has_disallowed_protocol($attribute->value)) {
-							$node->removeAttributeNode($attribute);
+						// Drop event handlers, scripting, xlink:href, URLs, etc.
+						if (
+							0 === stripos($name, 'on') ||
+							'href' === $name ||
+							strpos($attr->nodeValue, 'javascript:') !== false ||
+							! in_array($name, self::$allowed_attributes, true)
+						) {
+							$remove[] = $name;
 						}
 					}
-				}
-			} elseif (XML_COMMENT_NODE === $node->nodeType) {
-				self::remove_node($node);
-				return;
-			}
 
-			for ($child = $node->firstChild; null !== $child;) {
-				$next = $child->nextSibling;
-				self::sanitize_dom_node($child);
-				$child = $next;
-			}
-		}
-
-		/**
-		 * Determine if the tag is allowed.
-		 *
-		 * @param string $tag Tag name.
-		 *
-		 * @return bool
-		 */
-		private static function is_element_allowed($tag) {
-			self::prime_allow_list();
-
-			return isset(self::$allowed_elements[$tag]);
-		}
-
-		/**
-		 * Determine if the attribute is allowed for a tag.
-		 *
-		 * @param string $tag       Tag name.
-		 * @param string $attribute Attribute name.
-		 *
-		 * @return bool
-		 */
-		private static function is_attribute_allowed($tag, $attribute) {
-			self::prime_allow_list();
-
-			if (isset(self::$allowed_elements[$tag][$attribute])) {
-				return true;
-			}
-
-			return isset(self::$allowed_elements['*'][$attribute]);
-		}
-
-		/**
-		 * Remove a node from the DOM safely.
-		 *
-		 * @param DOMNode $node DOM node to remove.
-		 */
-		private static function remove_node(DOMNode $node) {
-			if (null === $node->parentNode) {
-				return;
-			}
-
-			$node->parentNode->removeChild($node);
-		}
-
-		/**
-		 * Simple protocol guard for attribute values.
-		 *
-		 * @param string $value Attribute value.
-		 *
-		 * @return bool
-		 */
-		private static function value_has_disallowed_protocol($value) {
-			if (! is_string($value)) {
-				return true;
-			}
-
-			$value = trim($value);
-
-			if ('' === $value) {
-				return false;
-			}
-
-			$lower_value = strtolower($value);
-
-			foreach (array('javascript:', 'data:', 'vbscript:') as $protocol) {
-				if (0 === strpos($lower_value, $protocol)) {
-					return true;
+					foreach ($remove as $attr_name) {
+						$node->removeAttribute($attr_name);
+					}
 				}
 			}
 
-			return false;
-		}
-
-		/**
-		 * Build the allow list for SVG markup.
-		 */
-		private static function prime_allow_list() {
-			if (null !== self::$allowed_elements) {
-				return;
-			}
-
-			$common_attributes = array(
-				'class'             => true,
-				'clip-path'         => true,
-				'clip-rule'         => true,
-				'color'             => true,
-				'cx'                => true,
-				'cy'                => true,
-				'd'                 => true,
-				'fill'              => true,
-				'fill-opacity'      => true,
-				'fill-rule'         => true,
-				'filter'            => true,
-				'focusable'         => true,
-				'height'            => true,
-				'id'                => true,
-				'opacity'           => true,
-				'r'                 => true,
-				'radius'            => true,
-				'role'              => true,
-				'rx'                => true,
-				'ry'                => true,
-				'stroke'            => true,
-				'stroke-dasharray'  => true,
-				'stroke-dashoffset' => true,
-				'stroke-linecap'    => true,
-				'stroke-linejoin'   => true,
-				'stroke-miterlimit' => true,
-				'stroke-opacity'    => true,
-				'stroke-width'      => true,
-				'transform'         => true,
-				'viewBox'           => true,
-				'width'             => true,
-				'x'                 => true,
-				'x1'                => true,
-				'x2'                => true,
-				'y'                 => true,
-				'y1'                => true,
-				'y2'                => true,
-			);
-
-			$shape_attributes = array_merge(
-				$common_attributes,
-				array(
-					'points' => true,
-				)
-			);
-
-			$allow_list = array(
-				'*'    => array(
-					'aria-hidden' => true,
-					'data-name'   => true,
-					'focusable'   => true,
-					'xml:space'   => true,
-				),
-				'svg'  => array_merge(
-					$common_attributes,
-					array(
-						'xmlns'               => true,
-						'xmlns:xlink'         => true,
-						'version'             => true,
-						'preserveAspectRatio' => true,
-					)
-				),
-				'g'    => $shape_attributes,
-				'path' => array_merge(
-					$common_attributes,
-					array(
-						'pathLength' => true,
-					)
-				),
-				'polyline' => $shape_attributes,
-				'polygon'  => $shape_attributes,
-				'circle'   => $shape_attributes,
-				'ellipse'  => $shape_attributes,
-				'rect'     => $shape_attributes,
-				'line'     => $shape_attributes,
-				'title'    => array('id' => true),
-				'desc'     => array('id' => true),
-				'defs'     => array(),
-				'linearGradient' => array(
-					'id'                => true,
-					'x1'                => true,
-					'x2'                => true,
-					'y1'                => true,
-					'y2'                => true,
-					'gradientUnits'     => true,
-					'gradientTransform' => true,
-				),
-				'radialGradient' => array(
-					'id'                => true,
-					'cx'                => true,
-					'cy'                => true,
-					'r'                 => true,
-					'fx'                => true,
-					'fy'                => true,
-					'gradientUnits'     => true,
-					'gradientTransform' => true,
-				),
-				'stop' => array(
-					'offset'      => true,
-					'stop-color'  => true,
-					'stop-opacity' => true,
-				),
-				'use' => array(
-					'xlink:href' => true,
-					'href'       => true,
-					'transform'  => true,
-				),
-			);
-
-			self::$allowed_elements = self::normalize_allow_list($allow_list);
-		}
-
-		/**
-		 * Normalize allow list keys to lowercase for comparisons.
-		 *
-		 * @param array $allow_list Raw allow list.
-		 *
-		 * @return array
-		 */
-		private static function normalize_allow_list(array $allow_list) {
-			$normalized = array();
-
-			foreach ($allow_list as $tag => $attributes) {
-				$tag_key                = strtolower($tag);
-				$normalized[$tag_key] = array();
-
-				foreach ($attributes as $attribute => $allowed) {
-					$normalized[$tag_key][strtolower($attribute)] = $allowed;
+			// Sanitize children recursively.
+			if ($node->hasChildNodes()) {
+				foreach (iterator_to_array($node->childNodes) as $child) {
+					self::sanitize_node_deep($child);
 				}
 			}
-
-			return $normalized;
-		}
-
-		/**
-		 * Fallback string sanitization if DOM isn't available.
-		 *
-		 * @param string $svg SVG markup.
-		 *
-		 * @return string
-		 */
-		private static function fallback_strip_disallowed($svg) {
-			$svg = preg_replace('#<(script|foreignObject|iframe|audio|video|canvas|embed|object).*?</\1>#is', '', $svg);
-			$svg = preg_replace('#on[a-z]+\s*=\s*([\'"]).*?\1#i', '', $svg);
-			$svg = preg_replace('/\s+/', ' ', $svg);
-
-			return trim((string) $svg);
 		}
 	}
+
 endif;
