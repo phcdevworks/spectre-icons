@@ -1,52 +1,4 @@
-name: Manual: Build WordPress ZIP
-
-on:
-  workflow_dispatch: {}
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    env:
-      PLUGIN_SLUG: spectre-icons
-      MAIN_FILE: spectre-icons.php
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      # If you have a build step (optional), uncomment:
-      # - name: Setup Node
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: 20
-      #     cache: npm
-      # - name: Install
-      #   run: npm ci
-      # - name: Build
-      #   run: npm run build
-
-      - name: Assemble WP plugin folder (runtime only)
-        run: |
-          set -euo pipefail
-          ROOT="$GITHUB_WORKSPACE"
-          OUT="$ROOT/dist/wp"
-          DEST="$OUT/${PLUGIN_SLUG}"
-
-          rm -rf "$OUT"
-          mkdir -p "$DEST"
-
-          # Required files
-          if [ ! -f "$ROOT/${MAIN_FILE}" ]; then
-            echo "ERROR: Missing main plugin file: $ROOT/${MAIN_FILE}"
-            exit 1
-          fi
-          if [ ! -f "$ROOT/readme.txt" ]; then
-            echo "ERROR: Missing readme.txt (WP.org format required)"
-            exit 1
-          fi
-
-          cp "$ROOT/${MAIN_FILE}" "$DEST/"
-          cp "$ROOT/readme.txt" "$DEST/"name: Manual: Build spectre-icons.zip (commit to repo)
+name: Build spectre-icons.zip (commit to repo)
 
 on:
   workflow_dispatch: {}
@@ -61,6 +13,7 @@ jobs:
       PLUGIN_SLUG: spectre-icons
       MAIN_FILE: spectre-icons.php
       ZIP_PATH: dist/spectre-icons.zip
+      WP_ORG_README: .wordpress-org/README.md
 
     steps:
       - name: Checkout
@@ -68,62 +21,54 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Optional build step (uncomment if your plugin needs it)
-      # - name: Setup Node
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: 20
-      #     cache: npm
-      # - name: Install
-      #   run: npm ci
-      # - name: Build
-      #   run: npm run build
-
-      - name: Build WP folder + ZIP
+      - name: Build clean WP.org ZIP
         run: |
           set -euo pipefail
 
           ROOT="$GITHUB_WORKSPACE"
           OUT="$ROOT/dist/wp"
           DEST="$OUT/${PLUGIN_SLUG}"
+          TMP_README="$(mktemp)"
 
           rm -rf "$OUT"
           mkdir -p "$DEST"
           mkdir -p "$ROOT/dist"
 
-          # REQUIRED
           if [ ! -f "$ROOT/${MAIN_FILE}" ]; then
             echo "ERROR: Missing main plugin file: $ROOT/${MAIN_FILE}"
             exit 1
           fi
-          if [ ! -f "$ROOT/readme.txt" ]; then
-            echo "ERROR: Missing readme.txt (WP.org format required)"
+
+          if [ -f "$ROOT/readme.txt" ]; then
+            cp "$ROOT/readme.txt" "$TMP_README"
+          elif [ -f "$ROOT/${WP_ORG_README}" ]; then
+            cp "$ROOT/${WP_ORG_README}" "$TMP_README"
+          else
+            echo "ERROR: Missing readme.txt or .wordpress-org/README.md"
             exit 1
           fi
 
+          # Copy only WordPress.org plugin runtime files
           cp "$ROOT/${MAIN_FILE}" "$DEST/"
-          cp "$ROOT/readme.txt" "$DEST/"
+          cp "$TMP_README" "$DEST/readme.txt"
 
-          # Copy runtime folders if present
           for d in includes assets build languages vendor; do
             if [ -d "$ROOT/$d" ]; then
               cp -R "$ROOT/$d" "$DEST/"
             fi
           done
 
-          # Copy license files if present
           for f in LICENSE license.txt LICENSE.md; do
             if [ -f "$ROOT/$f" ]; then
               cp "$ROOT/$f" "$DEST/"
             fi
           done
 
-          # Strip dev junk if it got copied
+          # Remove any dev-only leftovers that slipped in
           rm -rf "$DEST/.git" "$DEST/.github" "$DEST/.vscode" "$DEST/node_modules" \
                  "$DEST/src" "$DEST/tests" "$DEST/test" "$DEST/__tests__" \
                  "$DEST/.turbo" "$DEST/.cache" || true
 
-          # Remove tooling/config files if present
           find "$DEST" -maxdepth 2 -type f \( \
             -name "package.json" -o -name "package-lock.json" -o -name "pnpm-lock.yaml" -o -name "yarn.lock" -o \
             -name "tsconfig.json" -o -name "tsup.config.*" -o -name "vite.config.*" -o -name "webpack.config.*" -o \
@@ -133,7 +78,6 @@ jobs:
           test -f "$DEST/${MAIN_FILE}"
           test -f "$DEST/readme.txt"
 
-          # Create ZIP with top-level folder "spectre-icons/"
           rm -f "$ROOT/${ZIP_PATH}"
           ( cd "$OUT" && zip -r "$ROOT/${ZIP_PATH}" "${PLUGIN_SLUG}" -x "*.DS_Store" )
 
@@ -148,7 +92,6 @@ jobs:
 
           git add "${ZIP_PATH}"
 
-          # If nothing changed, don't create noise commits
           if git diff --cached --quiet; then
             echo "No changes to ${ZIP_PATH}; nothing to commit."
             exit 0
@@ -156,28 +99,3 @@ jobs:
 
           git commit -m "chore: update dist/spectre-icons.zip"
           git push
-
-
-          # Copy runtime directories if present
-          for d in includes assets build languages vendor; do
-            if [ -d "$ROOT/$d" ]; then
-              cp -R "$ROOT/$d" "$DEST/"
-            fi
-          done
-
-          # Copy licenses if present
-          for f in LICENSE license.txt LICENSE.md; do
-            if [ -f "$ROOT/$f" ]; then
-              cp "$ROOT/$f" "$DEST/"
-            fi
-          done
-
-          # Strip dev junk
-          rm -rf "$DEST/.git" "$DEST/.github" "$DEST/.vscode" "$DEST/node_modules" \
-                 "$DEST/src" "$DEST/tests" "$DEST/test" "$DEST/__tests__" \
-                 "$DEST/.turbo" "$DEST/.cache" || true
-
-          # Remove common tooling/config files if present
-          find "$DEST" -maxdepth 2 -type f \( \
-            -name "package.json" -o -name "package-lock.json" -o -name "pnpm-lock.yaml" -o -name "yarn.lock" -o \
-            -name "tsconfig.json" -
