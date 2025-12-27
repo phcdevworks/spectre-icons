@@ -55,10 +55,10 @@ add_action('plugins_loaded', 'spectre_icons_elementor_bootstrap', 20);
  */
 function spectre_icons_elementor_enqueue_styles() {
 
-	$css_path = SPECTRE_ICONS_URL . 'assets/css/editor.css';
+	$css_path = SPECTRE_ICONS_URL . 'assets/css/admin/spectre-icons-admin.css';
 
 	wp_enqueue_style(
-		'spectre-icons-editor',
+		'spectre-icons-elementor',
 		$css_path,
 		array(),
 		defined('SPECTRE_ICONS_VERSION') ? SPECTRE_ICONS_VERSION : '1.0.0'
@@ -72,22 +72,57 @@ function spectre_icons_elementor_enqueue_styles() {
  */
 function spectre_icons_elementor_enqueue_icon_scripts() {
 
-	$js_path = SPECTRE_ICONS_URL . 'assets/js/editor-icons.js';
+	// Avoid wp-auth-check throwing errors inside Elementor editor.
+	if (wp_script_is('wp-auth-check', 'enqueued')) {
+		wp_dequeue_script('wp-auth-check');
+		wp_deregister_script('wp-auth-check');
+	}
+
+	$js_path = SPECTRE_ICONS_URL . 'assets/js/elementor/spectre-icons-elementor.js';
 
 	wp_enqueue_script(
-		'spectre-icons-editor-js',
+		'spectre-icons-elementor-js',
 		$js_path,
 		array('jquery'),
 		defined('SPECTRE_ICONS_VERSION') ? SPECTRE_ICONS_VERSION : '1.0.0',
 		true
 	);
 
+	$definitions = spectre_icons_elementor_get_icon_library_definitions();
+	$libraries   = array();
+
+	foreach ($definitions as $slug => $def) {
+		$slug = sanitize_key($slug);
+		if ('' === $slug) {
+			continue;
+		}
+
+		if (empty($def['manifest_path']) || ! file_exists($def['manifest_path'])) {
+			continue;
+		}
+
+		$manifest_url = SPECTRE_ICONS_URL . 'assets/manifests/' . basename($def['manifest_path']);
+		$prefix       = isset($def['class_prefix']) ? (string) $def['class_prefix'] : '';
+
+		$style = 'filled';
+		if (false !== strpos($slug, 'lucide')) {
+			$style = 'outline';
+		}
+
+		$libraries[$slug] = array(
+			'json'     => $manifest_url,
+			'prefix'   => $prefix,
+			'selector' => $prefix ? '[class*="' . $prefix . '"]' : '',
+			'style'    => $style,
+		);
+	}
+
 	// Provide icon preview config to JS.
 	wp_localize_script(
-		'spectre-icons-editor-js',
-		'SpectreIconsConfig',
+		'spectre-icons-elementor-js',
+		'SpectreIconsElementorConfig',
 		array(
-			'libraries' => spectre_icons_elementor_get_icon_preview_config(),
+			'libraries' => $libraries,
 		)
 	);
 }
@@ -124,7 +159,11 @@ function spectre_icons_elementor_missing_manifest_notice() {
 
 	// Only show notice on Elementor or plugin settings screens.
 	$screen = get_current_screen();
-	if ($screen && ! str_contains($screen->id, 'elementor') && ! str_contains($screen->id, 'spectre')) {
+	if (
+		$screen &&
+		false === strpos($screen->id, 'elementor') &&
+		false === strpos($screen->id, 'spectre')
+	) {
 		return;
 	}
 

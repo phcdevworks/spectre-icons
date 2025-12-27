@@ -168,6 +168,7 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 			$config = wp_parse_args(
 				$library['config'],
 				array(
+					'name'            => $slug,
 					'label'           => $library['label'],
 					'labelIcon'       => '',
 					'manifest'        => '',
@@ -196,6 +197,7 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 			}
 
 			// Sanitize some string fields.
+			$config['name']      = is_string($config['name']) && '' !== $config['name'] ? sanitize_key($config['name']) : $slug;
 			$config['label']     = wp_strip_all_tags($config['label']);
 			$config['labelIcon'] = is_string($config['labelIcon']) ? sanitize_html_class($config['labelIcon']) : '';
 			$config['prefix']    = is_string($config['prefix']) ? sanitize_html_class($config['prefix']) : '';

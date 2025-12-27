@@ -237,22 +237,15 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 			}
 
 			/**
-			 * Here we assume the manifest structure is:
-			 *
-			 * [
-			 *   'arrow-right' => [ ...icon data... ],
-			 *   'check'       => [ ...icon data... ],
-			 * ]
-			 *
-			 * or a numerically-indexed array with a 'slug' key:
-			 *
-			 * [
-			 *   [ 'slug' => 'arrow-right', ... ],
-			 *   [ 'slug' => 'check', ... ],
-			 * ]
-			 *
-			 * If your schema differs, adjust this normalization logic.
+			 * Supported manifest structures:
+			 * - Top-level map: [ 'arrow-right' => [ ... ], ... ]
+			 * - Top-level wrapper: [ 'icons' => [ 'arrow-right' => '<svg...>', ... ] ]
+			 * - Indexed list: [ [ 'slug' => 'arrow-right', ... ], ... ]
 			 */
+			if (isset($data['icons']) && is_array($data['icons'])) {
+				$data = $data['icons'];
+			}
+
 			$icons = array();
 
 			// Associative array keyed by slug.
@@ -261,10 +254,16 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 			if ($is_assoc) {
 				foreach ($data as $slug => $icon_entry) {
 					$slug = sanitize_key($slug);
-					if ('' === $slug || ! is_array($icon_entry)) {
+					if ('' === $slug) {
 						continue;
 					}
-					$icons[$slug] = $icon_entry;
+					if (is_string($icon_entry)) {
+						$icons[$slug] = array('svg' => $icon_entry);
+						continue;
+					}
+					if (is_array($icon_entry)) {
+						$icons[$slug] = $icon_entry;
+					}
 				}
 			} else {
 				foreach ($data as $icon_entry) {
@@ -273,6 +272,10 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 					}
 					$slug = sanitize_key($icon_entry['slug']);
 					if ('' === $slug) {
+						continue;
+					}
+					if (isset($icon_entry['svg']) && is_string($icon_entry['svg'])) {
+						$icons[$slug] = $icon_entry;
 						continue;
 					}
 					$icons[$slug] = $icon_entry;

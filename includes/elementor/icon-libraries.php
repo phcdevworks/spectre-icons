@@ -24,35 +24,25 @@ if (file_exists($stub_path)) {
 function spectre_icons_elementor_get_icon_library_definitions() {
 
 	$base_path = SPECTRE_ICONS_PATH . 'assets/manifests/';
-	$resolve   = function (array $candidates) use ($base_path) {
-		foreach ($candidates as $candidate) {
-			$path = $base_path . $candidate;
-			if (file_exists($path)) {
-				return $path;
-			}
-		}
-		return '';
-	};
-
 	return array(
 		'spectre-lucide' => array(
 			'label'         => 'Lucide Icons',
 			'label_icon'    => 'eicon-check',
-			'manifest_path' => $resolve(array('lucide.json', 'spectre-lucide.json')),
+			'manifest_path' => $base_path . 'spectre-lucide.json',
 			'class_prefix'  => 'spectre-lucide-',
 		),
 
 		'spectre-fontawesome' => array(
 			'label'         => 'Font Awesome',
 			'label_icon'    => 'eicon-star',
-			'manifest_path' => $resolve(array('fontawesome.json', 'spectre-fontawesome.json')),
+			'manifest_path' => $base_path . 'spectre-fontawesome.json',
 			'class_prefix'  => 'spectre-fa-',
 		),
 
 		'spectre-social' => array(
 			'label'         => 'Social Icons',
 			'label_icon'    => 'eicon-editor-link',
-			'manifest_path' => $resolve(array('social.json', 'spectre-social.json')),
+			'manifest_path' => $base_path . 'spectre-social.json',
 			'class_prefix'  => 'spectre-social-',
 		),
 	);
@@ -84,6 +74,7 @@ function spectre_icons_elementor_get_icon_preview_config() {
 		}
 
 		$config[$slug] = array(
+			'name'            => $slug,
 			'label'           => $def['label'],
 			'labelIcon'       => isset($def['label_icon']) ? $def['label_icon'] : '',
 			'manifest'        => $def['manifest_path'],
@@ -137,6 +128,7 @@ function spectre_icons_elementor_register_manifest_libraries($libraries) {
 		$libraries[$slug] = array(
 			'label'  => $def['label'],
 			'config' => array(
+				'name'            => $slug,
 				'label'           => $def['label'],
 				'labelIcon'       => isset($def['label_icon']) ? $def['label_icon'] : '',
 				'manifest'        => $manifest_path,
