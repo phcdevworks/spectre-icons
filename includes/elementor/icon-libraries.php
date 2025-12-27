@@ -24,26 +24,35 @@ if (file_exists($stub_path)) {
 function spectre_icons_elementor_get_icon_library_definitions() {
 
 	$base_path = SPECTRE_ICONS_PATH . 'assets/manifests/';
+	$resolve   = function (array $candidates) use ($base_path) {
+		foreach ($candidates as $candidate) {
+			$path = $base_path . $candidate;
+			if (file_exists($path)) {
+				return $path;
+			}
+		}
+		return '';
+	};
 
 	return array(
 		'spectre-lucide' => array(
 			'label'         => 'Lucide Icons',
 			'label_icon'    => 'eicon-check',
-			'manifest_path' => $base_path . 'lucide.json',
+			'manifest_path' => $resolve(array('lucide.json', 'spectre-lucide.json')),
 			'class_prefix'  => 'spectre-lucide-',
 		),
 
 		'spectre-fontawesome' => array(
 			'label'         => 'Font Awesome',
 			'label_icon'    => 'eicon-star',
-			'manifest_path' => $base_path . 'fontawesome.json',
+			'manifest_path' => $resolve(array('fontawesome.json', 'spectre-fontawesome.json')),
 			'class_prefix'  => 'spectre-fa-',
 		),
 
 		'spectre-social' => array(
 			'label'         => 'Social Icons',
 			'label_icon'    => 'eicon-editor-link',
-			'manifest_path' => $base_path . 'social.json',
+			'manifest_path' => $resolve(array('social.json', 'spectre-social.json')),
 			'class_prefix'  => 'spectre-social-',
 		),
 	);

@@ -4,7 +4,7 @@
  * Plugin Name: Spectre Icons
  * Description: Modern SVG icon library integration for Elementor.
  * Version: 1.0.0
- * Author: PHC Devworks
+ * Author: PHCDevworks
  */
 
 if (! defined('ABSPATH')) {
