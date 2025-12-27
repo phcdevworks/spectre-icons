@@ -1,4 +1,4 @@
-name: Build spectre-icons.zip (commit to repo)
+name: Build spectre-icons.zip
 
 on:
   workflow_dispatch: {}
@@ -19,7 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Build clean WP.org ZIP
         shell: bash
@@ -45,46 +45,32 @@ jobs:
             exit 1
           fi
 
-          # --- Copy runtime plugin files using rsync ---
-          rsync -a --delete \
-            --exclude '.git/' \
-            --exclude '.github/' \
-            --exclude '.vscode/' \
-            --exclude 'node_modules/' \
-            --exclude 'src/' \
-            --exclude 'tests/' \
-            --exclude 'test/' \
-            --exclude '__tests__/' \
-            --exclude '.turbo/' \
-            --exclude '.cache/' \
-            --exclude '.env*' \
-            --exclude '*.map' \
-            --exclude '*.log' \
-            --exclude 'coverage/' \
-            --exclude 'tmp/' \
-            --exclude '.DS_Store' \
-            "$ROOT/" "$DEST/"
+          # --- Copy only runtime plugin files ---
+          cp "$ROOT/${MAIN_FILE}" "$DEST/"
+          cp "$ROOT/${WP_ORG_README}" "$DEST/readme.txt"
 
-          # Remove dev-only configs if they slipped in
-          find "$DEST" -maxdepth 2 -type f \( \
-            -name "package.json" -o -name "package-lock.json" -o -name "pnpm-lock.yaml" -o -name "yarn.lock" -o \
-            -name "tsconfig.json" -o -name "tsup.config.*" -o -name "vite.config.*" -o -name "webpack.config.*" -o \
-            -name ".eslintrc*" -o -name ".prettierrc*" -o -name "eslint.config.*" -o -name "prettier.config.*" \
-          \) -print -delete || true
+          for d in includes assets build languages vendor; do
+            if [ -d "$ROOT/$d" ]; then
+              cp -R "$ROOT/$d" "$DEST/"
+            fi
+          done
 
-          # Place README.md at plugin root (as-is)
-          cp "$ROOT/${WP_ORG_README}" "$DEST/README.md"
+          for f in LICENSE license.txt LICENSE.md; do
+            if [ -f "$ROOT/$f" ]; then
+              cp "$ROOT/$f" "$DEST/"
+            fi
+          done
 
           # Sanity checks
           test -f "$DEST/${MAIN_FILE}"
-          test -f "$DEST/README.md"
+          test -f "$DEST/readme.txt"
 
           # Build zip (must contain plugin folder)
           rm -f "$ROOT/${ZIP_PATH}"
           ( cd "$OUT" && zip -r "$ROOT/${ZIP_PATH}" "${PLUGIN_SLUG}" -x "*.DS_Store" )
 
           echo "Built $ROOT/${ZIP_PATH}"
-          unzip -l "$ROOT/${ZIP_PATH}" | sed -n '1,80p'
+          unzip -l "$ROOT/${ZIP_PATH}" | sed -n '1,40p'
 
       - name: Commit ZIP back to repo (overwrite)
         shell: bash
