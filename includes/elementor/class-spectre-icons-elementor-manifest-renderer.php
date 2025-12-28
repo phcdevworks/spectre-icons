@@ -165,6 +165,7 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 			$icon_data   = $icons[$icon_slug];
 			$attributes  = is_array($attributes) ? $attributes : array();
 			$tag         = self::sanitize_tag_name($tag);
+			$attributes  = self::maybe_add_style_class($attributes, $library_slug);
 			$attributes  = self::prepare_attributes($attributes, $icon_slug, $library);
 			$attr_string = self::attributes_to_string($attributes);
 
@@ -183,6 +184,38 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 				$attr_string,
 				$svg
 			);
+		}
+
+		/**
+		 * Add a style class based on library slug so CSS can target outline vs filled icons.
+		 *
+		 * @param array  $attributes Wrapper attributes.
+		 * @param string $library_slug Library slug.
+		 * @return array
+		 */
+		private static function maybe_add_style_class(array $attributes, $library_slug) {
+			$style_class = '';
+			if (false !== strpos($library_slug, 'lucide')) {
+				$style_class = 'spectre-icon--style-outline';
+			} elseif (false !== strpos($library_slug, 'fontawesome')) {
+				$style_class = 'spectre-icon--style-filled';
+			}
+
+			if ('' === $style_class) {
+				return $attributes;
+			}
+
+			if (isset($attributes['class'])) {
+				if (is_array($attributes['class'])) {
+					$attributes['class'][] = $style_class;
+					return $attributes;
+				}
+				$attributes['class'] = trim((string) $attributes['class'] . ' ' . $style_class);
+				return $attributes;
+			}
+
+			$attributes['class'] = $style_class;
+			return $attributes;
 		}
 
 		/**
