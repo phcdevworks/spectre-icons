@@ -4,6 +4,38 @@ All notable changes to this project will be documented here. The format follows 
 
 ## [Unreleased]
 
+## [1.0.0] - 2025-12-28
+
+### Added
+
+- Add GitHub Actions workflow for building WP ZIP ([6a2dcf1]).
+- Add manifest file fallback logic for icon libraries ([30edd13]).
+- Add style class to icons based on library slug ([f092992]).
+
+### Changed
+
+- Refactor build workflow and migrate readme to Markdown ([b6becf3]).
+- Refactor WP.org ZIP build to use rsync and improve cleanup ([6fdcb6a]).
+- Simplify WP zip build workflow and file copying ([ad3c5e9]).
+- Refactor Elementor integration and manifest handling ([9b0a18a]).
+- Refactor plugin structure and update metadata ([6d37aca]).
+- Refactor SVG sanitizer for stricter, simpler sanitization ([938c02b]).
+- Refactor Elementor integration hooks for Spectre Icons ([422479a]).
+- Refactor icon library registration for Elementor ([28ae2db]).
+- Refactor Elementor settings class for icon libraries ([f11f03d]).
+- Refactor Elementor icon manifest renderer ([a94e186]).
+- Refactor Spectre icon library manager for clarity and validation ([e99a137]).
+- Chore updates to release ZIP ([73b06ae], [70321e0], [372eff9], [b425bf1], [f41ae0e], [8ee974d]).
+
+### Fixed
+
+- Fix icon prefix handling and improve style overrides ([0565550]).
+- Fix zip build to avoid nested plugin folder ([2ac6f00]).
+
+### Documentation
+
+- Revise and expand README for Spectre Icons plugin ([c8ae77a]).
+
 ## [0.0.1] - 2025-12-10
 
 ### Added
@@ -67,8 +99,32 @@ All notable changes to this project will be documented here. The format follows 
 
 - Enable Intelephense diagnostics and add stubs path ([cb12589]).
 
-[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/v0.0.1...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/phcdevworks/spectre-icons/tree/v1.0.0
 [0.0.1]: https://github.com/phcdevworks/spectre-icons/tree/v0.0.1
+[f092992]: https://github.com/phcdevworks/spectre-icons/commit/f092992
+[0565550]: https://github.com/phcdevworks/spectre-icons/commit/0565550
+[73b06ae]: https://github.com/phcdevworks/spectre-icons/commit/73b06ae
+[70321e0]: https://github.com/phcdevworks/spectre-icons/commit/70321e0
+[9b0a18a]: https://github.com/phcdevworks/spectre-icons/commit/9b0a18a
+[372eff9]: https://github.com/phcdevworks/spectre-icons/commit/372eff9
+[30edd13]: https://github.com/phcdevworks/spectre-icons/commit/30edd13
+[b425bf1]: https://github.com/phcdevworks/spectre-icons/commit/b425bf1
+[2ac6f00]: https://github.com/phcdevworks/spectre-icons/commit/2ac6f00
+[f41ae0e]: https://github.com/phcdevworks/spectre-icons/commit/f41ae0e
+[ad3c5e9]: https://github.com/phcdevworks/spectre-icons/commit/ad3c5e9
+[6fdcb6a]: https://github.com/phcdevworks/spectre-icons/commit/6fdcb6a
+[8ee974d]: https://github.com/phcdevworks/spectre-icons/commit/8ee974d
+[b6becf3]: https://github.com/phcdevworks/spectre-icons/commit/b6becf3
+[6a2dcf1]: https://github.com/phcdevworks/spectre-icons/commit/6a2dcf1
+[6d37aca]: https://github.com/phcdevworks/spectre-icons/commit/6d37aca
+[938c02b]: https://github.com/phcdevworks/spectre-icons/commit/938c02b
+[422479a]: https://github.com/phcdevworks/spectre-icons/commit/422479a
+[28ae2db]: https://github.com/phcdevworks/spectre-icons/commit/28ae2db
+[f11f03d]: https://github.com/phcdevworks/spectre-icons/commit/f11f03d
+[a94e186]: https://github.com/phcdevworks/spectre-icons/commit/a94e186
+[e99a137]: https://github.com/phcdevworks/spectre-icons/commit/e99a137
+[c8ae77a]: https://github.com/phcdevworks/spectre-icons/commit/c8ae77a
 [2d91e81]: https://github.com/phcdevworks/spectre-icons/commit/2d91e81
 [ab64109]: https://github.com/phcdevworks/spectre-icons/commit/ab64109
 [8860a13]: https://github.com/phcdevworks/spectre-icons/commit/8860a13
