@@ -331,6 +331,18 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 				$icon_slug = sanitize_key($icon);
 			}
 
+			// Strip library prefix if Elementor stored a prefixed slug.
+			if (
+				'' !== $library_slug &&
+				'' !== $icon_slug &&
+				isset(self::$libraries[$library_slug]['prefix'])
+			) {
+				$prefix = (string) self::$libraries[$library_slug]['prefix'];
+				if ('' !== $prefix && 0 === strpos($icon_slug, $prefix)) {
+					$icon_slug = sanitize_key(substr($icon_slug, strlen($prefix)));
+				}
+			}
+
 			return array($library_slug, $icon_slug);
 		}
 

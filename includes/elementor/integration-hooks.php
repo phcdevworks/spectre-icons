@@ -42,6 +42,7 @@ function spectre_icons_elementor_bootstrap() {
 	// Enqueue CSS/JS.
 	add_action('elementor/editor/before_enqueue_scripts', 'spectre_icons_elementor_enqueue_styles');
 	add_action('elementor/editor/before_enqueue_scripts', 'spectre_icons_elementor_enqueue_icon_scripts');
+	add_action('elementor/frontend/after_enqueue_styles', 'spectre_icons_elementor_enqueue_styles');
 
 	// Admin notice for missing manifests.
 	add_action('admin_notices', 'spectre_icons_elementor_missing_manifest_notice');
