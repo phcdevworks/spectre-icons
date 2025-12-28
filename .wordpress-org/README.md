@@ -18,7 +18,7 @@ Spectre Icons exposes Spectre’s icon packs inside Elementor’s icon picker, r
 - Toggle individual libraries from **Settings → Spectre Icons**
 - Manifest-driven SVG rendering for Lucide + Font Awesome
 - Automatic inline SVG injection within Elementor
-- Cache-busted assets and translation-ready strings
+- Translation-ready strings and clean frontend rendering
 
 ## Installation
 
@@ -39,9 +39,10 @@ Manifests keep SVG markup out of PHP files and let the plugin load icons quickly
 
 ### 1.0.0
 
-- Ensure inline SVG icons inherit Elementor color controls.
-- Responsive icon wrapper sizing and frontend enqueue.
-- Preparations for WordPress.org submission.
+- Fix manifest loading and icon lookup for prefixed libraries.
+- Align Elementor editor config and asset enqueues.
+- Ensure Lucide outline icons render correctly.
+- Clean up WP.org ZIP packaging.
 
 ### 0.1.0
 
