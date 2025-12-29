@@ -43,6 +43,9 @@ function spectre_icons_elementor_bootstrap() {
 	add_action('elementor/editor/before_enqueue_scripts', 'spectre_icons_elementor_enqueue_styles');
 	add_action('elementor/editor/before_enqueue_scripts', 'spectre_icons_elementor_enqueue_icon_scripts');
 	add_action('elementor/frontend/after_enqueue_styles', 'spectre_icons_elementor_enqueue_styles');
+	add_action('elementor/preview/enqueue_styles', 'spectre_icons_elementor_enqueue_styles');
+	add_action('elementor/preview/enqueue_scripts', 'spectre_icons_elementor_enqueue_icon_scripts');
+	add_action('wp_enqueue_scripts', 'spectre_icons_elementor_enqueue_preview_assets');
 
 	// Admin notice for missing manifests.
 	add_action('admin_notices', 'spectre_icons_elementor_missing_manifest_notice');
@@ -175,4 +178,18 @@ function spectre_icons_elementor_missing_manifest_notice() {
 	echo '<div class="notice notice-warning"><p>';
 	echo esc_html__('Spectre Icons: No icon manifests found. Icons may not appear in Elementor until manifests are generated or installed.', 'spectre-icons');
 	echo '</p></div>';
+}
+
+/**
+ * Fallback enqueue for Elementor preview iframe when hooks are skipped.
+ *
+ * @return void
+ */
+function spectre_icons_elementor_enqueue_preview_assets() {
+	if (! isset($_GET['elementor-preview'])) {
+		return;
+	}
+
+	spectre_icons_elementor_enqueue_styles();
+	spectre_icons_elementor_enqueue_icon_scripts();
 }
