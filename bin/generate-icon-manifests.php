@@ -8,9 +8,15 @@
 
 declare(strict_types=1);
 
-require_once dirname(__DIR__) . '/includes/class-spectre-icons-svg-sanitizer.php';
+$root_path = dirname(__DIR__);
 
-$root_path       = dirname(__DIR__);
+// Define ABSPATH for CLI runs so the sanitizer can load outside WordPress.
+if (! defined('ABSPATH')) {
+	define('ABSPATH', $root_path . '/');
+}
+
+require_once $root_path . '/includes/class-spectre-icons-svg-sanitizer.php';
+
 $iconpacks_path  = $root_path . '/assets/iconpacks';
 $manifests_path  = $root_path . '/assets/manifests';
 $manifest_prefix = 'spectre-';
