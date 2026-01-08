@@ -55,8 +55,7 @@ jobs:
             fi
           done
 
-          # Remove source-only packs (manifests are the runtime assets)
-          rm -rf "$DEST/assets/iconpacks" || true
+          # Keep iconpacks in the ZIP for distribution
 
           for f in LICENSE license.txt LICENSE.md; do
             if [ -f "$ROOT/$f" ]; then
