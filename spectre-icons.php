@@ -2,11 +2,11 @@
 
 /**
  * Plugin Name: Spectre Icons
- * Plugin URI: https://github.com/phcdevworks/spectre-icons
- * Description: Modern SVG icon library integration for Elementor.
+ * Plugin URI: https://go.phcdev.co/gh-spectre-icons
+ * Description: Spectre Icons brings modern SVG icon libraries like Lucide and Font Awesome directly into WordPress builders—delivering a unified, performance-first icon system that replaces dozens of fragmented icon plugins.
  * Version: 1.0.0
  * Author: PHCDevworks
- * Author URI: https://github.com/phcdevworks
+ * Author URI: https://go.phcdev.co
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: spectre-icons
