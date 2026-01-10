@@ -8,7 +8,7 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Modern SVG icon libraries for WordPress builders. Delivers Lucide and Font Awesome icons with performance-first architecture and seamless Elementor integration.
+Curated SVG icon libraries for Elementor with fast manifests, inline rendering, and color controls.
 
 == Description ==
 

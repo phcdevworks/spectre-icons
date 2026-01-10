@@ -9,7 +9,7 @@
 **License:** GPLv2 or later
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html
 
-Spectre Icons adds curated icon libraries to Elementor with inline SVG rendering, color controls, and manifest-driven performance.
+Curated SVG icon libraries for Elementor with fast manifests, inline rendering, and color controls.
 
 ## Description
 
