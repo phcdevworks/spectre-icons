@@ -11,9 +11,9 @@ if (! defined('ABSPATH')) {
 }
 
 // Allow local dev stubs.
-$stub_path = dirname(__DIR__, 2) . '/stubs/wordpress-stubs.php';
-if (file_exists($stub_path)) {
-	require_once $stub_path;
+$spectre_stub_path = dirname(__DIR__, 2) . '/stubs/wordpress-stubs.php';
+if (file_exists($spectre_stub_path)) {
+	require_once $spectre_stub_path;
 }
 
 /**
