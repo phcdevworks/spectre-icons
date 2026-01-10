@@ -48,21 +48,5 @@ require_once SPECTRE_ICONS_PATH . 'includes/elementor/integration-hooks.php';
  *  PLUGIN INIT
  * ------------------------------------------------------------
  *
- * Handles loading Elementor integrations ONLY after Elementor loads.
+ * Elementor bootstrapping lives in includes/elementor/integration-hooks.php.
  */
-add_action('plugins_loaded', function () {
-
-	// Fail quietly if Elementor is not active.
-	if (! did_action('elementor/loaded')) {
-		return;
-	}
-
-	// Integration hooks handle:
-	//  - Settings
-	//  - Library Manager
-	//  - Manifest Renderer
-	//  - Tabs registration
-	//  - Editor enqueue
-	//  - Manifest check notice
-	spectre_icons_elementor_bootstrap();
-});
