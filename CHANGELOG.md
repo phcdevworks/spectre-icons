@@ -49,71 +49,60 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
-- Initial plugin release
-- Core SVG icon rendering system
-- Elementor integration with live preview support
-- Lucide and Font Awesome icon library support
-- Manifest-driven icon loading for optimal performance
-- Inline SVG rendering with theme color inheritance
-- Custom color control via Elementor color pickers
-- SVG sanitization and security measures
-- SECURITY.md with security policy
-- CONTRIBUTING.md with contribution guidelines
-- Project Code of Conduct
-- GitHub templates and funding information
-- Composer and PHPCS configuration for code quality
-- VS Code workspace configuration
-- WordPress.org assets and licensing documentation
-- Add PHP lint script and update README ([6141ce6]).
-- Add initial Spectre Icons translation template ([c19d63d]).
-- Add readme and translation support ([8300b3f]).
-- Add dynamic asset versioning for cache busting ([8fe2dc3]).
-- Add scoped refresh loops for icon rendering ([6b3cca2]).
-- Add README and enhance icon preview observer ([0f5222d]).
-- Add SVG injector for Elementor icon picker ([caca0b0]).
-- Add debug tools and improve icon library manager ([36a0cab]).
-- Add debug tools and improve icon picker initialization ([6b00f34]).
-- Add FontAwesome brand SVG icon pack ([9202650]).
-- Add Lucide icon pack and admin assets ([020ae4f]).
-- Add Lucide icon library integration ([fc359e2]).
-- Add Lucide icon SVGs to assets ([e9a8ba4]).
+- PHP lint script and update README ([6141ce6])
+- Initial Spectre Icons translation template ([c19d63d])
+- Readme and translation support ([8300b3f])
+- Dynamic asset versioning for cache busting ([8fe2dc3])
+- Scoped refresh loops for icon rendering ([6b3cca2])
+- README and enhance icon preview observer ([0f5222d])
+- SVG injector for Elementor icon picker ([caca0b0])
+- Debug tools and improve icon library manager ([36a0cab])
+- Debug tools and improve icon picker initialization ([6b00f34])
+- FontAwesome brand SVG icon pack ([9202650])
+- Lucide icon pack and admin assets ([020ae4f])
+- Lucide icon library integration ([fc359e2])
+- Lucide icon SVGs to assets ([e9a8ba4])
+- SVG sanitization and update icon rendering ([005a97e])
+- Composer and PHPCS configuration for tooling ([fde4dd2])
+- VS Code workspace configuration file ([5ad63c6])
+- WordPress.org assets and licensing info ([21d1ddd])
+- SECURITY.md with security policy ([2d91e81])
+- CONTRIBUTING.md with contribution guidelines ([ab64109])
+- Project Code of Conduct ([8860a13])
+- GitHub templates and funding info ([53ef16e])
 
 ### Changed
 
-- Refactor codebase for consistent coding standards ([12b4132]).
-- Refactor code style and update plugin version ([b7a8cea]).
-- Revise README with improved docs and update icon theme ([8be8e31]).
-- Improve social icon color handling in admin CSS ([1024588]).
-- Improve code comments and formatting for Elementor integration ([d0f0f30]).
-- Refine Elementor social icon color handling ([e81c0bb]).
-- Improve Elementor icon rendering and styling ([85204d1]).
-- Improve Elementor social icon styling and sizing ([3c316d7]).
-- Improve Elementor icon color handling in admin CSS ([e95a29a]).
-- Improve icon rendering and debug logging ([5d6149b]).
-- Standardize array syntax and spacing in Elementor integration ([9316091]).
-- Update asset paths for admin and Elementor scripts/styles ([c3ed31c]).
-- Refactor plugin to support multiple builders ([ac31af7]).
-- Update README and improve icon CSS overrides ([bf8a82a]).
-- Prevent redundant SVG rendering in icon admin JS ([b9bfb1c]).
-- Update icon manifests and renderer logic ([2233f56]).
-- Remove development stubs and debug scripts ([ae3e698]).
-- Refactor icon picker SVG injection for Elementor ([6d8b992]).
-- Remove debug and testing files, update manifests ([dbca981]).
-- Switch to native Elementor icon rendering ([d966ed5]).
-- Refactor icon admin JS and clean up PHP manifest ([36bcef9]).
-- Improve icon style and picker modal handling ([8002ed8]).
-- Update Lucide icon manifest and class ([925d0be]).
-- Update icon manifests for FontAwesome and Lucide ([011a84a]).
-- Refactor icon rendering and caching logic ([8262d35]).
-- Refactor icon styles registration and add rendered class ([73bec0a]).
-
-### Documentation
-
-- Release v1.0.0 and improve Elementor SVG color support ([02b6f1e]).
+- Refactor codebase for consistent coding standards ([12b4132])
+- Refactor code style and update plugin version ([b7a8cea])
+- Revise README with improved docs and update icon theme ([8be8e31])
+- Improve social icon color handling in admin CSS ([1024588])
+- Improve code comments and formatting for Elementor integration ([d0f0f30])
+- Refine Elementor social icon color handling ([e81c0bb])
+- Improve Elementor icon rendering and styling ([85204d1])
+- Improve Elementor social icon styling and sizing ([3c316d7])
+- Improve Elementor icon color handling in admin CSS ([e95a29a])
+- Improve icon rendering and debug logging ([5d6149b])
+- Standardize array syntax and spacing in Elementor integration ([9316091])
+- Update asset paths for admin and Elementor scripts/styles ([c3ed31c])
+- Refactor plugin to support multiple builders ([ac31af7])
+- Update README and improve icon CSS overrides ([bf8a82a])
+- Prevent redundant SVG rendering in icon admin JS ([b9bfb1c])
+- Update icon manifests and renderer logic ([2233f56])
+- Remove development stubs and debug scripts ([ae3e698])
+- Refactor icon picker SVG injection for Elementor ([6d8b992])
+- Remove debug and testing files, update manifests ([dbca981])
+- Switch to native Elementor icon rendering ([d966ed5])
+- Refactor icon admin JS and clean up PHP manifest ([36bcef9])
+- Improve icon style and picker modal handling ([8002ed8])
+- Update Lucide icon manifest and class ([925d0be])
+- Update icon manifests for FontAwesome and Lucide ([011a84a])
+- Refactor icon rendering and caching logic ([8262d35])
+- Refactor icon styles registration and add rendered class ([73bec0a])
 
 ### Fixed
 
-- Enable Intelephense diagnostics and add stubs path ([cb12589]).
+- Enable Intelephense diagnostics and add stubs path ([cb12589])
 
 [unreleased]: https://github.com/phcdevworks/spectre-icons/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/phcdevworks/spectre-icons/tree/v1.0.0
