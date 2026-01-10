@@ -62,6 +62,11 @@ jobs:
             fi
           done
 
+          # Ensure license.txt exists in the ZIP.
+          if [ -f "$ROOT/LICENSE" ]; then
+            cp "$ROOT/LICENSE" "$DEST/license.txt"
+          fi
+
           # Sanity checks
           test -f "$DEST/${MAIN_FILE}"
           test -f "$DEST/readme.txt"
