@@ -67,9 +67,9 @@ jobs:
           test -f "$DEST/${MAIN_FILE}"
           test -f "$DEST/readme.txt"
 
-          # Build zip with top-level plugin folder "spectre-icons/"
+          # Build zip without an extra top-level folder.
           rm -f "$ROOT/${ZIP_PATH}"
-          ( cd "$OUT" && zip -r "$ROOT/${ZIP_PATH}" "${PLUGIN_SLUG}" -x "*.DS_Store" )
+          ( cd "$DEST" && zip -r "$ROOT/${ZIP_PATH}" . -x "*.DS_Store" )
 
           echo "Built $ROOT/${ZIP_PATH}"
           unzip -l "$ROOT/${ZIP_PATH}" | sed -n '1,40p'
