@@ -13,7 +13,6 @@ jobs:
       PLUGIN_SLUG: spectre-icons
       MAIN_FILE: spectre-icons.php
       ZIP_PATH: dist/spectre-icons.zip
-      WP_ORG_README: .wordpress-org/README.md
 
     steps:
       - name: Checkout
@@ -40,14 +39,14 @@ jobs:
             exit 1
           fi
 
-          if [ ! -f "$ROOT/${WP_ORG_README}" ]; then
-            echo "ERROR: Missing ${WP_ORG_README}"
+          if [ ! -f "$ROOT/readme.txt" ]; then
+            echo "ERROR: Missing readme.txt"
             exit 1
           fi
 
           # --- Copy only runtime plugin files ---
           cp "$ROOT/${MAIN_FILE}" "$DEST/"
-          cp "$ROOT/${WP_ORG_README}" "$DEST/readme.txt"
+          cp "$ROOT/readme.txt" "$DEST/"
 
           for d in includes assets build languages vendor; do
             if [ -d "$ROOT/$d" ]; then

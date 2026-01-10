@@ -39,12 +39,6 @@ function spectre_icons_elementor_get_icon_library_definitions() {
 			'class_prefix'  => 'spectre-fa-',
 		),
 
-		'spectre-social' => array(
-			'label'         => 'Social Icons',
-			'label_icon'    => 'eicon-editor-link',
-			'manifest_path' => $base_path . 'spectre-social.json',
-			'class_prefix'  => 'spectre-social-',
-		),
 	);
 }
 

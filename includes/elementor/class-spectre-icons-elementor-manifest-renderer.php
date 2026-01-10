@@ -481,7 +481,7 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 		private static function build_svg_from_manifest_icon(array $icon_data) {
 			// If manifest already stores full SVG markup, just use it.
 			if (! empty($icon_data['svg']) && is_string($icon_data['svg'])) {
-				return $icon_data['svg'];
+				return Spectre_Icons_SVG_Sanitizer::sanitize($icon_data['svg']);
 			}
 
 			// If manifest stores inner markup (paths/group), wrap it in a basic SVG shell.
@@ -503,11 +503,13 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 
 				$attr_string = self::attributes_to_string($attrs);
 
-				return sprintf(
+				$svg = sprintf(
 					'<svg%1$s>%2$s</svg>',
 					$attr_string,
 					$body
 				);
+
+				return Spectre_Icons_SVG_Sanitizer::sanitize($svg);
 			}
 
 			// Nothing usable.

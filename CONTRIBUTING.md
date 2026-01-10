@@ -11,19 +11,13 @@ git clone https://github.com/phcdevworks/spectre-icons.git
 cd spectre-icons
 ```
 
-2. Generate icon manifests:
-
-```bash
-php bin/generate-icon-manifests.php
-```
-
-3. Install development dependencies (for code quality checks):
+2. Install development dependencies (for code quality checks):
 
 ```bash
 composer install
 ```
 
-4. Verify PHP syntax and coding standards:
+3. Verify PHP syntax and coding standards:
 
 ```bash
 bin/lint-php.sh
@@ -40,10 +34,9 @@ vendor/bin/phpcs --standard=WordPress spectre-icons.php includes/
   - `icon-libraries.php` – Library definitions and registration
   - `integration-hooks.php` – WordPress/Elementor hooks
 - `assets/iconpacks/` – Raw SVG files organized by library
-- `assets/manifests/` – Generated JSON manifests (do not edit by hand)
+- `assets/manifests/` – JSON manifests
 - `assets/js/` – Client-side SVG injection
 - `assets/css/` – Icon styling and color inheritance
-- `bin/generate-icon-manifests.php` – Manifest generation script
 - `.wordpress-org/` – WordPress.org plugin directory assets
 
 ## Guidelines
@@ -51,9 +44,8 @@ vendor/bin/phpcs --standard=WordPress spectre-icons.php includes/
 ### Icons & Manifests
 
 1. **Source SVGs**: Place icon files in `assets/iconpacks/<library-name>/`
-2. **Generate manifests**: Always run `php bin/generate-icon-manifests.php` after adding/updating icons
-3. **Commit both**: Check in both the SVG files and the generated JSON manifests
-4. **Icon licensing**: Ensure any new icon packs have compatible licenses (GPL-compatible)
+2. **Commit both**: Check in both the SVG files and the JSON manifests
+3. **Icon licensing**: Ensure any new icon packs have compatible licenses (GPL-compatible)
 
 ### PHP & WordPress Standards
 
@@ -83,11 +75,9 @@ vendor/bin/phpcs --standard=WordPress spectre-icons.php includes/
 1. Create a feature branch from `main`
 2. Make your changes with proper testing:
    - Run `bin/lint-php.sh` for syntax checks
-   - Regenerate manifests if icons changed
    - Test in a WordPress + Elementor environment
 3. Update documentation (`README.MD`, `readme.txt`) as needed
-4. Commit generated files (`assets/manifests/*.json`)
-5. Open a PR with:
+4. Open a PR with:
    - Clear description of the change
    - Screenshots/videos if UI-related
    - Testing steps performed
@@ -97,7 +87,6 @@ vendor/bin/phpcs --standard=WordPress spectre-icons.php includes/
 Before submitting a PR, verify:
 
 - [ ] PHP syntax is valid (`bin/lint-php.sh`)
-- [ ] Manifests are regenerated and committed
 - [ ] Icons render correctly in Elementor editor
 - [ ] Icons display properly on frontend
 - [ ] Color customization works (custom colors)

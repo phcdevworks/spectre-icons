@@ -47,9 +47,6 @@ Spectre Icons brings modern SVG icon libraries like Lucide and Font Awesome dire
 ### From Source
 
 ```bash
-# Generate manifests
-php bin/generate-icon-manifests.php
-
 # Lint PHP
 bin/lint-php.sh
 
@@ -85,7 +82,7 @@ Select "Official Color" mode for automatic white icons on branded backgrounds (F
 
 ```
 1. SVG packs → assets/iconpacks/
-2. Generator → JSON manifests (assets/manifests/)
+2. JSON manifests (assets/manifests/)
 3. Plugin registers manifests as Elementor libraries
 4. JavaScript injects inline SVGs in editor + frontend
 5. CSS handles color inheritance + branding
@@ -103,11 +100,9 @@ spectre-icons/
 │   └── icon-libraries.php             # Library definitions
 ├── assets/
 │   ├── iconpacks/                 # Raw SVG files
-│   ├── manifests/                 # Generated JSON manifests
+│   ├── manifests/                 # JSON manifests
 │   ├── js/                        # Client-side SVG injection
 │   └── css/                       # Icon styling
-├── bin/
-│   └── generate-icon-manifests.php # Manifest generator
 └── .wordpress-org/                # Plugin directory assets
 ```
 
@@ -119,13 +114,7 @@ spectre-icons/
 assets/iconpacks/your-pack-name/
 ```
 
-### 2. Generate Manifest
-
-```bash
-php bin/generate-icon-manifests.php
-```
-
-### 3. Register Library
+### 2. Register Library
 
 Add definition to `includes/elementor/icon-libraries.php`:
 
@@ -142,7 +131,7 @@ Add definition to `includes/elementor/icon-libraries.php`:
 ),
 ```
 
-### 4. Test
+### 3. Test
 
 Enable at **Settings → Spectre Icons**, refresh Elementor editor, verify picker + frontend.
 
@@ -157,23 +146,15 @@ Enable at **Settings → Spectre Icons**, refresh Elementor editor, verify picke
 
 ## Repository Layout
 
-| Folder                | Responsibility                                                               |
-| --------------------- | ---------------------------------------------------------------------------- |
-| `spectre-icons.php`   | Plugin bootstrap and core definitions                                        |
-| `includes/elementor/` | Elementor-specific integration (library manager, renderer, settings)         |
-| `assets/iconpacks/`   | Raw SVG files organized by library                                           |
-| `assets/manifests/`   | Generated JSON manifests (regenerated via `bin/generate-icon-manifests.php`) |
-| `assets/js/`          | Client-side SVG injection for editor and frontend                            |
-| `assets/css/`         | Icon styling, color inheritance, and branding support                        |
-| `.wordpress-org/`     | WordPress.org plugin directory assets (banners, icons)                       |
-
-## Build & Release
-
-```bash
-php bin/generate-icon-manifests.php
-```
-
-Generates optimized JSON manifests from SVG files. Always run after adding/updating icons. See **[Changelog](CHANGELOG.md)** for release history.
+| Folder                | Responsibility                                                       |
+| --------------------- | -------------------------------------------------------------------- |
+| `spectre-icons.php`   | Plugin bootstrap and core definitions                                |
+| `includes/elementor/` | Elementor-specific integration (library manager, renderer, settings) |
+| `assets/iconpacks/`   | Raw SVG files organized by library                                   |
+| `assets/manifests/`   | JSON manifests                                                       |
+| `assets/js/`          | Client-side SVG injection for editor and frontend                    |
+| `assets/css/`         | Icon styling, color inheritance, and branding support                |
+| `.wordpress-org/`     | WordPress.org plugin directory assets (banners, icons)               |
 
 ## Part of the Spectre Suite
 
