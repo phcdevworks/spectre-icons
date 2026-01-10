@@ -61,9 +61,6 @@ function spectre_icons_elementor_get_icon_preview_config() {
 			empty($def['manifest_path']) ||
 			! file_exists($def['manifest_path'])
 		) {
-			if (defined('WP_DEBUG') && WP_DEBUG) {
-				error_log('[Spectre Icons] Missing manifest: ' . $def['manifest_path']);
-			}
 			continue;
 		}
 
@@ -102,9 +99,6 @@ function spectre_icons_elementor_register_manifest_libraries($libraries) {
 		$manifest_path = isset($def['manifest_path']) ? $def['manifest_path'] : '';
 
 		if ('' === $manifest_path || ! file_exists($manifest_path)) {
-			if (defined('WP_DEBUG') && WP_DEBUG) {
-				error_log('[Spectre Icons] Skipping library "' . $slug . '" — manifest missing.');
-			}
 			continue;
 		}
 
