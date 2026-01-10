@@ -56,14 +56,10 @@ jobs:
 
           # Keep iconpacks in the ZIP for distribution
 
-          for f in LICENSE license.txt LICENSE.md; do
-            if [ -f "$ROOT/$f" ]; then
-              cp "$ROOT/$f" "$DEST/"
-            fi
-          done
-
-          # Ensure license.txt exists in the ZIP.
-          if [ -f "$ROOT/LICENSE" ]; then
+          # Include only license.txt in the ZIP.
+          if [ -f "$ROOT/license.txt" ]; then
+            cp "$ROOT/license.txt" "$DEST/license.txt"
+          elif [ -f "$ROOT/LICENSE" ]; then
             cp "$ROOT/LICENSE" "$DEST/license.txt"
           fi
 
