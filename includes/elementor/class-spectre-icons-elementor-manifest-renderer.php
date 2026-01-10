@@ -523,10 +523,8 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 		 * @return void
 		 */
 		private static function log_debug($message) {
-			if (defined('WP_DEBUG') && WP_DEBUG) {
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-				error_log('[Spectre Icons][Manifest Renderer] ' . $message);
-			}
+			// Intentionally no-op to avoid error_log in production.
+			(void) $message;
 		}
 	}
 
