@@ -79,7 +79,6 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 	// Avoid wp-auth-check throwing errors inside Elementor editor.
 	if (wp_script_is('wp-auth-check', 'enqueued')) {
 		wp_dequeue_script('wp-auth-check');
-		wp_deregister_script('wp-auth-check');
 	}
 
 	$js_path = SPECTRE_ICONS_URL . 'assets/js/elementor/spectre-icons-elementor.js';
