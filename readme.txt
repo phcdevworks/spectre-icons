@@ -137,7 +137,7 @@ Yes! Spectre Icons works anywhere Elementor can be used, including WooCommerce p
 
 == Changelog ==
 
-= 1.0.0 - 2025-12-28 =
+= 1.0.0 - 2026-01-10 =
 
 **Added**
 * GitHub Actions workflow for building WP ZIP
