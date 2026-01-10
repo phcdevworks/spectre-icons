@@ -1,53 +1,69 @@
 # Changelog
 
-All notable changes to this project will be documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the versioning reflects plugin releases for WordPress.
+All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2025-12-28
+## [1.0.0] - 2026-01-10
 
 ### Added
 
-- Add GitHub Actions workflow for building WP ZIP ([6a2dcf1]).
-- Add manifest file fallback logic for icon libraries ([30edd13]).
-- Add style class to icons based on library slug ([f092992]).
+- GitHub Actions workflow for automated WordPress.org ZIP builds ([6a2dcf1])
+- Manifest file fallback logic for icon libraries ([30edd13])
+- Style classes to icons based on library slug ([f092992])
+- Asset enqueues for Elementor preview support ([4c10ee7])
+- Admin control panel to toggle icon libraries ([6d37aca])
 
 ### Changed
 
-- Refactor build workflow and migrate readme to Markdown ([b6becf3]).
-- Refactor WP.org ZIP build to use rsync and improve cleanup ([6fdcb6a]).
-- Simplify WP zip build workflow and file copying ([ad3c5e9]).
-- Refactor Elementor integration and manifest handling ([9b0a18a]).
-- Refactor plugin structure and update metadata ([6d37aca]).
-- Refactor SVG sanitizer for stricter, simpler sanitization ([938c02b]).
-- Refactor Elementor integration hooks for Spectre Icons ([422479a]).
-- Refactor icon library registration for Elementor ([28ae2db]).
-- Refactor Elementor settings class for icon libraries ([f11f03d]).
-- Refactor Elementor icon manifest renderer ([a94e186]).
-- Refactor Spectre icon library manager for clarity and validation ([e99a137]).
-- Chore updates to release ZIP ([73b06ae], [70321e0], [372eff9], [b425bf1], [f41ae0e], [8ee974d]).
+- Refactored Elementor integration and manifest handling architecture ([9b0a18a])
+- Refactored SVG sanitizer for stricter, simpler sanitization ([938c02b])
+- Refactored icon library registration system for Elementor ([28ae2db])
+- Refactored Elementor integration hooks for Spectre Icons ([422479a])
+- Refactored plugin structure and updated metadata ([6d37aca])
+- Improved build workflow and migrated readme to Markdown ([b6becf3])
+- Updated plugin description and metadata ([9a05346])
+- Simplified ZIP build process with rsync ([ad3c5e9])
+- Refactored WP.org ZIP build to use rsync and improve cleanup ([6fdcb6a])
+- Retained iconpacks in build ZIP output ([f7b4fd2])
+- Included plugin folder in built zip archive ([b4cefe1])
 
 ### Fixed
 
-- Fix icon prefix handling and improve style overrides ([0565550]).
-- Fix zip build to avoid nested plugin folder ([2ac6f00]).
+- Icon prefix handling and improved style overrides ([0565550])
+- ZIP build to avoid nested plugin folder structure ([2ac6f00])
 
-### Documentation
+### Removed
 
-- Revise and expand README for Spectre Icons plugin ([c8ae77a]).
+- Manifest generator in favor of static manifests ([34d846f])
+- LIBXML_NOENT from SVG loading for security ([dd40ec6])
+- Redundant Elementor bootstrap hook ([023a362])
+- Deregister of wp-auth-check in Elementor hook ([119c6e3])
+
+### Security
+
+- Enhanced SVG sanitization to prevent XSS vulnerabilities ([938c02b])
+- Removed unsafe XML entity expansion flags ([dd40ec6])
 
 ## [0.0.1] - 2025-12-10
 
 ### Added
 
-- Add SECURITY.md with security policy ([2d91e81]).
-- Add CONTRIBUTING.md with contribution guidelines ([ab64109]).
-- Add project Code of Conduct ([8860a13]).
-- Add GitHub templates and funding info ([53ef16e]).
-- Add SVG sanitization and update icon rendering ([005a97e]).
-- Add Composer and PHPCS configuration for tooling ([fde4dd2]).
-- Add VS Code workspace configuration file ([5ad63c6]).
-- Add WordPress.org assets and update licensing info ([21d1ddd]).
+- Initial plugin release
+- Core SVG icon rendering system
+- Elementor integration with live preview support
+- Lucide and Font Awesome icon library support
+- Manifest-driven icon loading for optimal performance
+- Inline SVG rendering with theme color inheritance
+- Custom color control via Elementor color pickers
+- SVG sanitization and security measures
+- SECURITY.md with security policy
+- CONTRIBUTING.md with contribution guidelines
+- Project Code of Conduct
+- GitHub templates and funding information
+- Composer and PHPCS configuration for code quality
+- VS Code workspace configuration
+- WordPress.org assets and licensing documentation
 - Add PHP lint script and update README ([6141ce6]).
 - Add initial Spectre Icons translation template ([c19d63d]).
 - Add readme and translation support ([8300b3f]).
@@ -103,6 +119,16 @@ All notable changes to this project will be documented here. The format follows 
 [1.0.0]: https://github.com/phcdevworks/spectre-icons/tree/v1.0.0
 [0.0.1]: https://github.com/phcdevworks/spectre-icons/tree/v0.0.1
 [f092992]: https://github.com/phcdevworks/spectre-icons/commit/f092992
+[119c6e3]: https://github.com/phcdevworks/spectre-icons/commit/119c6e3
+[023a362]: https://github.com/phcdevworks/spectre-icons/commit/023a362
+[dd40ec6]: https://github.com/phcdevworks/spectre-icons/commit/dd40ec6
+[34d846f]: https://github.com/phcdevworks/spectre-icons/commit/34d846f
+[05021e2]: https://github.com/phcdevworks/spectre-icons/commit/05021e2
+[f7b4fd2]: https://github.com/phcdevworks/spectre-icons/commit/f7b4fd2
+[9a05346]: https://github.com/phcdevworks/spectre-icons/commit/9a05346
+[b4cefe1]: https://github.com/phcdevworks/spectre-icons/commit/b4cefe1
+[4c10ee7]: https://github.com/phcdevworks/spectre-icons/commit/4c10ee7
+[a6cae67]: https://github.com/phcdevworks/spectre-icons/commit/a6cae67
 [0565550]: https://github.com/phcdevworks/spectre-icons/commit/0565550
 [73b06ae]: https://github.com/phcdevworks/spectre-icons/commit/73b06ae
 [70321e0]: https://github.com/phcdevworks/spectre-icons/commit/70321e0
