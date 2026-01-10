@@ -105,7 +105,7 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 
 			// Suppress warnings for malformed SVG.
 			libxml_use_internal_errors(true);
-			$dom->loadXML($svg, LIBXML_NONET | LIBXML_NOENT | LIBXML_NOWARNING | LIBXML_NOERROR);
+			$dom->loadXML($svg, LIBXML_NONET | LIBXML_NOWARNING | LIBXML_NOERROR);
 			libxml_clear_errors();
 
 			self::sanitize_node_deep($dom->documentElement);
