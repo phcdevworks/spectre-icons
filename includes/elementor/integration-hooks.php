@@ -185,6 +185,8 @@ function spectre_icons_elementor_missing_manifest_notice() {
  * @return void
  */
 function spectre_icons_elementor_enqueue_preview_assets() {
+	// Nonce not required; this only gates preview asset loading by query flag.
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	if (! isset($_GET['elementor-preview'])) {
 		return;
 	}
