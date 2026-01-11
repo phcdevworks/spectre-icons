@@ -34,7 +34,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Empty .gitkeep from languages directory ([4e613a7])
 - LICENSE.md file ([94f636f])
-- license.txt file ([0c79a30])
 
 ### Documentation
 

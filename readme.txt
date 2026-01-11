@@ -154,7 +154,6 @@ Yes! Spectre Icons works anywhere Elementor can be used, including WooCommerce p
 **Removed**
 * Empty .gitkeep from languages directory (4e613a7)
 * LICENSE.md file (94f636f)
-* license.txt file (0c79a30)
 
 **Documentation**
 * Added proper icon attributions for bundled icon libraries (c4df46c)
