@@ -4,6 +4,44 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-01-11
+
+### Added
+
+- Icon attribution sections for Font Awesome and Lucide in documentation ([c4df46c])
+- SPDX license identifier to plugin header ([26d2038])
+- GNU General Public License version 2 ([852dced])
+
+### Changed
+
+- Improved Elementor integration and SVG sanitization logic ([98aef3d])
+- Updated readme formatting and converted markdown links to plain URLs for WordPress.org compatibility ([f375196])
+- Renamed internal stub path variables for better code clarity ([534bd47], [4cec228])
+- Replaced (void) with unset in log_debug methods for PHP best practices ([c1b3a96])
+- Updated plugin description for clarity and consistency ([7e8312f])
+- Updated 'Tested up to' to WordPress 6.9 ([8f313f2])
+- Updated plugin and author URIs in header ([1a38008])
+- Updated CHANGELOG formatting for consistency ([1a6e92c])
+- Updated license file handling in build workflow ([31b7aae])
+- Updated zip build to exclude top-level plugin folder ([1d2e199])
+
+### Fixed
+
+- Removed screenshots section from readme.txt for WordPress.org submission
+- Removed error_log debug statements from production code ([12ae914])
+
+### Removed
+
+- Empty .gitkeep from languages directory ([4e613a7])
+- LICENSE.md file ([94f636f])
+- license.txt file ([0c79a30])
+
+### Documentation
+
+- Added proper icon attributions for bundled Font Awesome Free and Lucide icon libraries ([c4df46c])
+- Improved WordPress.org readme.txt formatting and compliance ([f375196])
+- Updated changelog and readme for 1.0.0 release ([f0551d8])
+
 ## [1.0.0] - 2026-01-10
 
 ### Added
@@ -189,3 +227,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [020ae4f]: https://github.com/phcdevworks/spectre-icons/commit/020ae4f
 [fc359e2]: https://github.com/phcdevworks/spectre-icons/commit/fc359e2
 [e9a8ba4]: https://github.com/phcdevworks/spectre-icons/commit/e9a8ba4
+[c4df46c]: https://github.com/phcdevworks/spectre-icons/commit/c4df46c
+[98aef3d]: https://github.com/phcdevworks/spectre-icons/commit/98aef3d
+[f375196]: https://github.com/phcdevworks/spectre-icons/commit/f375196
+[534bd47]: https://github.com/phcdevworks/spectre-icons/commit/534bd47
+[c1b3a96]: https://github.com/phcdevworks/spectre-icons/commit/c1b3a96
+[4cec228]: https://github.com/phcdevworks/spectre-icons/commit/4cec228
+[7e8312f]: https://github.com/phcdevworks/spectre-icons/commit/7e8312f
+[8f313f2]: https://github.com/phcdevworks/spectre-icons/commit/8f313f2
+[12ae914]: https://github.com/phcdevworks/spectre-icons/commit/12ae914
+[26d2038]: https://github.com/phcdevworks/spectre-icons/commit/26d2038
+[1a38008]: https://github.com/phcdevworks/spectre-icons/commit/1a38008
+[4e613a7]: https://github.com/phcdevworks/spectre-icons/commit/4e613a7
+[1d2e199]: https://github.com/phcdevworks/spectre-icons/commit/1d2e199
+[31b7aae]: https://github.com/phcdevworks/spectre-icons/commit/31b7aae
+[c188302]: https://github.com/phcdevworks/spectre-icons/commit/c188302
+[0c79a30]: https://github.com/phcdevworks/spectre-icons/commit/0c79a30
+[94f636f]: https://github.com/phcdevworks/spectre-icons/commit/94f636f
+[852dced]: https://github.com/phcdevworks/spectre-icons/commit/852dced
+[0b4df5a]: https://github.com/phcdevworks/spectre-icons/commit/0b4df5a
+[1a6e92c]: https://github.com/phcdevworks/spectre-icons/commit/1a6e92c
+[f0551d8]: https://github.com/phcdevworks/spectre-icons/commit/f0551d8

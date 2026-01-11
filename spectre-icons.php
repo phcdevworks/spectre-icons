@@ -4,7 +4,7 @@
  * Plugin Name: Spectre Icons
  * Plugin URI: https://github.com/phcdevworks/spectre-icons
  * Description: Spectre Icons brings modern SVG icon libraries like Lucide and Font Awesome directly into WordPress builders—delivering a unified, performance-first icon system that replaces dozens of fragmented icon plugins.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: PHCDevworks
  * Author URI: https://phcdevworks.com/
  * License: GPLv2 or later
@@ -26,7 +26,7 @@ if (! defined('ABSPATH')) {
  *  CONSTANTS
  * ------------------------------------------------------------
  */
-define('SPECTRE_ICONS_VERSION', '1.0.0');
+define('SPECTRE_ICONS_VERSION', '1.1.0');
 define('SPECTRE_ICONS_PATH', plugin_dir_path(__FILE__));
 define('SPECTRE_ICONS_URL', plugin_dir_url(__FILE__));
 
