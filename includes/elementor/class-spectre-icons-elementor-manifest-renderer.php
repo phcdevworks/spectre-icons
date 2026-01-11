@@ -524,7 +524,7 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 		 */
 		private static function log_debug($message) {
 			// Intentionally no-op to avoid error_log in production.
-			(void) $message;
+			unset($message);
 		}
 	}
 
