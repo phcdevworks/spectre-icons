@@ -24,6 +24,7 @@ function spectre_icons_elementor_bootstrap() {
 
 	// Elementor not installed or not loaded yet.
 	if (! did_action('elementor/loaded')) {
+		add_action('admin_notices', 'spectre_icons_elementor_missing_elementor_notice');
 		add_action('elementor/loaded', 'spectre_icons_elementor_bootstrap', 20);
 		return;
 	}
@@ -51,6 +52,34 @@ function spectre_icons_elementor_bootstrap() {
 	add_action('admin_notices', 'spectre_icons_elementor_missing_manifest_notice');
 }
 add_action('plugins_loaded', 'spectre_icons_elementor_bootstrap', 20);
+
+/**
+ * Admin notice when Elementor is missing.
+ *
+ * @return void
+ */
+function spectre_icons_elementor_missing_elementor_notice() {
+	if (! is_admin() || wp_doing_ajax()) {
+		return;
+	}
+
+	if (did_action('elementor/loaded')) {
+		return;
+	}
+
+	if (! current_user_can('activate_plugins')) {
+		return;
+	}
+
+	$screen = function_exists('get_current_screen') ? get_current_screen() : null;
+	if (! $screen || 'plugins' !== $screen->id) {
+		return;
+	}
+
+	echo '<div class="notice notice-warning"><p>';
+	echo esc_html__('Spectre Icons requires Elementor to be active.', 'spectre-icons');
+	echo '</p></div>';
+}
 
 /**
  * Enqueue CSS for Elementor editor.

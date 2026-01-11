@@ -36,8 +36,7 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 			'use',
 			'symbol',
 			'title',
-			'desc',
-			'group'
+			'desc'
 		);
 
 		/**
@@ -79,6 +78,11 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 		 */
 		public static function sanitize($svg) {
 			if (! is_string($svg) || '' === trim($svg)) {
+				return '';
+			}
+
+			if (! class_exists('DOMDocument')) {
+				// Safest fallback when DOM extension is unavailable.
 				return '';
 			}
 

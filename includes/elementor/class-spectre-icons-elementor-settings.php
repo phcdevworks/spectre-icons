@@ -76,8 +76,8 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 		 */
 		public function register_menu_page() {
 			add_options_page(
-				'Spectre Icons – Elementor',
-				'Spectre Icons',
+				__('Spectre Icons - Elementor', 'spectre-icons'),
+				__('Spectre Icons', 'spectre-icons'),
 				'manage_options',
 				'spectre-icons-elementor',
 				array($this, 'render_settings_page')
