@@ -4,7 +4,7 @@ Tags: icons, elementor, svg, lucide, font awesome
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -128,6 +128,39 @@ Yes! Spectre Icons works anywhere Elementor can be used, including WooCommerce p
 
 == Changelog ==
 
+= 1.1.0 - 2026-01-11 =
+
+**Added**
+* Icon attribution sections for Font Awesome and Lucide in documentation (c4df46c)
+* SPDX license identifier to plugin header (26d2038)
+* GNU General Public License version 2 (852dced)
+
+**Changed**
+* Improved Elementor integration and SVG sanitization logic (98aef3d)
+* Updated readme formatting and converted markdown links to plain URLs (f375196)
+* Renamed internal stub path variables for better code clarity (534bd47, 4cec228)
+* Replaced (void) with unset in log_debug methods (c1b3a96)
+* Updated plugin description for clarity and consistency (7e8312f)
+* Updated 'Tested up to' to WordPress 6.9 (8f313f2)
+* Updated plugin and author URIs in header (1a38008)
+* Updated CHANGELOG formatting for consistency (1a6e92c)
+* Updated license file handling in build workflow (31b7aae)
+* Updated zip build to exclude top-level plugin folder (1d2e199)
+
+**Fixed**
+* Removed screenshots section from readme.txt for WordPress.org submission
+* Removed error_log debug statements from production code (12ae914)
+
+**Removed**
+* Empty .gitkeep from languages directory (4e613a7)
+* LICENSE.md file (94f636f)
+* license.txt file (0c79a30)
+
+**Documentation**
+* Added proper icon attributions for bundled icon libraries (c4df46c)
+* Improved WordPress.org readme.txt formatting and compliance (f375196)
+* Updated changelog and readme for 1.0.0 release (f0551d8)
+
 = 1.0.0 - 2026-01-10 =
 
 **Added**
@@ -171,6 +204,9 @@ Yes! Spectre Icons works anywhere Elementor can be used, including WooCommerce p
 * Comprehensive documentation
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+WordPress.org submission ready release with improved documentation, icon attributions, and enhanced code quality. Recommended for all users.
 
 = 1.0.0 =
 Major stable release with improved architecture, better performance, and enhanced icon rendering. Recommended for all users.
