@@ -189,10 +189,17 @@ If Spectre Icons helps your workflow, consider sponsoring:
 - [GitHub Sponsors](https://github.com/sponsors/phcdevworks)
 - [Buy Me a Coffee](https://buymeacoffee.com/phcdevworks)
 
-### Bundled Icon Libraries
+## Icon Attributions
 
-- **Lucide**: ISC License (MIT-compatible) - [lucide.dev](https://lucide.dev)
-- **Font Awesome Free**: CC BY 4.0 (icons) / MIT (code) - [fontawesome.com/license](https://fontawesome.com/license/free)
+This plugin bundles icons from Font Awesome Free and Lucide.
+
+**Font Awesome Free**
+Font Awesome Free is licensed under CC BY 4.0 (icons) and MIT (code).
+https://fontawesome.com/license/free
+
+**Lucide Icons**
+Lucide is licensed under the ISC License (MIT-compatible).
+https://lucide.dev
 
 ## Contributing
 
