@@ -126,15 +126,6 @@ Yes! Spectre Icons works anywhere Elementor can be used, including WooCommerce p
 * PHP 7.4 or higher (PHP 8.x supported)
 * Elementor 3.x or higher
 
-== Screenshots ==
-
-1. Settings panel - Enable/disable icon libraries
-2. Elementor icon picker - Lucide Icons library
-3. Elementor icon picker - Font Awesome library
-4. Icon widget with custom colors
-5. Social Icons widget with official branding
-6. Icon List widget in action
-
 == Changelog ==
 
 = 1.0.0 - 2026-01-10 =
@@ -210,17 +201,17 @@ https://lucide.dev
 = Contributing =
 
 Contributions are welcome! Visit our GitHub repository for detailed contribution guidelines:
-[github.com/phcdevworks/spectre-icons](https://github.com/phcdevworks/spectre-icons)
+https://github.com/phcdevworks/spectre-icons
 
 = Support =
 
 For issues, questions, or feature requests:
-* GitHub Issues: [github.com/phcdevworks/spectre-icons/issues](https://github.com/phcdevworks/spectre-icons/issues)
-* Documentation: [github.com/phcdevworks/spectre-icons](https://github.com/phcdevworks/spectre-icons)
+* GitHub Issues: https://github.com/phcdevworks/spectre-icons/issues
+* Documentation: https://github.com/phcdevworks/spectre-icons
 
 = Credits =
 
-Developed by [PHCDevworks](https://go.phcdev.co)
+Developed by PHCDevworks (https://phcdevworks.com)
 
 Icon libraries:
 * Lucide by Lucide Contributors
