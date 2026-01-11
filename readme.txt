@@ -184,12 +184,19 @@ Yes! Spectre Icons works anywhere Elementor can be used, including WooCommerce p
 = 1.0.0 =
 Major stable release with improved architecture, better performance, and enhanced icon rendering. Recommended for all users.
 
+== Icon Attributions ==
+
+This plugin bundles icons from Font Awesome Free and Lucide.
+
+= Font Awesome Free =
+Font Awesome Free is licensed under CC BY 4.0 (icons) and MIT (code).
+https://fontawesome.com/license/free
+
+= Lucide Icons =
+Lucide is licensed under the ISC License (MIT-compatible).
+https://lucide.dev
+
 == Additional Info ==
-
-= Bundled Icon Libraries =
-
-* **Lucide**: ISC License (MIT-compatible) - [lucide.dev](https://lucide.dev)
-* **Font Awesome Free**: CC BY 4.0 (icons) / MIT (code) - [fontawesome.com/license/free](https://fontawesome.com/license/free)
 
 = Part of the Spectre Suite =
 
