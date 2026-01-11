@@ -10,12 +10,6 @@ if (! defined('ABSPATH')) {
 	exit;
 }
 
-// Allow local dev stubs.
-$spectre_icons_stub_path = dirname(__DIR__, 2) . '/stubs/wordpress-stubs.php';
-if (file_exists($spectre_icons_stub_path)) {
-	require_once $spectre_icons_stub_path;
-}
-
 /**
  * Return base definition for each icon library.
  *
