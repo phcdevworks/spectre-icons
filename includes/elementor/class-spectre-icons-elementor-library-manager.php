@@ -197,13 +197,25 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 			}
 
 			// Sanitize some string fields.
-			$config['name']      = is_string($config['name']) && '' !== $config['name'] ? sanitize_key($config['name']) : $slug;
-			$config['label']     = wp_strip_all_tags($config['label']);
-			$config['labelIcon'] = is_string($config['labelIcon']) ? sanitize_html_class($config['labelIcon']) : '';
-			$config['prefix']    = is_string($config['prefix']) ? sanitize_html_class($config['prefix']) : '';
+			$config['name']  = (is_string($config['name']) && '' !== $config['name'])
+				? sanitize_key($config['name'])
+				: $slug;
+
+			$config['label'] = wp_strip_all_tags((string) $config['label']);
+
+			// Allow only Elementor's eicon-* tokens.
+			if (is_string($config['labelIcon']) && preg_match('/^eicon-[a-z0-9\-]+$/', $config['labelIcon'])) {
+				$config['labelIcon'] = $config['labelIcon'];
+			} else {
+				$config['labelIcon'] = '';
+			}
+
+			// Preserve hyphens/trailing hyphen for class prefixes like "spectre-lucide-".
+			$config['prefix'] = is_string($config['prefix'])
+				? preg_replace('/[^a-z0-9\-_]/i', '', (string) $config['prefix'])
+				: '';
 
 			$library['config'] = $config;
-
 			return $library;
 		}
 

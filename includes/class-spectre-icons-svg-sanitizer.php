@@ -36,11 +36,13 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 			'use',
 			'symbol',
 			'title',
-			'desc'
+			'desc',
 		);
 
 		/**
 		 * Allowed attributes for SVG elements.
+		 *
+		 * NOTE: We intentionally do NOT allow href/xlink:href, style, or any on* handlers.
 		 *
 		 * @var string[]
 		 */
@@ -67,7 +69,6 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 			'y2',
 			'transform',
 			'xmlns',
-			'xmlns:xlink'
 		);
 
 		/**
@@ -93,17 +94,22 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 				return '';
 			}
 
-			// Remove script tags, foreignObject, and other malicious containers.
+			// Remove script tags, foreignObject, and other malicious containers (case-insensitive).
 			$svg = preg_replace('/<\/?(script|foreignObject|iframe|object|embed)[^>]*>/i', '', $svg);
 
-			// Remove event handlers (anything starting with "on…").
+			// Remove inline event handlers (anything starting with "on…").
 			$svg = preg_replace('/\son[a-z]+\s*=\s*"[^"]*"/i', '', $svg);
 			$svg = preg_replace("/\son[a-z]+\s*=\s*'[^']*'/i", '', $svg);
+
+			// Add XML header if missing (improves loadXML compatibility).
+			if (false === stripos($svg, '<?xml')) {
+				$svg = '<?xml version="1.0" encoding="UTF-8"?>' . $svg;
+			}
 
 			// Load via DOM to strip unwanted tags + attributes.
 			$dom = new DOMDocument();
 
-			// Prevent entity expansion attacks.
+			// Prevent external entity expansion attacks.
 			$dom->resolveExternals   = false;
 			$dom->substituteEntities = false;
 
@@ -112,9 +118,13 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 			$dom->loadXML($svg, LIBXML_NONET | LIBXML_NOWARNING | LIBXML_NOERROR);
 			libxml_clear_errors();
 
+			if (! $dom->documentElement) {
+				return '';
+			}
+
 			self::sanitize_node_deep($dom->documentElement);
 
-			// Output clean XML.
+			// Output clean XML (just the <svg> element).
 			$clean = $dom->saveXML($dom->documentElement);
 
 			return is_string($clean) ? $clean : '';
@@ -128,13 +138,15 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 		 */
 		private static function sanitize_node_deep(DOMNode $node) {
 
-			if ($node->nodeType === XML_ELEMENT_NODE) {
+			if (XML_ELEMENT_NODE === $node->nodeType) {
 
 				$tag = $node->nodeName;
 
 				// Remove tag entirely if not permitted.
 				if (! in_array($tag, self::$allowed_tags, true)) {
-					$node->parentNode->removeChild($node);
+					if ($node->parentNode) {
+						$node->parentNode->removeChild($node);
+					}
 					return;
 				}
 
@@ -143,13 +155,15 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 					$remove = array();
 
 					foreach (iterator_to_array($node->attributes) as $attr) {
-						$name = $attr->nodeName;
+						$name  = (string) $attr->nodeName;
+						$value = strtolower(preg_replace('/\s+/', '', (string) $attr->nodeValue));
 
-						// Drop event handlers, scripting, xlink:href, URLs, etc.
+						// Drop event handlers, href/xlink:href, javascript: URLs, and anything not allowlisted.
 						if (
 							0 === stripos($name, 'on') ||
 							'href' === $name ||
-							strpos($attr->nodeValue, 'javascript:') !== false ||
+							'xlink:href' === $name ||
+							0 === strpos($value, 'javascript:') ||
 							! in_array($name, self::$allowed_attributes, true)
 						) {
 							$remove[] = $name;

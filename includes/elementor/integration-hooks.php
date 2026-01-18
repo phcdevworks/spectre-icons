@@ -129,11 +129,21 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 			continue;
 		}
 
-		if (empty($def['manifest_path']) || ! file_exists($def['manifest_path'])) {
+		if (empty($def['manifest_file'])) {
 			continue;
 		}
 
-		$manifest_url = SPECTRE_ICONS_URL . 'assets/manifests/' . basename($def['manifest_path']);
+		$manifest_file = sanitize_file_name($def['manifest_file']);
+		if ('' === $manifest_file) {
+			continue;
+		}
+
+		$manifest_path = SPECTRE_ICONS_PATH . 'assets/manifests/' . $manifest_file;
+		if (! file_exists($manifest_path)) {
+			continue;
+		}
+
+		$manifest_url = SPECTRE_ICONS_URL . 'assets/manifests/' . $manifest_file;
 		$prefix       = isset($def['class_prefix']) ? (string) $def['class_prefix'] : '';
 
 		$style = 'filled';
