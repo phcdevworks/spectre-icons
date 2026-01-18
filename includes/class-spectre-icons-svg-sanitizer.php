@@ -61,7 +61,7 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 			'y',
 			'width',
 			'height',
-			'viewBox',
+			'viewbox', // normalize to lowercase comparison
 			'points',
 			'x1',
 			'y1',
@@ -69,6 +69,9 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 			'y2',
 			'transform',
 			'xmlns',
+			'aria-hidden',
+			'role',
+			'focusable',
 		);
 
 		/**
@@ -94,37 +97,34 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 				return '';
 			}
 
-			// Remove script tags, foreignObject, and other malicious containers (case-insensitive).
+			// Remove dangerous containers (best-effort pre-strip).
 			$svg = preg_replace('/<\/?(script|foreignObject|iframe|object|embed)[^>]*>/i', '', $svg);
 
-			// Remove inline event handlers (anything starting with "on…").
+			// Remove inline event handlers (best-effort pre-strip).
 			$svg = preg_replace('/\son[a-z]+\s*=\s*"[^"]*"/i', '', $svg);
 			$svg = preg_replace("/\son[a-z]+\s*=\s*'[^']*'/i", '', $svg);
 
-			// Add XML header if missing (improves loadXML compatibility).
-			if (false === stripos($svg, '<?xml')) {
-				$svg = '<?xml version="1.0" encoding="UTF-8"?>' . $svg;
-			}
+			// Prevent DOCTYPE/entity tricks (DOMDocument can parse DOCTYPE in XML mode).
+			$svg = preg_replace('/<!DOCTYPE[\s\S]*?>/i', '', $svg);
+			$svg = preg_replace('/<!ENTITY[\s\S]*?>/i', '', $svg);
 
-			// Load via DOM to strip unwanted tags + attributes.
+			// Load via DOM to enforce allowlists.
 			$dom = new DOMDocument();
 
 			// Prevent external entity expansion attacks.
 			$dom->resolveExternals   = false;
 			$dom->substituteEntities = false;
 
-			// Suppress warnings for malformed SVG.
 			libxml_use_internal_errors(true);
-			$dom->loadXML($svg, LIBXML_NONET | LIBXML_NOWARNING | LIBXML_NOERROR);
+			$loaded = $dom->loadXML($svg, LIBXML_NONET | LIBXML_NOWARNING | LIBXML_NOERROR);
 			libxml_clear_errors();
 
-			if (! $dom->documentElement) {
+			if (! $loaded || ! $dom->documentElement) {
 				return '';
 			}
 
 			self::sanitize_node_deep($dom->documentElement);
 
-			// Output clean XML (just the <svg> element).
 			$clean = $dom->saveXML($dom->documentElement);
 
 			return is_string($clean) ? $clean : '';
@@ -139,8 +139,7 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 		private static function sanitize_node_deep(DOMNode $node) {
 
 			if (XML_ELEMENT_NODE === $node->nodeType) {
-
-				$tag = $node->nodeName;
+				$tag = strtolower((string) $node->nodeName);
 
 				// Remove tag entirely if not permitted.
 				if (! in_array($tag, self::$allowed_tags, true)) {
@@ -155,18 +154,32 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 					$remove = array();
 
 					foreach (iterator_to_array($node->attributes) as $attr) {
-						$name  = (string) $attr->nodeName;
-						$value = strtolower(preg_replace('/\s+/', '', (string) $attr->nodeValue));
+						$name_raw = (string) $attr->nodeName;
+						$name     = strtolower($name_raw);
+						$value    = strtolower(preg_replace('/\s+/', '', (string) $attr->nodeValue));
 
-						// Drop event handlers, href/xlink:href, javascript: URLs, and anything not allowlisted.
-						if (
-							0 === stripos($name, 'on') ||
-							'href' === $name ||
-							'xlink:href' === $name ||
-							0 === strpos($value, 'javascript:') ||
-							! in_array($name, self::$allowed_attributes, true)
-						) {
-							$remove[] = $name;
+						// Block any event handlers.
+						if (0 === stripos($name_raw, 'on')) {
+							$remove[] = $name_raw;
+							continue;
+						}
+
+						// Block any href variants + xlink namespace.
+						if ('href' === $name || 'xlink:href' === $name || 'xmlns:xlink' === $name) {
+							$remove[] = $name_raw;
+							continue;
+						}
+
+						// Block javascript: and data: urls anywhere.
+						if (0 === strpos($value, 'javascript:') || 0 === strpos($value, 'data:')) {
+							$remove[] = $name_raw;
+							continue;
+						}
+
+						// Enforce attribute allowlist (case-insensitive).
+						if (! in_array($name, self::$allowed_attributes, true)) {
+							$remove[] = $name_raw;
+							continue;
 						}
 					}
 

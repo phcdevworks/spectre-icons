@@ -56,6 +56,8 @@ add_action('plugins_loaded', 'spectre_icons_elementor_bootstrap', 20);
 /**
  * Admin notice when Elementor is missing.
  *
+ * Scoped to the Plugins screen only (no admin hijacking).
+ *
  * @return void
  */
 function spectre_icons_elementor_missing_elementor_notice() {
@@ -82,17 +84,16 @@ function spectre_icons_elementor_missing_elementor_notice() {
 }
 
 /**
- * Enqueue CSS for Elementor editor.
+ * Enqueue CSS for Elementor editor + preview.
  *
  * @return void
  */
 function spectre_icons_elementor_enqueue_styles() {
-
-	$css_path = SPECTRE_ICONS_URL . 'assets/css/admin/spectre-icons-admin.css';
+	$css_url = SPECTRE_ICONS_URL . 'assets/css/admin/spectre-icons-admin.css';
 
 	wp_enqueue_style(
 		'spectre-icons-elementor',
-		$css_path,
+		$css_url,
 		array(),
 		defined('SPECTRE_ICONS_VERSION') ? SPECTRE_ICONS_VERSION : '1.0.0'
 	);
@@ -110,11 +111,11 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 		wp_dequeue_script('wp-auth-check');
 	}
 
-	$js_path = SPECTRE_ICONS_URL . 'assets/js/elementor/spectre-icons-elementor.js';
+	$js_url = SPECTRE_ICONS_URL . 'assets/js/elementor/spectre-icons-elementor.js';
 
 	wp_enqueue_script(
 		'spectre-icons-elementor-js',
-		$js_path,
+		$js_url,
 		array('jquery'),
 		defined('SPECTRE_ICONS_VERSION') ? SPECTRE_ICONS_VERSION : '1.0.0',
 		true
@@ -133,7 +134,7 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 			continue;
 		}
 
-		$manifest_file = sanitize_file_name($def['manifest_file']);
+		$manifest_file = sanitize_file_name((string) $def['manifest_file']);
 		if ('' === $manifest_file) {
 			continue;
 		}
@@ -146,20 +147,16 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 		$manifest_url = SPECTRE_ICONS_URL . 'assets/manifests/' . $manifest_file;
 		$prefix       = isset($def['class_prefix']) ? (string) $def['class_prefix'] : '';
 
-		$style = 'filled';
-		if (false !== strpos($slug, 'lucide')) {
-			$style = 'outline';
-		}
+		$style = (false !== strpos($slug, 'lucide')) ? 'outline' : 'filled';
 
 		$libraries[$slug] = array(
 			'json'     => $manifest_url,
 			'prefix'   => $prefix,
-			'selector' => $prefix ? '[class*="' . $prefix . '"]' : '',
+			'selector' => $prefix ? '[class*="' . esc_attr($prefix) . '"]' : '',
 			'style'    => $style,
 		);
 	}
 
-	// Provide icon preview config to JS.
 	wp_localize_script(
 		'spectre-icons-elementor-js',
 		'SpectreIconsElementorConfig',
@@ -175,7 +172,6 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
  * @return bool
  */
 function spectre_icons_elementor_manifests_available() {
-
 	static $cache = null;
 
 	if (null !== $cache) {
@@ -190,6 +186,8 @@ function spectre_icons_elementor_manifests_available() {
 
 /**
  * Admin notice if manifests are missing.
+ *
+ * Scoped to Plugins screen + this plugin's settings screen.
  *
  * @return void
  */
