@@ -20,14 +20,14 @@ function spectre_icons_elementor_get_icon_library_definitions() {
 	$base_path = SPECTRE_ICONS_PATH . 'assets/manifests/';
 	return array(
 		'spectre-lucide' => array(
-			'label'         => 'Lucide Icons',
+			'label'         => __('Lucide Icons', 'spectre-icons'),
 			'label_icon'    => 'eicon-check',
 			'manifest_path' => $base_path . 'spectre-lucide.json',
 			'class_prefix'  => 'spectre-lucide-',
 		),
 
 		'spectre-fontawesome' => array(
-			'label'         => 'Font Awesome',
+			'label'         => __('Font Awesome', 'spectre-icons'),
 			'label_icon'    => 'eicon-star',
 			'manifest_path' => $base_path . 'spectre-fontawesome.json',
 			'class_prefix'  => 'spectre-fa-',
@@ -63,7 +63,7 @@ function spectre_icons_elementor_get_icon_preview_config() {
 			'label'           => $def['label'],
 			'labelIcon'       => isset($def['label_icon']) ? $def['label_icon'] : '',
 			'manifest'        => $def['manifest_path'],
-			'prefix'          => $def['class_prefix'],
+			'prefix'          => isset($def['class_prefix']) ? $def['class_prefix'] : '',
 			'render_callback' => array('Spectre_Icons_Elementor_Manifest_Renderer', 'render_icon'),
 			'native'          => false,
 			'icons'           => Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs($slug),
@@ -127,4 +127,3 @@ function spectre_icons_elementor_register_manifest_libraries($libraries) {
 }
 
 add_filter('spectre_icons_elementor_icon_libraries', 'spectre_icons_elementor_register_manifest_libraries');
-add_filter('spectre_elementor_icon_libraries', 'spectre_icons_elementor_register_manifest_libraries');
