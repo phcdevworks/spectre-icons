@@ -178,42 +178,11 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 
 			// Wrap SVG in the chosen HTML tag. The SVG itself is treated as trusted
 			// content from plugin assets; attributes are escaped.
-			$html = sprintf(
+			return sprintf(
 				'<%1$s%2$s>%3$s</%1$s>',
 				$tag,
 				$attr_string,
 				$svg
-			);
-
-			// Wrapper HTML is restricted; SVG is sanitized separately.
-			return wp_kses(
-				$html,
-				array(
-					'span' => array(
-						'class' => true,
-						'role'  => true,
-						'title' => true,
-						'id'    => true,
-						'aria-hidden' => true,
-						'aria-label'  => true,
-					),
-					'div'  => array(
-						'class' => true,
-						'role'  => true,
-						'title' => true,
-						'id'    => true,
-						'aria-hidden' => true,
-						'aria-label'  => true,
-					),
-					'i'    => array(
-						'class' => true,
-						'role'  => true,
-						'title' => true,
-						'id'    => true,
-						'aria-hidden' => true,
-						'aria-label'  => true,
-					),
-				)
 			);
 		}
 

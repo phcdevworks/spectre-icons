@@ -16,23 +16,19 @@ if (! defined('ABSPATH')) {
  * @return array<string,array>
  */
 function spectre_icons_elementor_get_icon_library_definitions() {
-
-	$base_path = SPECTRE_ICONS_PATH . 'assets/manifests/';
 	return array(
 		'spectre-lucide' => array(
-			'label'         => __('Lucide Icons', 'spectre-icons'),
-			'label_icon'    => 'eicon-check',
-			'manifest_path' => $base_path . 'spectre-lucide.json',
-			'class_prefix'  => 'spectre-lucide-',
+			'label'        => __('Lucide Icons', 'spectre-icons'),
+			'label_icon'   => 'eicon-check',
+			'manifest_file' => 'spectre-lucide.json',
+			'class_prefix' => 'spectre-lucide-',
 		),
-
 		'spectre-fontawesome' => array(
-			'label'         => __('Font Awesome', 'spectre-icons'),
-			'label_icon'    => 'eicon-star',
-			'manifest_path' => $base_path . 'spectre-fontawesome.json',
-			'class_prefix'  => 'spectre-fa-',
+			'label'        => __('Font Awesome', 'spectre-icons'),
+			'label_icon'   => 'eicon-star',
+			'manifest_file' => 'spectre-fontawesome.json',
+			'class_prefix' => 'spectre-fa-',
 		),
-
 	);
 }
 
@@ -51,10 +47,16 @@ function spectre_icons_elementor_get_icon_preview_config() {
 			continue;
 		}
 
-		if (
-			empty($def['manifest_path']) ||
-			! file_exists($def['manifest_path'])
-		) {
+		$base_dir = trailingslashit(SPECTRE_ICONS_PATH . 'assets/manifests/');
+
+		$manifest_file = isset($def['manifest_file']) ? sanitize_file_name($def['manifest_file']) : '';
+		if ('' === $manifest_file) {
+			continue;
+		}
+
+		$manifest_path = $base_dir . $manifest_file;
+
+		if (! file_exists($manifest_path)) {
 			continue;
 		}
 
@@ -62,7 +64,7 @@ function spectre_icons_elementor_get_icon_preview_config() {
 			'name'            => $slug,
 			'label'           => $def['label'],
 			'labelIcon'       => isset($def['label_icon']) ? $def['label_icon'] : '',
-			'manifest'        => $def['manifest_path'],
+			'manifest' => $manifest_path,
 			'prefix'          => isset($def['class_prefix']) ? $def['class_prefix'] : '',
 			'render_callback' => array('Spectre_Icons_Elementor_Manifest_Renderer', 'render_icon'),
 			'native'          => false,
@@ -90,9 +92,16 @@ function spectre_icons_elementor_register_manifest_libraries($libraries) {
 			continue;
 		}
 
-		$manifest_path = isset($def['manifest_path']) ? $def['manifest_path'] : '';
+		$base_dir = trailingslashit(SPECTRE_ICONS_PATH . 'assets/manifests/');
 
-		if ('' === $manifest_path || ! file_exists($manifest_path)) {
+		$manifest_file = isset($def['manifest_file']) ? sanitize_file_name($def['manifest_file']) : '';
+		if ('' === $manifest_file) {
+			continue;
+		}
+
+		$manifest_path = $base_dir . $manifest_file;
+
+		if (! file_exists($manifest_path)) {
 			continue;
 		}
 
