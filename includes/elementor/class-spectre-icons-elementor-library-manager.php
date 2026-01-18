@@ -148,6 +148,13 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 		 * @return array|null     Sanitized library or null on failure.
 		 */
 		private function validate_library_definition($slug, array $library) {
+			$slug = sanitize_key($slug);
+
+			if ('' === $slug) {
+				self::log_debug('validate_library_definition called with empty slug.');
+				return null;
+			}
+
 			$defaults = array(
 				'label'  => '',
 				'config' => array(),
@@ -182,7 +189,7 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 
 			// Basic checks to avoid Elementor-side errors.
 			if ('' === $config['label']) {
-				self::log_debug(sprintf('Library "%s" config missing \"label\".', $slug));
+				self::log_debug(sprintf('Library "%s" config missing "label".', $slug));
 				return null;
 			}
 
@@ -203,7 +210,7 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 
 			$config['label'] = wp_strip_all_tags((string) $config['label']);
 
-			// Allow only Elementor's eicon-* tokens.
+			// Allow only Elementor's eicon-* tokens for the tab icon.
 			if (is_string($config['labelIcon']) && preg_match('/^eicon-[a-z0-9\-]+$/', $config['labelIcon'])) {
 				$config['labelIcon'] = $config['labelIcon'];
 			} else {
@@ -216,6 +223,7 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 				: '';
 
 			$library['config'] = $config;
+
 			return $library;
 		}
 
