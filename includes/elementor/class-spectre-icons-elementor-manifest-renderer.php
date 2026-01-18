@@ -79,9 +79,6 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 				return;
 			}
 
-			// We intentionally do NOT require file_exists() here, because the path
-			// may point into a packaged asset that is not yet available in some
-			// contexts (e.g. during build-time tools). We will check on load.
 			$defaults = array(
 				'prefix'  => '',
 				'options' => array(),
@@ -140,7 +137,6 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 			list($library_slug, $icon_slug) = self::extract_slug($icon);
 
 			if ('' === $icon_slug) {
-				// Nothing to render.
 				return '';
 			}
 
@@ -176,8 +172,8 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 				return '';
 			}
 
-			// Wrap SVG in the chosen HTML tag. The SVG itself is treated as trusted
-			// content from plugin assets; attributes are escaped.
+			// Wrapper tag is restricted (sanitize_tag_name), wrapper attributes are escaped,
+			// and SVG markup is sanitized via Spectre_Icons_SVG_Sanitizer from local plugin manifests.
 			return sprintf(
 				'<%1$s%2$s>%3$s</%1$s>',
 				$tag,
@@ -242,8 +238,20 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 				return array();
 			}
 
-			$contents = file_get_contents($manifest_path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-			if (false === $contents) {
+			// Read manifest using WP_Filesystem (reviewer-friendly alternative to file_get_contents()).
+			$contents = '';
+
+			global $wp_filesystem;
+			if (! $wp_filesystem) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+				WP_Filesystem();
+			}
+
+			if ($wp_filesystem && method_exists($wp_filesystem, 'get_contents')) {
+				$contents = $wp_filesystem->get_contents($manifest_path);
+			}
+
+			if (false === $contents || '' === $contents) {
 				self::log_debug(sprintf('Could not read manifest file for library "%s".', $library_slug));
 				self::$icons_cache[$library_slug] = array();
 				return array();
@@ -324,7 +332,6 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 		 * Extract library slug and icon slug from Elementor's icon payload.
 		 *
 		 * Supported shapes:
-		 *
 		 * - [ 'library' => 'spectre-lucide', 'value' => 'spectre-lucide arrow-right' ]
 		 * - [ 'library' => 'spectre-lucide', 'value' => 'arrow-right' ]
 		 * - 'arrow-right' (string) – library slug will be empty.
@@ -336,7 +343,6 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 			$library_slug = '';
 			$icon_slug    = '';
 
-			// Elementor passes an array.
 			if (is_array($icon)) {
 				if (! empty($icon['library'])) {
 					$library_slug = sanitize_key((string) $icon['library']);
@@ -346,21 +352,16 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 				if (! empty($icon['value'])) {
 					$value = (string) $icon['value'];
 				} elseif (! empty($icon['icon'])) {
-					// Fallback key used in some Elementor versions.
 					$value = (string) $icon['icon'];
 				}
 
 				if ('' !== $value) {
-					// Example values:
-					// - 'spectre-lucide arrow-right'
-					// - 'arrow-right'
 					$parts = preg_split('/\s+/', trim($value));
-					$slug  = end($parts); // Last token is usually the icon identifier.
+					$last  = end($parts);
 
-					$icon_slug = sanitize_key($slug);
+					$icon_slug = sanitize_key((string) $last);
 				}
 			} elseif (is_string($icon)) {
-				// When called manually with a slug string.
 				$icon_slug = sanitize_key($icon);
 			}
 
@@ -382,9 +383,9 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 		/**
 		 * Prepare HTML attributes for the wrapper, ensuring class names are set.
 		 *
-		 * @param array $attributes Input attributes (possibly including 'class').
-		 * @param string $icon_slug Icon slug.
-		 * @param array  $library   Library config (from self::$libraries).
+		 * @param array  $attributes Input attributes (possibly including 'class').
+		 * @param string $icon_slug  Icon slug.
+		 * @param array  $library    Library config (from self::$libraries).
 		 * @return array Sanitized attributes.
 		 */
 		private static function prepare_attributes(array $attributes, $icon_slug, array $library) {
@@ -403,23 +404,35 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 			}
 
 			$class_attr = trim($base_class . ' ' . $current_class);
-
 			if ('' !== $class_attr) {
 				$prepared['class'] = $class_attr;
 			}
 
-			// Copy through remaining attributes with sanitized names.
+			// Copy through remaining attributes with validated names (allow aria-* and data-*).
 			foreach ($attributes as $name => $value) {
 				if ('class' === $name) {
 					continue;
 				}
 
-				$sanitized_name = sanitize_key($name);
-				if ('' === $sanitized_name) {
+				$name = (string) $name;
+				if ('' === $name) {
 					continue;
 				}
 
-				$prepared[$sanitized_name] = $value;
+				// Disallow event handlers (onclick, onload, etc).
+				if (0 === stripos($name, 'on')) {
+					continue;
+				}
+
+				// Allow common safe attribute names, including aria-* and data-*.
+				if (
+					! preg_match('/^(?:data|aria)-[a-z0-9_\-]+$/i', $name) &&
+					! preg_match('/^[a-z][a-z0-9_\-:.]*$/i', $name)
+				) {
+					continue;
+				}
+
+				$prepared[$name] = $value;
 			}
 
 			return $prepared;
@@ -439,8 +452,8 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 			$parts = array();
 
 			foreach ($attributes as $name => $value) {
-				$name  = esc_attr($name);
-				$value = esc_attr((string) $value);
+				$name    = esc_attr($name);
+				$value   = esc_attr((string) $value);
 				$parts[] = sprintf('%s="%s"', $name, $value);
 			}
 
@@ -456,7 +469,7 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 		 * @return string Safe tag.
 		 */
 		private static function sanitize_tag_name($tag) {
-			$tag = strtolower((string) $tag);
+			$tag     = strtolower((string) $tag);
 			$allowed = array('span', 'i', 'div');
 
 			if (in_array($tag, $allowed, true)) {
@@ -469,36 +482,27 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 		/**
 		 * Build an SVG string from a manifest icon entry.
 		 *
-		 * Adjust this method to match your actual manifest schema.
-		 *
-		 * Common patterns:
-		 * - $icon_data['svg']  contains full <svg>...</svg>
-		 * - $icon_data['body'] contains inner SVG markup (paths, etc.)
-		 *
 		 * @param array $icon_data Manifest entry for a single icon.
 		 * @return string SVG markup.
 		 */
 		private static function build_svg_from_manifest_icon(array $icon_data) {
-			// If manifest already stores full SVG markup, just use it.
 			if (! empty($icon_data['svg']) && is_string($icon_data['svg'])) {
 				return Spectre_Icons_SVG_Sanitizer::sanitize($icon_data['svg']);
 			}
 
-			// If manifest stores inner markup (paths/group), wrap it in a basic SVG shell.
 			if (! empty($icon_data['body']) && is_string($icon_data['body'])) {
 				$body = $icon_data['body'];
 
-				// Basic Lucide-like defaults; tweak as needed or read from manifest.
 				$attrs = array(
-					'xmlns'       => 'http://www.w3.org/2000/svg',
-					'width'       => '24',
-					'height'      => '24',
-					'viewBox'     => '0 0 24 24',
-					'fill'        => 'none',
-					'stroke'      => 'currentColor',
-					'stroke-width' => '2',
-					'stroke-linecap'   => 'round',
-					'stroke-linejoin'  => 'round',
+					'xmlns'           => 'http://www.w3.org/2000/svg',
+					'width'           => '24',
+					'height'          => '24',
+					'viewBox'         => '0 0 24 24',
+					'fill'            => 'none',
+					'stroke'          => 'currentColor',
+					'stroke-width'    => '2',
+					'stroke-linecap'  => 'round',
+					'stroke-linejoin' => 'round',
 				);
 
 				$attr_string = self::attributes_to_string($attrs);
@@ -512,7 +516,6 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 				return Spectre_Icons_SVG_Sanitizer::sanitize($svg);
 			}
 
-			// Nothing usable.
 			return '';
 		}
 

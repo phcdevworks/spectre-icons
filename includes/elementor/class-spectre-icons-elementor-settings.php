@@ -70,7 +70,7 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 		}
 
 		/**
-		 * Render admin settings page.
+		 * Register admin settings page.
 		 *
 		 * @return void
 		 */
@@ -121,7 +121,7 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 			$libraries = apply_filters('spectre_icons_elementor_icon_libraries', array());
 			$prefs     = $this->get_tabs();
 
-			if (empty($libraries)) {
+			if (empty($libraries) || ! is_array($libraries)) {
 				echo '<p>' . esc_html__('No icon libraries available.', 'spectre-icons') . '</p>';
 				return;
 			}
@@ -134,14 +134,14 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 					continue;
 				}
 
-				$label = isset($lib['label']) ? $lib['label'] : ucfirst($slug);
+				$label   = isset($lib['label']) ? (string) $lib['label'] : ucfirst($slug);
 				$enabled = isset($prefs[$slug]) ? (bool) $prefs[$slug] : true;
 
 				printf(
 					'<label style="display:block;margin-bottom:6px;">
-					<input type="checkbox" name="%1$s[%2$s]" value="1" %3$s>
-					%4$s
-				</label>',
+						<input type="checkbox" name="%1$s[%2$s]" value="1" %3$s>
+						%4$s
+					</label>',
 					esc_attr($this->option_name),
 					esc_attr($slug),
 					checked($enabled, true, false),
@@ -168,13 +168,14 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 				$stored = array();
 			}
 
-			// Normalize values to bool.
 			$prefs = array();
+
 			foreach ($stored as $slug => $enabled) {
 				$slug = sanitize_key($slug);
 				if ('' === $slug) {
 					continue;
 				}
+
 				$prefs[$slug] = (bool) $enabled;
 			}
 
