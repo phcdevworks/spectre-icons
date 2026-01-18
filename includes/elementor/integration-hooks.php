@@ -184,18 +184,21 @@ function spectre_icons_elementor_manifests_available() {
  * @return void
  */
 function spectre_icons_elementor_missing_manifest_notice() {
+	if (! is_admin() || wp_doing_ajax()) {
+		return;
+	}
 
 	if (! current_user_can('manage_options')) {
 		return;
 	}
 
-	// Only show notice on Elementor or plugin settings screens.
-	$screen = get_current_screen();
-	if (
-		$screen &&
-		false === strpos($screen->id, 'elementor') &&
-		false === strpos($screen->id, 'spectre')
-	) {
+	$screen = function_exists('get_current_screen') ? get_current_screen() : null;
+	if (! $screen) {
+		return;
+	}
+
+	// Only show notice on Plugins or Spectre Icons settings screen.
+	if (! in_array($screen->id, array('plugins', 'settings_page_spectre-icons-elementor'), true)) {
 		return;
 	}
 
