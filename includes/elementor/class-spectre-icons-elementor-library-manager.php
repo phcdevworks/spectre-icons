@@ -136,6 +136,9 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 		}
 
 		public function register_additional_tabs($tabs) {
+			// Refresh libraries at the moment Elementor asks for them (prevents stale/late filter issues).
+			$this->load_libraries();
+
 			if (! is_array($tabs)) {
 				$tabs = array();
 			}
