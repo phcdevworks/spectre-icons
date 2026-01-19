@@ -47,6 +47,9 @@ function spectre_icons_elementor_get_icon_preview_config() {
 	$base_dir  = trailingslashit(SPECTRE_ICONS_PATH . 'assets/manifests/');
 	$base_real = realpath($base_dir);
 
+	// Normalize to a directory prefix to make strpos checks safer.
+	$base_real = $base_real ? trailingslashit(wp_normalize_path($base_real)) : '';
+
 	foreach ($definitions as $slug => $def) {
 		$slug = sanitize_key($slug);
 		if ('' === $slug) {
@@ -62,7 +65,9 @@ function spectre_icons_elementor_get_icon_preview_config() {
 
 		// Path hardening: ensure resolved path stays within manifests directory.
 		$real = realpath($manifest_path);
-		if (! $base_real || ! $real || 0 !== strpos($real, $base_real)) {
+		$real = $real ? wp_normalize_path($real) : '';
+
+		if ('' === $base_real || '' === $real || 0 !== strpos($real, $base_real)) {
 			continue;
 		}
 
@@ -74,12 +79,15 @@ function spectre_icons_elementor_get_icon_preview_config() {
 			? $def['label_icon']
 			: '';
 
+		$class_prefix_raw = isset($def['class_prefix']) ? (string) $def['class_prefix'] : '';
+		$class_prefix     = preg_replace('/[^a-z0-9\-_]/i', '', $class_prefix_raw);
+
 		$config[$slug] = array(
 			'name'            => $slug,
 			'label'           => isset($def['label']) ? (string) $def['label'] : $slug,
 			'labelIcon'       => $label_icon,
 			'manifest'        => $real,
-			'prefix'          => isset($def['class_prefix']) ? (string) $def['class_prefix'] : '',
+			'prefix'          => $class_prefix,
 			'render_callback' => array('Spectre_Icons_Elementor_Manifest_Renderer', 'render_icon'),
 			'native'          => false,
 			'ver'             => '0.1.0',
@@ -104,6 +112,9 @@ function spectre_icons_elementor_register_manifest_libraries($libraries) {
 	$base_dir  = trailingslashit(SPECTRE_ICONS_PATH . 'assets/manifests/');
 	$base_real = realpath($base_dir);
 
+	// Normalize to a directory prefix to make strpos checks safer.
+	$base_real = $base_real ? trailingslashit(wp_normalize_path($base_real)) : '';
+
 	foreach ($defs as $slug => $def) {
 		$slug = sanitize_key($slug);
 		if ('' === $slug) {
@@ -119,7 +130,9 @@ function spectre_icons_elementor_register_manifest_libraries($libraries) {
 
 		// Path hardening: ensure resolved path stays within manifests directory.
 		$real = realpath($manifest_path);
-		if (! $base_real || ! $real || 0 !== strpos($real, $base_real)) {
+		$real = $real ? wp_normalize_path($real) : '';
+
+		if ('' === $base_real || '' === $real || 0 !== strpos($real, $base_real)) {
 			continue;
 		}
 
@@ -127,8 +140,10 @@ function spectre_icons_elementor_register_manifest_libraries($libraries) {
 			continue;
 		}
 
-		$label        = isset($def['label']) ? (string) $def['label'] : $slug;
-		$class_prefix = isset($def['class_prefix']) ? (string) $def['class_prefix'] : '';
+		$label = isset($def['label']) ? (string) $def['label'] : $slug;
+
+		$class_prefix_raw = isset($def['class_prefix']) ? (string) $def['class_prefix'] : '';
+		$class_prefix     = preg_replace('/[^a-z0-9\-_]/i', '', $class_prefix_raw);
 
 		$label_icon = (isset($def['label_icon']) && is_string($def['label_icon']) && preg_match('/^eicon-[a-z0-9\-]+$/', $def['label_icon']))
 			? $def['label_icon']
