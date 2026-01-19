@@ -53,14 +53,14 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 
 			add_settings_section(
 				'spectre_icons_elementor_section',
-				esc_html__('Spectre Icons: Elementor Libraries', 'spectre-icons'),
+				__('Spectre Icons: Elementor Libraries', 'spectre-icons'),
 				'__return_false',
 				'spectre_icons_elementor'
 			);
 
 			add_settings_field(
 				'spectre_icons_elementor_tabs_field',
-				esc_html__('Enabled Icon Libraries', 'spectre-icons'),
+				__('Enabled Icon Libraries', 'spectre-icons'),
 				array($this, 'render_tabs_field'),
 				'spectre_icons_elementor',
 				'spectre_icons_elementor_section'
@@ -74,8 +74,8 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 		 */
 		public function register_menu_page() {
 			add_options_page(
-				esc_html__('Spectre Icons - Elementor', 'spectre-icons'),
-				esc_html__('Spectre Icons', 'spectre-icons'),
+				__('Spectre Icons - Elementor', 'spectre-icons'),
+				__('Spectre Icons', 'spectre-icons'),
 				'manage_options',
 				'spectre-icons-elementor',
 				array($this, 'render_settings_page')
@@ -85,6 +85,8 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 		/**
 		 * Sanitize library preference values.
 		 *
+		 * Whitelists keys to only known library slugs from the filter.
+		 *
 		 * @param mixed $value Raw input.
 		 * @return array Sanitized prefs.
 		 */
@@ -93,16 +95,32 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 				return array();
 			}
 
+			// Whitelist known library slugs.
+			$libraries = apply_filters('spectre_icons_elementor_icon_libraries', array());
+			$allowed   = array();
+
+			if (is_array($libraries)) {
+				foreach ($libraries as $slug => $lib) {
+					$slug = sanitize_key($slug);
+					if ('' !== $slug) {
+						$allowed[$slug] = true;
+					}
+				}
+			}
+
 			$clean = array();
 
 			foreach ($value as $slug => $enabled) {
 				$slug = sanitize_key($slug);
-				if ('' === $slug) {
+				if ('' === $slug || ! isset($allowed[$slug])) {
 					continue;
 				}
 
 				$clean[$slug] = (bool) $enabled;
 			}
+
+			// Reset cached prefs after save.
+			$this->tabs_cache = null;
 
 			return $clean;
 		}
@@ -129,7 +147,9 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 					continue;
 				}
 
-				$label   = isset($lib['label']) ? (string) $lib['label'] : ucfirst($slug);
+				$label_raw = isset($lib['label']) ? (string) $lib['label'] : ucfirst($slug);
+				$label     = wp_strip_all_tags($label_raw);
+
 				$enabled = isset($prefs[$slug]) ? (bool) $prefs[$slug] : true;
 
 				printf(
@@ -158,7 +178,6 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 			}
 
 			$stored = get_option($this->option_name, array());
-
 			if (! is_array($stored)) {
 				$stored = array();
 			}
