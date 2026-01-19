@@ -33,8 +33,6 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 
 		/**
 		 * Constructor.
-		 *
-		 * Registers the settings field + admin menu.
 		 */
 		public function __construct() {
 			add_action('admin_init', array($this, 'register_settings'));
@@ -55,14 +53,14 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 
 			add_settings_section(
 				'spectre_icons_elementor_section',
-				__('Spectre Icons: Elementor Libraries', 'spectre-icons'),
+				esc_html__('Spectre Icons: Elementor Libraries', 'spectre-icons'),
 				'__return_false',
 				'spectre_icons_elementor'
 			);
 
 			add_settings_field(
 				'spectre_icons_elementor_tabs_field',
-				__('Enabled Icon Libraries', 'spectre-icons'),
+				esc_html__('Enabled Icon Libraries', 'spectre-icons'),
 				array($this, 'render_tabs_field'),
 				'spectre_icons_elementor',
 				'spectre_icons_elementor_section'
@@ -76,8 +74,8 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 		 */
 		public function register_menu_page() {
 			add_options_page(
-				__('Spectre Icons - Elementor', 'spectre-icons'),
-				__('Spectre Icons', 'spectre-icons'),
+				esc_html__('Spectre Icons - Elementor', 'spectre-icons'),
+				esc_html__('Spectre Icons', 'spectre-icons'),
 				'manage_options',
 				'spectre-icons-elementor',
 				array($this, 'render_settings_page')
@@ -86,9 +84,6 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 
 		/**
 		 * Sanitize library preference values.
-		 *
-		 * Input shape expected:
-		 *   [ 'spectre-lucide' => '1', 'spectre-social' => '0', ... ]
 		 *
 		 * @param mixed $value Raw input.
 		 * @return array Sanitized prefs.
@@ -113,7 +108,7 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 		}
 
 		/**
-		 * Render the tab checkbox field inside the settings page.
+		 * Render the tab checkbox field.
 		 *
 		 * @return void
 		 */
@@ -138,8 +133,8 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 				$enabled = isset($prefs[$slug]) ? (bool) $prefs[$slug] : true;
 
 				printf(
-					'<label style="display:block;margin-bottom:6px;">
-						<input type="checkbox" name="%1$s[%2$s]" value="1" %3$s>
+					'<label class="spectre-icons-setting-item">
+						<input type="checkbox" name="%1$s[%2$s]" value="1" %3$s />
 						%4$s
 					</label>',
 					esc_attr($this->option_name),
@@ -155,7 +150,7 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 		/**
 		 * Fetch enabled/disabled libraries.
 		 *
-		 * @return array<string,bool> Map of slug => enabled.
+		 * @return array<string,bool>
 		 */
 		public function get_tabs() {
 			if (null !== $this->tabs_cache) {

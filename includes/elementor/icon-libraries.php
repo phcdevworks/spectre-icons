@@ -35,9 +35,7 @@ function spectre_icons_elementor_get_icon_library_definitions() {
 /**
  * Build preview config for Elementor.
  *
- * Note: This returns config in the "tab" shape. Your Library Manager expects
- * libraries shaped as [ slug => [ 'label' => ..., 'config' => ... ] ].
- * Keep this function only if you use it elsewhere; the filter below is what Elementor uses.
+ * NOTE: This is informational only. The filter below is authoritative.
  *
  * @return array<string,array>
  */
@@ -59,15 +57,27 @@ function spectre_icons_elementor_get_icon_preview_config() {
 		}
 
 		$manifest_path = $base_dir . $manifest_file;
-
 		if (! file_exists($manifest_path)) {
 			continue;
 		}
 
+		// Ensure renderer knows about this manifest before querying slugs.
+		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest(
+			$slug,
+			$manifest_path,
+			array(
+				'prefix' => isset($def['class_prefix']) ? (string) $def['class_prefix'] : '',
+			)
+		);
+
+		$label_icon = isset($def['label_icon']) && preg_match('/^eicon-[a-z0-9\-]+$/', $def['label_icon'])
+			? $def['label_icon']
+			: '';
+
 		$config[$slug] = array(
 			'name'            => $slug,
 			'label'           => isset($def['label']) ? (string) $def['label'] : $slug,
-			'labelIcon'       => isset($def['label_icon']) ? (string) $def['label_icon'] : '',
+			'labelIcon'       => $label_icon,
 			'manifest'        => $manifest_path,
 			'prefix'          => isset($def['class_prefix']) ? (string) $def['class_prefix'] : '',
 			'render_callback' => array('Spectre_Icons_Elementor_Manifest_Renderer', 'render_icon'),
@@ -82,8 +92,6 @@ function spectre_icons_elementor_get_icon_preview_config() {
 
 /**
  * Register manifest libraries with the renderer + return Elementor-ready config.
- *
- * This is the authoritative source used by the Library Manager.
  *
  * @param array $libraries Existing icon libraries.
  * @return array Modified libraries array.
@@ -108,26 +116,25 @@ function spectre_icons_elementor_register_manifest_libraries($libraries) {
 		}
 
 		$manifest_path = $base_dir . $manifest_file;
-
 		if (! file_exists($manifest_path)) {
 			continue;
 		}
 
 		$label        = isset($def['label']) ? (string) $def['label'] : $slug;
-		$label_icon   = isset($def['label_icon']) ? (string) $def['label_icon'] : '';
 		$class_prefix = isset($def['class_prefix']) ? (string) $def['class_prefix'] : '';
 
-		// Register manifest with renderer.
+		$label_icon = isset($def['label_icon']) && preg_match('/^eicon-[a-z0-9\-]+$/', $def['label_icon'])
+			? $def['label_icon']
+			: '';
+
 		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest(
 			$slug,
 			$manifest_path,
 			array(
-				'prefix'  => $class_prefix,
-				'options' => array(),
+				'prefix' => $class_prefix,
 			)
 		);
 
-		// Build config for the Library Manager / Elementor.
 		$libraries[$slug] = array(
 			'label'  => $label,
 			'config' => array(
