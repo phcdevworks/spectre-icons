@@ -159,8 +159,6 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 
 			$icons = array();
 
-			// Support associative map or list. Your current logic already basically does this,
-			// but this version avoids undefined-index warnings.
 			foreach ($data as $slug => $entry) {
 				$key = '';
 
@@ -185,35 +183,56 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 			return $icons;
 		}
 
+		/**
+		 * Extract library slug + icon slug from Elementor payload.
+		 *
+		 * Handles:
+		 * - ['library' => 'spectre-lucide', 'value' => 'spectre-lucide arrow-right']
+		 * - ['library' => 'spectre-lucide', 'value' => 'spectre-lucide-arrow-right']
+		 * - ['library' => 'spectre-lucide', 'value' => 'arrow-right']
+		 */
 		private static function extract_slug($icon) {
 			$library = '';
-			$slug    = '';
+			$raw     = '';
 
 			if (is_array($icon)) {
 				$library = sanitize_key($icon['library'] ?? '');
-				$value   = (string) ($icon['value'] ?? $icon['icon'] ?? '');
-
-				if ('' !== $value) {
-					$parts = preg_split('/\s+/', trim($value));
-					$slug  = sanitize_key((string) end($parts));
-				}
+				$raw     = (string) ($icon['value'] ?? $icon['icon'] ?? '');
 			} elseif (is_string($icon)) {
-				$slug = sanitize_key($icon);
+				$raw = $icon;
 			}
 
+			$raw = trim($raw);
+			$slug_raw = '';
+
+			if ('' !== $raw) {
+				// If it's space-delimited, use last token (Elementor commonly does this).
+				$parts = preg_split('/\s+/', $raw);
+				$slug_raw = (string) end($parts);
+			}
+
+			// If we still don't have anything, bail safely.
+			if ('' === $slug_raw) {
+				return array($library, '');
+			}
+
+			// If library is known, strip prefix BEFORE sanitizing so match is exact.
 			if ($library && isset(self::$libraries[$library]['prefix'])) {
 				$prefix = (string) self::$libraries[$library]['prefix'];
-				if ('' !== $prefix && 0 === strpos($slug, $prefix)) {
-					$slug = sanitize_key(substr($slug, strlen($prefix)));
+				if ('' !== $prefix && 0 === strpos($slug_raw, $prefix)) {
+					$slug_raw = substr($slug_raw, strlen($prefix));
 				}
 			}
 
-			return array($library, $slug);
+			return array($library, sanitize_key($slug_raw));
 		}
 
+		/**
+		 * Wrapper tag should be inline; div can break layouts.
+		 */
 		private static function sanitize_tag_name($tag) {
 			$tag = strtolower((string) $tag);
-			return in_array($tag, array('span', 'i', 'div'), true) ? $tag : 'span';
+			return in_array($tag, array('span', 'i'), true) ? $tag : 'span';
 		}
 
 		private static function maybe_add_style_class(array $attributes, $library_slug) {
