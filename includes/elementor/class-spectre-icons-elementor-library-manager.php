@@ -72,7 +72,9 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 		}
 
 		private function validate_library_definition($slug, array $library) {
-			if ('' === $library['label'] || ! is_array($library['config'])) {
+			$label = isset($library['label']) ? (string) $library['label'] : '';
+
+			if ('' === $label || ! is_array($library['config'])) {
 				return null;
 			}
 
@@ -80,7 +82,7 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 				$library['config'],
 				array(
 					'name'            => $slug,
-					'label'           => $library['label'],
+					'label'           => $label,
 					'labelIcon'       => '',
 					'manifest'        => '',
 					'prefix'          => '',
@@ -91,29 +93,40 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 				)
 			);
 
-			// Strict render callback enforcement
-			if (
-				! is_array($config['render_callback']) ||
-				2 !== count($config['render_callback']) ||
-				! class_exists($config['render_callback'][0]) ||
-				! method_exists($config['render_callback'][0], $config['render_callback'][1])
-			) {
+			// Enforce: must be callable (don’t over-restrict to [Class, method] only).
+			if (empty($config['render_callback']) || ! is_callable($config['render_callback'])) {
 				return null;
 			}
 
-			$config['name']  = sanitize_key((string) $config['name']);
-			$config['label'] = wp_strip_all_tags((string) $config['label']);
+			// Normalize/sanitize name.
+			$name = sanitize_key((string) $config['name']);
+			if ('' === $name) {
+				$name = $slug;
+			}
+			$config['name'] = $name;
 
+			// Sanitize label.
+			$config['label'] = wp_strip_all_tags((string) $config['label']);
+			if ('' === $config['label']) {
+				$config['label'] = wp_strip_all_tags($label);
+			}
+			if ('' === $config['label']) {
+				$config['label'] = $slug;
+			}
+
+			// Allow only Elementor's eicon-* tokens for the tab icon.
 			$icon = (string) $config['labelIcon'];
 			if (strlen($icon) > 32 || ! preg_match('/^eicon-[a-z0-9\-]+$/', $icon)) {
 				$icon = '';
 			}
 			$config['labelIcon'] = $icon;
 
+			// Prefix used for classnames (preserve hyphens/trailing hyphen).
 			$config['prefix'] = is_string($config['prefix'])
-				? preg_replace('/[^a-z0-9\-_]/i', '', $config['prefix'])
+				? preg_replace('/[^a-z0-9\-_]/i', '', (string) $config['prefix'])
 				: '';
 
+			// Icons list must be an array.
 			$config['icons'] = is_array($config['icons']) ? $config['icons'] : array();
 
 			$library['config'] = $config;
@@ -144,7 +157,7 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
 					continue;
 				}
 
-				$tabs[$slug] = (array) $library['config'];
+				$tabs[$slug] = $library['config'];
 			}
 
 			return $tabs;
