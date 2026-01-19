@@ -56,8 +56,6 @@ add_action('plugins_loaded', 'spectre_icons_elementor_bootstrap', 20);
 /**
  * Admin notice when Elementor is missing.
  *
- * Scoped to the Plugins screen only (no admin hijacking).
- *
  * @return void
  */
 function spectre_icons_elementor_missing_elementor_notice() {
@@ -89,11 +87,9 @@ function spectre_icons_elementor_missing_elementor_notice() {
  * @return void
  */
 function spectre_icons_elementor_enqueue_styles() {
-	$css_url = SPECTRE_ICONS_URL . 'assets/css/admin/spectre-icons-admin.css';
-
 	wp_enqueue_style(
 		'spectre-icons-elementor',
-		$css_url,
+		SPECTRE_ICONS_URL . 'assets/css/admin/spectre-icons-admin.css',
 		array(),
 		defined('SPECTRE_ICONS_VERSION') ? SPECTRE_ICONS_VERSION : '1.0.0'
 	);
@@ -106,16 +102,13 @@ function spectre_icons_elementor_enqueue_styles() {
  */
 function spectre_icons_elementor_enqueue_icon_scripts() {
 
-	// Avoid wp-auth-check throwing errors inside Elementor editor.
 	if (wp_script_is('wp-auth-check', 'enqueued')) {
 		wp_dequeue_script('wp-auth-check');
 	}
 
-	$js_url = SPECTRE_ICONS_URL . 'assets/js/elementor/spectre-icons-elementor.js';
-
 	wp_enqueue_script(
 		'spectre-icons-elementor-js',
-		$js_url,
+		SPECTRE_ICONS_URL . 'assets/js/elementor/spectre-icons-elementor.js',
 		array('jquery'),
 		defined('SPECTRE_ICONS_VERSION') ? SPECTRE_ICONS_VERSION : '1.0.0',
 		true
@@ -126,34 +119,22 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 
 	foreach ($definitions as $slug => $def) {
 		$slug = sanitize_key($slug);
-		if ('' === $slug) {
-			continue;
-		}
-
-		if (empty($def['manifest_file'])) {
+		if ('' === $slug || empty($def['manifest_file'])) {
 			continue;
 		}
 
 		$manifest_file = sanitize_file_name((string) $def['manifest_file']);
-		if ('' === $manifest_file) {
-			continue;
-		}
-
 		$manifest_path = SPECTRE_ICONS_PATH . 'assets/manifests/' . $manifest_file;
+
 		if (! file_exists($manifest_path)) {
 			continue;
 		}
 
-		$manifest_url = SPECTRE_ICONS_URL . 'assets/manifests/' . $manifest_file;
-		$prefix       = isset($def['class_prefix']) ? (string) $def['class_prefix'] : '';
-
-		$style = (false !== strpos($slug, 'lucide')) ? 'outline' : 'filled';
-
 		$libraries[$slug] = array(
-			'json'     => $manifest_url,
-			'prefix'   => $prefix,
-			'selector' => $prefix ? '[class*="' . esc_attr($prefix) . '"]' : '',
-			'style'    => $style,
+			'json'     => SPECTRE_ICONS_URL . 'assets/manifests/' . $manifest_file,
+			'prefix'   => isset($def['class_prefix']) ? (string) $def['class_prefix'] : '',
+			'selector' => isset($def['class_prefix']) ? '[class*="' . $def['class_prefix'] . '"]' : '',
+			'style'    => (false !== strpos($slug, 'lucide')) ? 'outline' : 'filled',
 		);
 	}
 
@@ -178,35 +159,22 @@ function spectre_icons_elementor_manifests_available() {
 		return $cache;
 	}
 
-	$config = spectre_icons_elementor_get_icon_preview_config();
-	$cache  = ! empty($config);
-
+	$cache = ! empty(spectre_icons_elementor_get_icon_preview_config());
 	return $cache;
 }
 
 /**
  * Admin notice if manifests are missing.
  *
- * Scoped to Plugins screen + this plugin's settings screen.
- *
  * @return void
  */
 function spectre_icons_elementor_missing_manifest_notice() {
-	if (! is_admin() || wp_doing_ajax()) {
-		return;
-	}
-
-	if (! current_user_can('manage_options')) {
+	if (! is_admin() || wp_doing_ajax() || ! current_user_can('manage_options')) {
 		return;
 	}
 
 	$screen = function_exists('get_current_screen') ? get_current_screen() : null;
-	if (! $screen) {
-		return;
-	}
-
-	// Only show notice on Plugins or Spectre Icons settings screen.
-	if (! in_array($screen->id, array('plugins', 'settings_page_spectre-icons-elementor'), true)) {
+	if (! $screen || ! in_array($screen->id, array('plugins', 'settings_page_spectre-icons-elementor'), true)) {
 		return;
 	}
 
@@ -220,12 +188,11 @@ function spectre_icons_elementor_missing_manifest_notice() {
 }
 
 /**
- * Fallback enqueue for Elementor preview iframe when hooks are skipped.
+ * Fallback enqueue for Elementor preview iframe.
  *
  * @return void
  */
 function spectre_icons_elementor_enqueue_preview_assets() {
-	// Nonce not required; this only gates preview asset loading by query flag.
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	if (! isset($_GET['elementor-preview'])) {
 		return;
