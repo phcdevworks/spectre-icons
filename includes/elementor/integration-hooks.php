@@ -125,18 +125,23 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 		}
 
 		$manifest_file = sanitize_file_name((string) $def['manifest_file']);
-		$manifest_path = SPECTRE_ICONS_PATH . 'assets/manifests/' . $manifest_file;
+		if ('' === $manifest_file) {
+			continue;
+		}
 
+		$manifest_path = SPECTRE_ICONS_PATH . 'assets/manifests/' . $manifest_file;
 		if (! file_exists($manifest_path)) {
 			continue;
 		}
 
-		$prefix = isset($def['class_prefix']) ? (string) $def['class_prefix'] : '';
+		$prefix_raw = isset($def['class_prefix']) ? (string) $def['class_prefix'] : '';
+		// Sanitize prefix for safe CSS selector usage (keep hyphen/underscore).
+		$prefix = preg_replace('/[^a-z0-9\-_]/i', '', $prefix_raw);
 
 		$libraries[$slug] = array(
 			'json'     => SPECTRE_ICONS_URL . 'assets/manifests/' . $manifest_file,
 			'prefix'   => $prefix,
-			'selector' => $prefix ? '[class*="' . esc_attr($prefix) . '"]' : '',
+			'selector' => $prefix ? '[class*="' . $prefix . '"]' : '',
 			'style'    => (false !== strpos($slug, 'lucide')) ? 'outline' : 'filled',
 		);
 	}
