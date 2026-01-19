@@ -16,9 +16,9 @@ if (! defined('ABSPATH')) {
  * @return void
  */
 function spectre_icons_elementor_bootstrap() {
+	static $bootstrapped = false;
 
-	// Prevent double-initializing.
-	if (did_action('spectre_icons_elementor_bootstrapped')) {
+	if ($bootstrapped) {
 		return;
 	}
 
@@ -29,7 +29,7 @@ function spectre_icons_elementor_bootstrap() {
 		return;
 	}
 
-	do_action('spectre_icons_elementor_bootstrapped');
+	$bootstrapped = true;
 
 	$settings = new Spectre_Icons_Elementor_Settings();
 	$manager  = Spectre_Icons_Elementor_Library_Manager::instance($settings);
@@ -56,18 +56,17 @@ add_action('plugins_loaded', 'spectre_icons_elementor_bootstrap', 20);
 /**
  * Admin notice when Elementor is missing.
  *
+ * Scoped strictly to Plugins screen.
+ *
  * @return void
  */
 function spectre_icons_elementor_missing_elementor_notice() {
-	if (! is_admin() || wp_doing_ajax()) {
-		return;
-	}
-
-	if (did_action('elementor/loaded')) {
-		return;
-	}
-
-	if (! current_user_can('activate_plugins')) {
+	if (
+		! is_admin() ||
+		wp_doing_ajax() ||
+		did_action('elementor/loaded') ||
+		! current_user_can('activate_plugins')
+	) {
 		return;
 	}
 
@@ -102,6 +101,7 @@ function spectre_icons_elementor_enqueue_styles() {
  */
 function spectre_icons_elementor_enqueue_icon_scripts() {
 
+	// Prevent wp-auth-check from breaking Elementor iframe.
 	if (wp_script_is('wp-auth-check', 'enqueued')) {
 		wp_dequeue_script('wp-auth-check');
 	}
@@ -119,6 +119,7 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 
 	foreach ($definitions as $slug => $def) {
 		$slug = sanitize_key($slug);
+
 		if ('' === $slug || empty($def['manifest_file'])) {
 			continue;
 		}
@@ -130,10 +131,12 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 			continue;
 		}
 
+		$prefix = isset($def['class_prefix']) ? (string) $def['class_prefix'] : '';
+
 		$libraries[$slug] = array(
 			'json'     => SPECTRE_ICONS_URL . 'assets/manifests/' . $manifest_file,
-			'prefix'   => isset($def['class_prefix']) ? (string) $def['class_prefix'] : '',
-			'selector' => isset($def['class_prefix']) ? '[class*="' . $def['class_prefix'] . '"]' : '',
+			'prefix'   => $prefix,
+			'selector' => $prefix ? '[class*="' . esc_attr($prefix) . '"]' : '',
 			'style'    => (false !== strpos($slug, 'lucide')) ? 'outline' : 'filled',
 		);
 	}
@@ -166,15 +169,24 @@ function spectre_icons_elementor_manifests_available() {
 /**
  * Admin notice if manifests are missing.
  *
+ * Scoped to Plugins + this plugin’s settings page only.
+ *
  * @return void
  */
 function spectre_icons_elementor_missing_manifest_notice() {
-	if (! is_admin() || wp_doing_ajax() || ! current_user_can('manage_options')) {
+	if (
+		! is_admin() ||
+		wp_doing_ajax() ||
+		! current_user_can('manage_options')
+	) {
 		return;
 	}
 
 	$screen = function_exists('get_current_screen') ? get_current_screen() : null;
-	if (! $screen || ! in_array($screen->id, array('plugins', 'settings_page_spectre-icons-elementor'), true)) {
+	if (
+		! $screen ||
+		! in_array($screen->id, array('plugins', 'settings_page_spectre-icons-elementor'), true)
+	) {
 		return;
 	}
 
@@ -183,7 +195,10 @@ function spectre_icons_elementor_missing_manifest_notice() {
 	}
 
 	echo '<div class="notice notice-warning"><p>';
-	echo esc_html__('Spectre Icons: No icon manifests found. Icons may not appear in Elementor until manifests are generated or installed.', 'spectre-icons');
+	echo esc_html__(
+		'Spectre Icons: No icon manifests found. Icons may not appear in Elementor until manifests are generated or installed.',
+		'spectre-icons'
+	);
 	echo '</p></div>';
 }
 
