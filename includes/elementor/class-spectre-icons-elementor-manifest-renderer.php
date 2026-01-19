@@ -31,9 +31,13 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 				)
 			);
 
+			$prefix = is_string($args['prefix']) ? (string) $args['prefix'] : '';
+			// Preserve hyphens/trailing hyphen for prefixes like "spectre-lucide-".
+			$prefix = preg_replace('/[^a-z0-9\-_]/i', '', $prefix);
+
 			self::$libraries[$slug] = array(
 				'manifest' => $manifest_path,
-				'prefix'   => is_string($args['prefix']) ? $args['prefix'] : '',
+				'prefix'   => $prefix,
 				'options'  => is_array($args['options']) ? $args['options'] : array(),
 			);
 
@@ -53,12 +57,12 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 		public static function render_icon($icon, $attributes = array(), $tag = 'span') {
 			list($library_slug, $icon_slug) = self::extract_slug($icon);
 
-			if ('' === $icon_slug || ! isset(self::$libraries[$library_slug])) {
+			if ('' === $icon_slug || '' === $library_slug || ! isset(self::$libraries[$library_slug])) {
 				return '';
 			}
 
 			$icons = self::get_icons($library_slug);
-			if (empty($icons[$icon_slug])) {
+			if (empty($icons) || empty($icons[$icon_slug]) || ! is_array($icons[$icon_slug])) {
 				return '';
 			}
 
@@ -88,32 +92,64 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 				return self::$icons_cache[$library_slug];
 			}
 
-			$library = self::$libraries[$library_slug];
-			$path    = (string) $library['manifest'];
-
-			$base_dir = realpath(trailingslashit(SPECTRE_ICONS_PATH . 'assets/manifests'));
-			$real     = realpath($path);
-
-			if (! $base_dir || ! $real || 0 !== strpos($real, $base_dir)) {
+			if (! isset(self::$libraries[$library_slug])) {
 				self::$icons_cache[$library_slug] = array();
 				return array();
 			}
 
+			$library = self::$libraries[$library_slug];
+			$path    = isset($library['manifest']) ? (string) $library['manifest'] : '';
+
+			if ('' === $path) {
+				self::$icons_cache[$library_slug] = array();
+				return array();
+			}
+
+			// Restrict manifest loading to plugin manifests directory.
+			$base_dir = realpath(SPECTRE_ICONS_PATH . 'assets/manifests');
+			$real     = realpath($path);
+
+			if (! $base_dir || ! $real) {
+				self::$icons_cache[$library_slug] = array();
+				return array();
+			}
+
+			$base_dir = trailingslashit($base_dir);
+
+			// Must be inside base_dir (with trailing slash to avoid prefix tricks).
+			if (0 !== strpos($real, $base_dir)) {
+				self::$icons_cache[$library_slug] = array();
+				return array();
+			}
+
+			// Must be a readable file.
+			if (! is_file($real) || ! is_readable($real)) {
+				self::$icons_cache[$library_slug] = array();
+				return array();
+			}
+
+			// Read manifest using WP_Filesystem (reviewer-friendly).
 			global $wp_filesystem;
+
 			if (! $wp_filesystem) {
 				require_once ABSPATH . 'wp-admin/includes/file.php';
-				if (! WP_Filesystem()) {
-					return array();
-				}
+				WP_Filesystem();
+			}
+
+			if (! $wp_filesystem || ! is_object($wp_filesystem) || ! method_exists($wp_filesystem, 'get_contents')) {
+				self::$icons_cache[$library_slug] = array();
+				return array();
 			}
 
 			$contents = $wp_filesystem->get_contents($real);
 			if (! is_string($contents) || '' === $contents) {
+				self::$icons_cache[$library_slug] = array();
 				return array();
 			}
 
 			$data = json_decode($contents, true);
 			if (! is_array($data)) {
+				self::$icons_cache[$library_slug] = array();
 				return array();
 			}
 
@@ -122,8 +158,18 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 			}
 
 			$icons = array();
+
+			// Support associative map or list. Your current logic already basically does this,
+			// but this version avoids undefined-index warnings.
 			foreach ($data as $slug => $entry) {
-				$key = sanitize_key(is_string($slug) ? $slug : ($entry['slug'] ?? ''));
+				$key = '';
+
+				if (is_string($slug) && '' !== $slug) {
+					$key = sanitize_key($slug);
+				} elseif (is_array($entry) && ! empty($entry['slug'])) {
+					$key = sanitize_key((string) $entry['slug']);
+				}
+
 				if ('' === $key) {
 					continue;
 				}
@@ -146,17 +192,18 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 			if (is_array($icon)) {
 				$library = sanitize_key($icon['library'] ?? '');
 				$value   = (string) ($icon['value'] ?? $icon['icon'] ?? '');
-				if ($value) {
+
+				if ('' !== $value) {
 					$parts = preg_split('/\s+/', trim($value));
-					$slug  = sanitize_key(end($parts));
+					$slug  = sanitize_key((string) end($parts));
 				}
 			} elseif (is_string($icon)) {
 				$slug = sanitize_key($icon);
 			}
 
 			if ($library && isset(self::$libraries[$library]['prefix'])) {
-				$prefix = self::$libraries[$library]['prefix'];
-				if ($prefix && 0 === strpos($slug, $prefix)) {
+				$prefix = (string) self::$libraries[$library]['prefix'];
+				if ('' !== $prefix && 0 === strpos($slug, $prefix)) {
 					$slug = sanitize_key(substr($slug, strlen($prefix)));
 				}
 			}
@@ -165,31 +212,43 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 		}
 
 		private static function sanitize_tag_name($tag) {
-			return in_array(strtolower($tag), array('span', 'i', 'div'), true) ? strtolower($tag) : 'span';
+			$tag = strtolower((string) $tag);
+			return in_array($tag, array('span', 'i', 'div'), true) ? $tag : 'span';
 		}
 
 		private static function maybe_add_style_class(array $attributes, $library_slug) {
-			$class = strpos($library_slug, 'lucide') !== false
+			$class = (strpos($library_slug, 'lucide') !== false)
 				? 'spectre-icon--style-outline'
-				: (strpos($library_slug, 'fontawesome') !== false ? 'spectre-icon--style-filled' : '');
+				: ((strpos($library_slug, 'fontawesome') !== false) ? 'spectre-icon--style-filled' : '');
 
-			if ($class) {
-				$attributes['class'] = trim(($attributes['class'] ?? '') . ' ' . $class);
+			if ('' !== $class) {
+				$attributes['class'] = trim((string) ($attributes['class'] ?? '') . ' ' . $class);
 			}
 
 			return $attributes;
 		}
 
 		private static function prepare_attributes(array $attributes, $icon_slug, array $library) {
-			$class = ($library['prefix'] ?? '') . $icon_slug;
-			$attributes['class'] = trim($class . ' ' . ($attributes['class'] ?? ''));
+			$prefix = isset($library['prefix']) ? (string) $library['prefix'] : '';
+			$class  = $prefix . $icon_slug;
+
+			$attributes['class'] = trim($class . ' ' . (string) ($attributes['class'] ?? ''));
 
 			$clean = array();
+
 			foreach ($attributes as $k => $v) {
+				$k = (string) $k;
+				if ('' === $k) {
+					continue;
+				}
+
+				// Disallow event handlers like onclick, onload, etc.
 				if (0 === stripos($k, 'on')) {
 					continue;
 				}
-				if (preg_match('/^(data|aria)-|^[a-z][a-z0-9_\-:.]*$/i', $k)) {
+
+				// Allow common safe attribute names, including aria-* and data-*.
+				if (preg_match('/^(?:data|aria)-[a-z0-9_\-]+$/i', $k) || preg_match('/^[a-z][a-z0-9_\-:.]*$/i', $k)) {
 					$clean[$k] = $v;
 				}
 			}
@@ -206,7 +265,7 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 		}
 
 		private static function build_svg_from_manifest_icon(array $icon_data) {
-			if (! empty($icon_data['svg'])) {
+			if (! empty($icon_data['svg']) && is_string($icon_data['svg'])) {
 				return Spectre_Icons_SVG_Sanitizer::sanitize($icon_data['svg']);
 			}
 			return '';
