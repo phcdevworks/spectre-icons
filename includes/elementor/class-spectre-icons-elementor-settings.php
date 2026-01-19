@@ -53,14 +53,14 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 
 			add_settings_section(
 				'spectre_icons_elementor_section',
-				__('Spectre Icons: Elementor Libraries', 'spectre-icons'),
+				esc_html__('Spectre Icons: Elementor Libraries', 'spectre-icons'),
 				'__return_false',
 				'spectre_icons_elementor'
 			);
 
 			add_settings_field(
 				'spectre_icons_elementor_tabs_field',
-				__('Enabled Icon Libraries', 'spectre-icons'),
+				esc_html__('Enabled Icon Libraries', 'spectre-icons'),
 				array($this, 'render_tabs_field'),
 				'spectre_icons_elementor',
 				'spectre_icons_elementor_section'
@@ -74,8 +74,8 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 		 */
 		public function register_menu_page() {
 			add_options_page(
-				__('Spectre Icons - Elementor', 'spectre-icons'),
-				__('Spectre Icons', 'spectre-icons'),
+				esc_html__('Spectre Icons - Elementor', 'spectre-icons'),
+				esc_html__('Spectre Icons', 'spectre-icons'),
 				'manage_options',
 				'spectre-icons-elementor',
 				array($this, 'render_settings_page')
@@ -85,25 +85,27 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 		/**
 		 * Sanitize library preference values.
 		 *
-		 * Whitelists keys to only known library slugs from the filter.
+		 * Whitelists keys to only known library slugs from definitions (NO filter calls here).
 		 *
 		 * @param mixed $value Raw input.
 		 * @return array Sanitized prefs.
 		 */
 		public function sanitize_tabs($value) {
 			if (! is_array($value)) {
+				$this->tabs_cache = null;
 				return array();
 			}
 
-			// Whitelist known library slugs.
-			$libraries = apply_filters('spectre_icons_elementor_icon_libraries', array());
-			$allowed   = array();
-
-			if (is_array($libraries)) {
-				foreach ($libraries as $slug => $lib) {
-					$slug = sanitize_key($slug);
-					if ('' !== $slug) {
-						$allowed[$slug] = true;
+			// Whitelist known library slugs (safe, no side effects).
+			$allowed = array();
+			if (function_exists('spectre_icons_elementor_get_icon_library_definitions')) {
+				$defs = spectre_icons_elementor_get_icon_library_definitions();
+				if (is_array($defs)) {
+					foreach ($defs as $slug => $def) {
+						$slug = sanitize_key($slug);
+						if ('' !== $slug) {
+							$allowed[$slug] = true;
+						}
 					}
 				}
 			}
@@ -112,7 +114,14 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
 
 			foreach ($value as $slug => $enabled) {
 				$slug = sanitize_key($slug);
-				if ('' === $slug || ! isset($allowed[$slug])) {
+
+				// If definitions are available, enforce allowlist.
+				if (! empty($allowed) && ('' === $slug || ! isset($allowed[$slug]))) {
+					continue;
+				}
+
+				// If definitions aren't available for some reason, still require a valid key.
+				if (empty($allowed) && '' === $slug) {
 					continue;
 				}
 
