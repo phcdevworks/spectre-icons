@@ -12,122 +12,217 @@ if (! defined('ABSPATH')) {
 
 if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 
+	/**
+	 * Static service for working with JSON icon manifests.
+	 *
+	 * Responsibilities:
+	 * - Register manifests per library (path + options).
+	 * - Load & cache manifest contents.
+	 * - Return icon slugs for previews.
+	 * - Render individual icons as inline SVG elements.
+	 */
 	final class Spectre_Icons_Elementor_Manifest_Renderer {
 
 		/**
-		 * @var array<string,array>
+		 * Registered libraries.
+		 *
+		 * Shape:
+		 * [
+		 *   'library-slug' => [
+		 *     'manifest' => '/path/to/manifest.json',
+		 *     'prefix'   => 'spectre-lucide-', // optional
+		 *     'options'  => [ ... ],           // optional
+		 *   ],
+		 * ]
+		 *
+		 * @var array<string, array>
 		 */
 		private static $libraries = array();
 
 		/**
-		 * @var array<string,array>
+		 * Cached decoded icon manifests.
+		 *
+		 * Shape:
+		 * [
+		 *   'library-slug' => [
+		 *     'icon-slug' => [ manifest-entry-array ],
+		 *   ],
+		 * ]
+		 *
+		 * @var array<string, array>
 		 */
 		private static $icons_cache = array();
 
 		/**
-		 * Register a manifest for a library.
+		 * Register a manifest for a given library.
 		 *
-		 * @param string $library_slug
-		 * @param string $manifest_path
-		 * @param array  $args
+		 * Usually called from icon-libraries.php when building library config.
+		 *
+		 * @param string $library_slug  Library slug (e.g. 'spectre-lucide').
+		 * @param string $manifest_path Absolute path to the JSON manifest file.
+		 * @param array  $args          Optional extra args. Supported keys:
+		 *                              - prefix (string) CSS class prefix
+		 *                              - options (array) any additional data
+		 *
 		 * @return void
 		 */
 		public static function register_manifest($library_slug, $manifest_path, array $args = array()) {
 			$slug = sanitize_key($library_slug);
 
-			if ('' === $slug || ! is_string($manifest_path) || '' === $manifest_path) {
+			if ('' === $slug) {
+				self::log_debug(sprintf('register_manifest called with invalid library slug "%s".', (string) $library_slug));
 				return;
 			}
 
-			$args = wp_parse_args(
-				$args,
-				array(
-					'prefix'  => '',
-					'options' => array(),
-				)
+			if (! is_string($manifest_path) || '' === $manifest_path) {
+				self::log_debug(sprintf('Library "%s" missing manifest path.', $slug));
+				return;
+			}
+
+			// We intentionally do NOT require file_exists() here, because the path
+			// may point into a packaged asset that is not yet available in some
+			// contexts (e.g. during build-time tools). We will check on load.
+			$defaults = array(
+				'prefix'  => '',
+				'options' => array(),
 			);
 
-			$prefix = is_string($args['prefix']) ? (string) $args['prefix'] : '';
-			// Preserve hyphens/trailing hyphen for prefixes like "spectre-lucide-".
-			$prefix = preg_replace('/[^a-z0-9\-_]/i', '', $prefix);
+			$args = wp_parse_args($args, $defaults);
 
 			self::$libraries[$slug] = array(
 				'manifest' => $manifest_path,
-				'prefix'   => $prefix,
+				'prefix'   => is_string($args['prefix']) ? $args['prefix'] : '',
 				'options'  => is_array($args['options']) ? $args['options'] : array(),
 			);
 
+			// Clear cache for this library in case we re-register.
 			unset(self::$icons_cache[$slug]);
 		}
 
 		/**
 		 * Get all icon slugs for a given library.
 		 *
-		 * @param string $library_slug
-		 * @return string[]
+		 * Used by Elementor for preview lists.
+		 *
+		 * @param string $library_slug Library slug.
+		 * @return array<string>       Icon slugs (may be empty).
 		 */
 		public static function get_icon_slugs($library_slug) {
 			$slug = sanitize_key($library_slug);
 
 			if ('' === $slug || ! isset(self::$libraries[$slug])) {
+				self::log_debug(sprintf('get_icon_slugs called for unknown library "%s".', (string) $library_slug));
 				return array();
 			}
 
 			$icons = self::get_icons($slug);
 
-			return is_array($icons) ? array_keys($icons) : array();
+			if (empty($icons) || ! is_array($icons)) {
+				return array();
+			}
+
+			return array_keys($icons);
 		}
 
 		/**
-		 * Render a single icon.
+		 * Render a single icon as inline SVG wrapped in an HTML tag.
 		 *
-		 * @param array|string $icon
-		 * @param array        $attributes
-		 * @param string       $tag
-		 * @return string
+		 * This is wired as the Elementor `render_callback`.
+		 *
+		 * @param array|string $icon       Icon descriptor from Elementor, or raw slug.
+		 * @param array        $attributes Optional HTML attributes for the wrapper tag.
+		 * @param string       $tag        HTML tag name to wrap the SVG in (default: span).
+		 *
+		 * @return string Rendered HTML or empty string on failure.
 		 */
 		public static function render_icon($icon, $attributes = array(), $tag = 'span') {
+			// Determine library + icon slug from Elementor's payload.
 			list($library_slug, $icon_slug) = self::extract_slug($icon);
 
-			if ('' === $icon_slug || '' === $library_slug || ! isset(self::$libraries[$library_slug])) {
+			if ('' === $icon_slug) {
+				// Nothing to render.
 				return '';
 			}
 
-			$icons = self::get_icons($library_slug);
-
-			if (empty($icons) || empty($icons[$icon_slug]) || ! is_array($icons[$icon_slug])) {
+			if ('' === $library_slug || ! isset(self::$libraries[$library_slug])) {
+				self::log_debug(sprintf('render_icon: unknown library "%s" for icon "%s".', $library_slug, $icon_slug));
 				return '';
 			}
 
-			$attributes = self::prepare_attributes(
-				self::maybe_add_style_class((array) $attributes, $library_slug),
-				$icon_slug,
-				self::$libraries[$library_slug]
-			);
+			$library = self::$libraries[$library_slug];
+			$icons   = self::get_icons($library_slug);
 
-			$svg = self::build_svg_from_manifest_icon($icons[$icon_slug]);
+			if (empty($icons) || ! is_array($icons)) {
+				self::log_debug(sprintf('render_icon: no icons loaded for library "%s".', $library_slug));
+				return '';
+			}
+
+			if (! isset($icons[$icon_slug])) {
+				self::log_debug(sprintf('render_icon: icon "%s" not found in library "%s".', $icon_slug, $library_slug));
+				return '';
+			}
+
+			$icon_data   = $icons[$icon_slug];
+			$attributes  = is_array($attributes) ? $attributes : array();
+			$tag         = self::sanitize_tag_name($tag);
+			$attributes  = self::maybe_add_style_class($attributes, $library_slug);
+			$attributes  = self::prepare_attributes($attributes, $icon_slug, $library);
+			$attr_string = self::attributes_to_string($attributes);
+
+			$svg = self::build_svg_from_manifest_icon($icon_data);
 
 			if ('' === $svg) {
+				self::log_debug(sprintf('render_icon: icon "%s" in library "%s" has empty SVG.', $icon_slug, $library_slug));
 				return '';
 			}
 
-			$tag = self::sanitize_tag_name($tag);
-
+			// Wrap SVG in the chosen HTML tag. The SVG itself is treated as trusted
+			// content from plugin assets; attributes are escaped.
 			return sprintf(
 				'<%1$s%2$s>%3$s</%1$s>',
 				$tag,
-				self::attributes_to_string($attributes),
+				$attr_string,
 				$svg
 			);
 		}
 
 		/**
-		 * Load and cache icon data for a library.
+		 * Add a style class based on library slug so CSS can target outline vs filled icons.
 		 *
-		 * IMPORTANT: Do NOT use WP_Filesystem here (breaks on frontend on some hosts).
+		 * @param array  $attributes Wrapper attributes.
+		 * @param string $library_slug Library slug.
+		 * @return array
+		 */
+		private static function maybe_add_style_class(array $attributes, $library_slug) {
+			$style_class = '';
+			if (false !== strpos($library_slug, 'lucide')) {
+				$style_class = 'spectre-icon--style-outline';
+			} elseif (false !== strpos($library_slug, 'fontawesome')) {
+				$style_class = 'spectre-icon--style-filled';
+			}
+
+			if ('' === $style_class) {
+				return $attributes;
+			}
+
+			if (isset($attributes['class'])) {
+				if (is_array($attributes['class'])) {
+					$attributes['class'][] = $style_class;
+					return $attributes;
+				}
+				$attributes['class'] = trim((string) $attributes['class'] . ' ' . $style_class);
+				return $attributes;
+			}
+
+			$attributes['class'] = $style_class;
+			return $attributes;
+		}
+
+		/**
+		 * Load and cache the icon manifest for the given library.
 		 *
-		 * @param string $library_slug
-		 * @return array<string,array>
+		 * @param string $library_slug Sanitized library slug.
+		 * @return array<string, array> Map of icon slug => manifest entry.
 		 */
 		private static function get_icons($library_slug) {
 			if (isset(self::$icons_cache[$library_slug])) {
@@ -135,76 +230,88 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 			}
 
 			if (! isset(self::$libraries[$library_slug])) {
+				return array();
+			}
+
+			$library       = self::$libraries[$library_slug];
+			$manifest_path = isset($library['manifest']) ? (string) $library['manifest'] : '';
+
+			if ('' === $manifest_path || ! file_exists($manifest_path)) {
+				self::log_debug(sprintf('Manifest file missing for library "%s": %s', $library_slug, $manifest_path));
 				self::$icons_cache[$library_slug] = array();
 				return array();
 			}
 
-			$library = self::$libraries[$library_slug];
-			$path    = isset($library['manifest']) ? (string) $library['manifest'] : '';
-
-			if ('' === $path) {
-				self::$icons_cache[$library_slug] = array();
-				return array();
-			}
-
-			// Restrict manifest loading to plugin manifests directory.
-			$base_dir = realpath(SPECTRE_ICONS_PATH . 'assets/manifests');
-			$real     = realpath($path);
-
-			if (! $base_dir || ! $real) {
-				self::$icons_cache[$library_slug] = array();
-				return array();
-			}
-
-			$base_dir = trailingslashit($base_dir);
-
-			// Must be inside base_dir (with trailing slash to avoid prefix tricks).
-			if (0 !== strpos($real, $base_dir)) {
-				self::$icons_cache[$library_slug] = array();
-				return array();
-			}
-
-			// Must be a readable file.
-			if (! is_file($real) || ! is_readable($real)) {
-				self::$icons_cache[$library_slug] = array();
-				return array();
-			}
-
-			$contents = file_get_contents($real); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-			if (! is_string($contents) || '' === $contents) {
+			$contents = file_get_contents($manifest_path); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			if (false === $contents) {
+				self::log_debug(sprintf('Could not read manifest file for library "%s".', $library_slug));
 				self::$icons_cache[$library_slug] = array();
 				return array();
 			}
 
 			$data = json_decode($contents, true);
-			if (! is_array($data)) {
+
+			if (null === $data && JSON_ERROR_NONE !== json_last_error()) {
+				self::log_debug(
+					sprintf(
+						'JSON decode error in manifest for library "%1$s": %2$s',
+						$library_slug,
+						json_last_error_msg()
+					)
+				);
 				self::$icons_cache[$library_slug] = array();
 				return array();
 			}
 
+			if (! is_array($data)) {
+				self::log_debug(sprintf('Manifest for library "%s" did not decode to an array.', $library_slug));
+				self::$icons_cache[$library_slug] = array();
+				return array();
+			}
+
+			/**
+			 * Supported manifest structures:
+			 * - Top-level map: [ 'arrow-right' => [ ... ], ... ]
+			 * - Top-level wrapper: [ 'icons' => [ 'arrow-right' => '<svg...>', ... ] ]
+			 * - Indexed list: [ [ 'slug' => 'arrow-right', ... ], ... ]
+			 */
 			if (isset($data['icons']) && is_array($data['icons'])) {
 				$data = $data['icons'];
 			}
 
 			$icons = array();
 
-			foreach ($data as $slug => $entry) {
-				$key = '';
+			// Associative array keyed by slug.
+			$is_assoc = array_keys($data) !== range(0, count($data) - 1);
 
-				if (is_string($slug) && '' !== $slug) {
-					$key = sanitize_key($slug);
-				} elseif (is_array($entry) && ! empty($entry['slug'])) {
-					$key = sanitize_key((string) $entry['slug']);
+			if ($is_assoc) {
+				foreach ($data as $slug => $icon_entry) {
+					$slug = sanitize_key($slug);
+					if ('' === $slug) {
+						continue;
+					}
+					if (is_string($icon_entry)) {
+						$icons[$slug] = array('svg' => $icon_entry);
+						continue;
+					}
+					if (is_array($icon_entry)) {
+						$icons[$slug] = $icon_entry;
+					}
 				}
-
-				if ('' === $key) {
-					continue;
-				}
-
-				if (is_string($entry)) {
-					$icons[$key] = array('svg' => $entry);
-				} elseif (is_array($entry)) {
-					$icons[$key] = $entry;
+			} else {
+				foreach ($data as $icon_entry) {
+					if (! is_array($icon_entry) || empty($icon_entry['slug'])) {
+						continue;
+					}
+					$slug = sanitize_key($icon_entry['slug']);
+					if ('' === $slug) {
+						continue;
+					}
+					if (isset($icon_entry['svg']) && is_string($icon_entry['svg'])) {
+						$icons[$slug] = $icon_entry;
+						continue;
+					}
+					$icons[$slug] = $icon_entry;
 				}
 			}
 
@@ -214,116 +321,212 @@ if (! class_exists('Spectre_Icons_Elementor_Manifest_Renderer')) :
 		}
 
 		/**
-		 * @param array|string $icon
-		 * @return array{string,string}
+		 * Extract library slug and icon slug from Elementor's icon payload.
+		 *
+		 * Supported shapes:
+		 *
+		 * - [ 'library' => 'spectre-lucide', 'value' => 'spectre-lucide arrow-right' ]
+		 * - [ 'library' => 'spectre-lucide', 'value' => 'arrow-right' ]
+		 * - 'arrow-right' (string) – library slug will be empty.
+		 *
+		 * @param array|string $icon Icon descriptor or slug.
+		 * @return array{string,string} [ library_slug, icon_slug ]
 		 */
 		private static function extract_slug($icon) {
-			$library = '';
-			$slug    = '';
+			$library_slug = '';
+			$icon_slug    = '';
 
+			// Elementor passes an array.
 			if (is_array($icon)) {
-				$library = sanitize_key($icon['library'] ?? '');
-				$value   = (string) ($icon['value'] ?? $icon['icon'] ?? '');
+				if (! empty($icon['library'])) {
+					$library_slug = sanitize_key((string) $icon['library']);
+				}
+
+				$value = '';
+				if (! empty($icon['value'])) {
+					$value = (string) $icon['value'];
+				} elseif (! empty($icon['icon'])) {
+					// Fallback key used in some Elementor versions.
+					$value = (string) $icon['icon'];
+				}
 
 				if ('' !== $value) {
+					// Example values:
+					// - 'spectre-lucide arrow-right'
+					// - 'arrow-right'
 					$parts = preg_split('/\s+/', trim($value));
-					$slug  = sanitize_key((string) end($parts));
+					$slug  = end($parts); // Last token is usually the icon identifier.
+
+					$icon_slug = sanitize_key($slug);
 				}
 			} elseif (is_string($icon)) {
-				$slug = sanitize_key($icon);
+				// When called manually with a slug string.
+				$icon_slug = sanitize_key($icon);
 			}
 
-			if ($library && isset(self::$libraries[$library]['prefix'])) {
-				$prefix = (string) self::$libraries[$library]['prefix'];
-				if ('' !== $prefix && 0 === strpos($slug, $prefix)) {
-					$slug = sanitize_key(substr($slug, strlen($prefix)));
+			// Strip library prefix if Elementor stored a prefixed slug.
+			if (
+				'' !== $library_slug &&
+				'' !== $icon_slug &&
+				isset(self::$libraries[$library_slug]['prefix'])
+			) {
+				$prefix = (string) self::$libraries[$library_slug]['prefix'];
+				if ('' !== $prefix && 0 === strpos($icon_slug, $prefix)) {
+					$icon_slug = sanitize_key(substr($icon_slug, strlen($prefix)));
 				}
 			}
 
-			return array($library, $slug);
+			return array($library_slug, $icon_slug);
 		}
 
 		/**
-		 * @param string $tag
-		 * @return string
+		 * Prepare HTML attributes for the wrapper, ensuring class names are set.
+		 *
+		 * @param array $attributes Input attributes (possibly including 'class').
+		 * @param string $icon_slug Icon slug.
+		 * @param array  $library   Library config (from self::$libraries).
+		 * @return array Sanitized attributes.
+		 */
+		private static function prepare_attributes(array $attributes, $icon_slug, array $library) {
+			$prepared = array();
+
+			$base_class = $icon_slug;
+			if (! empty($library['prefix']) && is_string($library['prefix'])) {
+				$base_class = $library['prefix'] . $icon_slug;
+			}
+
+			$current_class = '';
+			if (isset($attributes['class'])) {
+				$current_class = is_array($attributes['class'])
+					? implode(' ', $attributes['class'])
+					: (string) $attributes['class'];
+			}
+
+			$class_attr = trim($base_class . ' ' . $current_class);
+
+			if ('' !== $class_attr) {
+				$prepared['class'] = $class_attr;
+			}
+
+			// Copy through remaining attributes with sanitized names.
+			foreach ($attributes as $name => $value) {
+				if ('class' === $name) {
+					continue;
+				}
+
+				$sanitized_name = sanitize_key($name);
+				if ('' === $sanitized_name) {
+					continue;
+				}
+
+				$prepared[$sanitized_name] = $value;
+			}
+
+			return $prepared;
+		}
+
+		/**
+		 * Convert an attribute array into a string for HTML output.
+		 *
+		 * @param array $attributes Attribute name => value.
+		 * @return string Leading space + attributes, or empty string.
+		 */
+		private static function attributes_to_string(array $attributes) {
+			if (empty($attributes)) {
+				return '';
+			}
+
+			$parts = array();
+
+			foreach ($attributes as $name => $value) {
+				$name  = esc_attr($name);
+				$value = esc_attr((string) $value);
+				$parts[] = sprintf('%s="%s"', $name, $value);
+			}
+
+			return ' ' . implode(' ', $parts);
+		}
+
+		/**
+		 * Sanitize a tag name for the wrapper element.
+		 *
+		 * Restricts to reasonable tags (span, i, div).
+		 *
+		 * @param string $tag Requested tag.
+		 * @return string Safe tag.
 		 */
 		private static function sanitize_tag_name($tag) {
 			$tag = strtolower((string) $tag);
-			return in_array($tag, array('span', 'i', 'div'), true) ? $tag : 'span';
-		}
+			$allowed = array('span', 'i', 'div');
 
-		/**
-		 * @param array  $attributes
-		 * @param string $library_slug
-		 * @return array
-		 */
-		private static function maybe_add_style_class(array $attributes, $library_slug) {
-			$class = (false !== strpos($library_slug, 'lucide'))
-				? 'spectre-icon--style-outline'
-				: ((false !== strpos($library_slug, 'fontawesome')) ? 'spectre-icon--style-filled' : '');
-
-			if ('' !== $class) {
-				$attributes['class'] = trim((string) ($attributes['class'] ?? '') . ' ' . $class);
+			if (in_array($tag, $allowed, true)) {
+				return $tag;
 			}
 
-			return $attributes;
+			return 'span';
 		}
 
 		/**
-		 * @param array  $attributes
-		 * @param string $icon_slug
-		 * @param array  $library
-		 * @return array
-		 */
-		private static function prepare_attributes(array $attributes, $icon_slug, array $library) {
-			$prefix = isset($library['prefix']) ? (string) $library['prefix'] : '';
-			$class  = $prefix . $icon_slug;
-
-			$attributes['class'] = trim($class . ' ' . (string) ($attributes['class'] ?? ''));
-
-			$clean = array();
-
-			foreach ($attributes as $k => $v) {
-				$k = (string) $k;
-				if ('' === $k) {
-					continue;
-				}
-
-				// Disallow event handlers like onclick, onload, etc.
-				if (0 === stripos($k, 'on')) {
-					continue;
-				}
-
-				// Allow common safe attribute names, including aria-* and data-*.
-				if (preg_match('/^(?:data|aria)-[a-z0-9_\-]+$/i', $k) || preg_match('/^[a-z][a-z0-9_\-:.]*$/i', $k)) {
-					$clean[$k] = $v;
-				}
-			}
-
-			return $clean;
-		}
-
-		/**
-		 * @param array $attributes
-		 * @return string
-		 */
-		private static function attributes_to_string(array $attributes) {
-			$out = '';
-			foreach ($attributes as $k => $v) {
-				$out .= sprintf(' %s="%s"', esc_attr($k), esc_attr((string) $v));
-			}
-			return $out;
-		}
-
-		/**
-		 * @param array $icon_data
-		 * @return string
+		 * Build an SVG string from a manifest icon entry.
+		 *
+		 * Adjust this method to match your actual manifest schema.
+		 *
+		 * Common patterns:
+		 * - $icon_data['svg']  contains full <svg>...</svg>
+		 * - $icon_data['body'] contains inner SVG markup (paths, etc.)
+		 *
+		 * @param array $icon_data Manifest entry for a single icon.
+		 * @return string SVG markup.
 		 */
 		private static function build_svg_from_manifest_icon(array $icon_data) {
+			// If manifest already stores full SVG markup, just use it.
 			if (! empty($icon_data['svg']) && is_string($icon_data['svg'])) {
 				return Spectre_Icons_SVG_Sanitizer::sanitize($icon_data['svg']);
 			}
+
+			// If manifest stores inner markup (paths/group), wrap it in a basic SVG shell.
+			if (! empty($icon_data['body']) && is_string($icon_data['body'])) {
+				$body = $icon_data['body'];
+
+				// Basic Lucide-like defaults; tweak as needed or read from manifest.
+				$attrs = array(
+					'xmlns'       => 'http://www.w3.org/2000/svg',
+					'width'       => '24',
+					'height'      => '24',
+					'viewBox'     => '0 0 24 24',
+					'fill'        => 'none',
+					'stroke'      => 'currentColor',
+					'stroke-width' => '2',
+					'stroke-linecap'   => 'round',
+					'stroke-linejoin'  => 'round',
+				);
+
+				$attr_string = self::attributes_to_string($attrs);
+
+				$svg = sprintf(
+					'<svg%1$s>%2$s</svg>',
+					$attr_string,
+					$body
+				);
+
+				return Spectre_Icons_SVG_Sanitizer::sanitize($svg);
+			}
+
+			// Nothing usable.
 			return '';
+		}
+
+		/**
+		 * Internal debug logger.
+		 *
+		 * @param string $message Message to log.
+		 * @return void
+		 */
+		private static function log_debug($message) {
+			if (defined('WP_DEBUG') && WP_DEBUG) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				error_log('[Spectre Icons][Manifest Renderer] ' . $message);
+			}
 		}
 	}
 

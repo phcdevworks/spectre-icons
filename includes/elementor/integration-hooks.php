@@ -51,7 +51,7 @@ function spectre_icons_elementor_bootstrap() {
 	// Admin notice for missing manifests.
 	add_action('admin_notices', 'spectre_icons_elementor_missing_manifest_notice');
 }
-add_action('init', 'spectre_icons_elementor_bootstrap', 20);
+add_action('plugins_loaded', 'spectre_icons_elementor_bootstrap', 20);
 
 /**
  * Admin notice when Elementor is missing.
