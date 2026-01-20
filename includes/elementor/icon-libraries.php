@@ -18,13 +18,13 @@ if (! defined('ABSPATH')) {
 function spectre_icons_elementor_get_icon_library_definitions() {
 	return array(
 		'spectre-lucide' => array(
-			'label'         => __('Lucide Icons', 'spectre-icons'),
+			'label'         => 'Lucide Icons',
 			'label_icon'    => 'eicon-check',
 			'manifest_file' => 'spectre-lucide.json',
 			'class_prefix'  => 'spectre-lucide-',
 		),
 		'spectre-fontawesome' => array(
-			'label'         => __('Font Awesome', 'spectre-icons'),
+			'label'         => 'Font Awesome',
 			'label_icon'    => 'eicon-star',
 			'manifest_file' => 'spectre-fontawesome.json',
 			'class_prefix'  => 'spectre-fa-',
