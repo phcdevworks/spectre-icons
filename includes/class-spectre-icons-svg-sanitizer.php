@@ -183,8 +183,10 @@ if (! class_exists('Spectre_Icons_SVG_Sanitizer')) :
 						}
 					}
 
-					foreach ($remove as $attr_name) {
-						$node->removeAttribute($attr_name);
+					if ($node instanceof DOMElement) {
+						foreach ($remove as $attr_name) {
+							$node->removeAttribute($attr_name);
+						}
 					}
 				}
 			}

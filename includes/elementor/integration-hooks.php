@@ -135,8 +135,7 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 		}
 
 		$prefix_raw = isset($def['class_prefix']) ? (string) $def['class_prefix'] : '';
-		// Sanitize prefix for safe CSS selector usage (keep hyphen/underscore).
-		$prefix = preg_replace('/[^a-z0-9\-_]/i', '', $prefix_raw);
+		$prefix     = preg_replace('/[^a-z0-9\-_]/i', '', $prefix_raw);
 
 		$libraries[$slug] = array(
 			'json'     => SPECTRE_ICONS_URL . 'assets/manifests/' . $manifest_file,
