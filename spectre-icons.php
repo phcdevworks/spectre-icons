@@ -25,11 +25,7 @@ define('SPECTRE_ICONS_VERSION', '1.1.0');
 define('SPECTRE_ICONS_PATH', plugin_dir_path(__FILE__));
 define('SPECTRE_ICONS_URL', plugin_dir_url(__FILE__));
 
-add_action('init', function () {
-	load_plugin_textdomain('spectre-icons', false, dirname(plugin_basename(__FILE__)) . '/languages');
-});
-
-$includes = array(
+$spectre_icons_includes = array(
 	'includes/elementor/class-spectre-icons-elementor-library-manager.php',
 	'includes/elementor/class-spectre-icons-elementor-manifest-renderer.php',
 	'includes/elementor/class-spectre-icons-elementor-settings.php',
@@ -38,8 +34,8 @@ $includes = array(
 	'includes/elementor/integration-hooks.php',
 );
 
-foreach ($includes as $file) {
-	$path = SPECTRE_ICONS_PATH . $file;
+foreach ($spectre_icons_includes as $spectre_icons_file) {
+	$path = SPECTRE_ICONS_PATH . $spectre_icons_file;
 	if (file_exists($path)) {
 		require_once $path;
 	}
