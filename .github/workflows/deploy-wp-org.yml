@@ -139,6 +139,14 @@ jobs:
             echo "No $WPORG_ASSETS_DIR directory found; skipping wp.org assets sync."
           fi
 
+          echo "Commit trunk/assets changes..."
+          cd "$SVN_DIR"
+          svn commit -m "Deploy version $VERSION" \
+            --username "$SVN_USERNAME" \
+            --password "$SVN_PASSWORD" \
+            --non-interactive \
+            --no-auth-cache
+
           echo "Create SVN tag $VERSION (URL-based copy)..."
           svn copy \
             "$SVN_URL/trunk" \
@@ -147,13 +155,7 @@ jobs:
             --username "$SVN_USERNAME" \
             --password "$SVN_PASSWORD" \
             --non-interactive \
-            --no-auth-cache
-
-          echo "Commit trunk/assets changes..."
-          cd "$SVN_DIR"
-          svn commit -m "Deploy version $VERSION" \
-            --username "$SVN_USERNAME" \
-            --password "$SVN_PASSWORD" \
+            --no-auth-cache \
             --non-interactive \
             --no-auth-cache
 
