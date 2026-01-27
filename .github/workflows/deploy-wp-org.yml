@@ -1,7 +1,12 @@
 name: Deploy to WordPress.org
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deploy (e.g., 1.1.0)'
+        required: true
+        type: string
 
 permissions:
   contents: read
