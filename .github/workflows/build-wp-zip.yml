@@ -54,25 +54,18 @@ jobs:
             fi
           done
 
-          # Keep iconpacks in the ZIP for distribution
-
-          # Include only license.txt in the ZIP.
+          # Include license file
           if [ -f "$ROOT/license.txt" ]; then
             cp "$ROOT/license.txt" "$DEST/license.txt"
           elif [ -f "$ROOT/LICENSE" ]; then
             cp "$ROOT/LICENSE" "$DEST/license.txt"
           fi
 
-          # Copy WordPress.org assets to see structure
-          if [ -d "$ROOT/.wordpress-org" ]; then
-            cp -R "$ROOT/.wordpress-org" "$DEST/"
-          fi
-
           # Sanity checks
           test -f "$DEST/${MAIN_FILE}"
           test -f "$DEST/readme.txt"
 
-          # Build zip without an extra top-level folder.
+          # Build zip without an extra top-level folder
           rm -f "$ROOT/${ZIP_PATH}"
           ( cd "$DEST" && zip -r "$ROOT/${ZIP_PATH}" . -x "*.DS_Store" )
 
