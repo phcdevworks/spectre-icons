@@ -12,9 +12,7 @@ jobs:
     env:
       PLUGIN_SLUG: spectre-icons
       MAIN_FILE: spectre-icons.php
-      SVN_URL: ${{ secrets.SVN_URL }}
-      SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-      SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+      SVN_URL: https://plugins.svn.wordpress.org/spectre-icons
 
     steps:
       - name: Checkout
@@ -92,6 +90,8 @@ jobs:
           ROOT="$GITHUB_WORKSPACE"
           DIST="$ROOT/dist"
           SVN_DIR="$ROOT/svn"
+          SVN_USERNAME="${{ secrets.SVN_USERNAME }}"
+          SVN_PASSWORD="${{ secrets.SVN_PASSWORD }}"
 
           # Test credentials early - fail fast if auth fails
           echo "Testing SVN credentials..."
@@ -105,10 +105,14 @@ jobs:
           fi
 
           echo "Checking out SVN..."
-          svn checkout "$SVN_URL" "$SVN_DIR" --depth immediates --non-interactive --no-auth-cache
-          svn update "$SVN_DIR/trunk" --set-depth infinity --non-interactive --no-auth-cache
-          svn update "$SVN_DIR/assets" --set-depth infinity --non-interactive --no-auth-cache || true
-          svn update "$SVN_DIR/tags" --set-depth immediates --non-interactive --no-auth-cache
+          svn checkout "$SVN_URL" "$SVN_DIR" --depth immediates --non-interactive --no-auth-cache \
+            --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+          svn update "$SVN_DIR/trunk" --set-depth infinity --non-interactive --no-auth-cache \
+            --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+          svn update "$SVN_DIR/assets" --set-depth infinity --non-interactive --no-auth-cache \
+            --username "$SVN_USERNAME" --password "$SVN_PASSWORD" || true
+          svn update "$SVN_DIR/tags" --set-depth immediates --non-interactive --no-auth-cache \
+            --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
 
           echo "Sync dist -> trunk (clean deploy)..."
           rm -rf "$SVN_DIR/trunk"/*
