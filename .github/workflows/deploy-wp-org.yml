@@ -99,11 +99,22 @@ jobs:
           DIST="$ROOT/dist"
           SVN_DIR="$ROOT/svn"
 
+          # Test credentials early - fail fast if auth fails
+          echo "Testing SVN credentials..."
+          if ! svn info "$SVN_URL" \
+            --username "$SVN_USERNAME" \
+            --password "$SVN_PASSWORD" \
+            --non-interactive \
+            --no-auth-cache >/dev/null 2>&1; then
+            echo "ERROR: SVN authentication failed. Check SVN_USERNAME and SVN_PASSWORD secrets."
+            exit 1
+          fi
+
           echo "Checking out SVN..."
-          svn checkout "$SVN_URL" "$SVN_DIR" --depth immediates --non-interactive
-          svn update "$SVN_DIR/trunk" --set-depth infinity --non-interactive
-          svn update "$SVN_DIR/assets" --set-depth infinity --non-interactive || true
-          svn update "$SVN_DIR/tags" --set-depth immediates --non-interactive
+          svn checkout "$SVN_URL" "$SVN_DIR" --depth immediates --non-interactive --no-auth-cache
+          svn update "$SVN_DIR/trunk" --set-depth infinity --non-interactive --no-auth-cache
+          svn update "$SVN_DIR/assets" --set-depth infinity --non-interactive --no-auth-cache || true
+          svn update "$SVN_DIR/tags" --set-depth immediates --non-interactive --no-auth-cache
 
           echo "Sync dist -> trunk (clean deploy)..."
           rm -rf "$SVN_DIR/trunk"/*
@@ -134,13 +145,15 @@ jobs:
             -m "Tagging version $VERSION" \
             --username "$SVN_USERNAME" \
             --password "$SVN_PASSWORD" \
-            --non-interactive
+            --non-interactive \
+            --no-auth-cache
 
           echo "Commit trunk/assets changes..."
           cd "$SVN_DIR"
           svn commit -m "Deploy version $VERSION" \
             --username "$SVN_USERNAME" \
             --password "$SVN_PASSWORD" \
-            --non-interactive
+            --non-interactive \
+            --no-auth-cache
 
           echo "Successfully deployed version $VERSION to WordPress.org"
