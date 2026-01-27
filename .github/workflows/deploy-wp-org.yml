@@ -59,21 +59,15 @@ jobs:
             exit 1
           fi
 
-          # --- Copy only runtime plugin files into dist ---
+          # --- Copy only runtime plugin files ---
           cp "$ROOT/${MAIN_FILE}" "$DIST/"
           cp "$ROOT/readme.txt" "$DIST/"
 
-          # Runtime directories (exclude repo meta like .github, tests, etc.)
-          for d in includes build languages vendor; do
+          for d in includes assets build languages vendor; do
             if [ -d "$ROOT/$d" ]; then
               cp -R "$ROOT/$d" "$DIST/"
             fi
           done
-
-          # NOTE:
-          # - WordPress.org "repo root /assets" is for banners/icons/screenshots.
-          # - If you also have runtime assets used by the plugin, keep them in e.g. build/ or includes/.
-          # - If you DO want to ship runtime assets from an "assets/" folder, you can add it here.
 
           # Include license file
           if [ -f "$ROOT/license.txt" ]; then
@@ -126,9 +120,7 @@ jobs:
           svn status | awk '/^\!/ {print $2}' | xargs -r svn delete
 
           echo "Sync plugin directory assets -> SVN /assets (banners/icons/screenshots)..."
-          # If you keep wp.org assets in ./wporg-assets, this is the cleanest.
-          # If you keep them in ./assets, rename the folder or adjust this path.
-          WPORG_ASSETS_DIR="$ROOT/wporg-assets"
+          WPORG_ASSETS_DIR="$ROOT/.wordpress-org"
           if [ -d "$WPORG_ASSETS_DIR" ]; then
             rsync -av --delete "$WPORG_ASSETS_DIR/" "$SVN_DIR/assets/"
             cd "$SVN_DIR/assets"
