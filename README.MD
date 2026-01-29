@@ -2,7 +2,7 @@
 
 Spectre Icons brings modern SVG icon libraries like Lucide and Font Awesome directly into WordPress builders—delivering a unified, performance-first icon system that replaces dozens of fragmented icon plugins.
 
-> 📋 **[View Roadmap](https://github.com/phcdevworks/spectre-icons/blob/main/ROADMAP.md)** | 🤝 **[Contributing Guide](CONTRIBUTING.md)** | 📝 **[Changelog](CHANGELOG.md)**
+> 📋 **[View Roadmap](https://github.com/phcdevworks/spectre-icons/blob/main/ROADMAP.md)** | 🤝 **[Contributing Guide](CONTRIBUTING.md)** | 📝 **[Changelog](CHANGELOG.md)** | 🔌 **[WordPress Plugin Directory](https://wordpress.org/plugins/spectre-icons/)**
 
 ## Overview
 

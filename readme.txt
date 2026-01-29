@@ -14,6 +14,8 @@ Curated SVG icon libraries for Elementor with fast manifests, inline rendering, 
 
 Spectre Icons brings modern SVG icon libraries like Lucide and Font Awesome directly into WordPress builders—delivering a unified, performance-first icon system that replaces dozens of fragmented icon plugins.
 
+Plugin Directory: https://wordpress.org/plugins/spectre-icons/
+
 = Key Features =
 
 * **Manifest-driven icon loading** for optimal performance
