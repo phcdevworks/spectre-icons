@@ -123,6 +123,9 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
         if ('' === $slug || empty($def['manifest_file'])) {
             continue;
         }
+        if (function_exists('spectre_icons_elementor_is_library_enabled') && ! spectre_icons_elementor_is_library_enabled($slug)) {
+            continue;
+        }
 
         $manifest_file = sanitize_file_name((string) $def['manifest_file']);
         if ('' === $manifest_file) {

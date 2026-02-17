@@ -91,11 +91,6 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
          * @return array Sanitized prefs.
          */
         public function sanitize_tabs($value) {
-            if (! is_array($value)) {
-                $this->tabs_cache = null;
-                return array();
-            }
-
             // Whitelist known library slugs (safe, no side effects).
             $allowed = array();
             if (function_exists('spectre_icons_elementor_get_icon_library_definitions')) {
@@ -110,22 +105,25 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
                 }
             }
 
+            if (! is_array($value)) {
+                $value = array();
+            }
+
             $clean = array();
 
-            foreach ($value as $slug => $enabled) {
-                $slug = sanitize_key($slug);
-
-                // If definitions are available, enforce allowlist.
-                if (! empty($allowed) && ('' === $slug || ! isset($allowed[$slug]))) {
-                    continue;
+            // Persist explicit false values for unchecked boxes.
+            if (! empty($allowed)) {
+                foreach (array_keys($allowed) as $slug) {
+                    $clean[$slug] = ! empty($value[$slug]);
                 }
-
-                // If definitions aren't available for some reason, still require a valid key.
-                if (empty($allowed) && '' === $slug) {
-                    continue;
+            } else {
+                foreach ($value as $slug => $enabled) {
+                    $slug = sanitize_key($slug);
+                    if ('' === $slug) {
+                        continue;
+                    }
+                    $clean[$slug] = (bool) $enabled;
                 }
-
-                $clean[$slug] = (bool) $enabled;
             }
 
             // Reset cached prefs after save.
@@ -140,7 +138,22 @@ if (! class_exists('Spectre_Icons_Elementor_Settings')) :
          * @return void
          */
         public function render_tabs_field() {
-            $libraries = apply_filters('spectre_icons_elementor_icon_libraries', array());
+            $libraries = array();
+            if (function_exists('spectre_icons_elementor_get_icon_library_definitions')) {
+                $definitions = spectre_icons_elementor_get_icon_library_definitions();
+                if (is_array($definitions)) {
+                    foreach ($definitions as $slug => $def) {
+                        $slug = sanitize_key($slug);
+                        if ('' === $slug || ! is_array($def)) {
+                            continue;
+                        }
+
+                        $libraries[$slug] = array(
+                            'label' => isset($def['label']) ? (string) $def['label'] : ucfirst($slug),
+                        );
+                    }
+                }
+            }
             $prefs     = $this->get_tabs();
 
             if (empty($libraries) || ! is_array($libraries)) {

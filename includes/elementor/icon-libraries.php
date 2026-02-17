@@ -33,6 +33,49 @@ function spectre_icons_elementor_get_icon_library_definitions() {
 }
 
 /**
+ * Return stored enabled/disabled states for known icon libraries.
+ *
+ * @return array<string,bool>
+ */
+function spectre_icons_elementor_get_icon_library_preferences() {
+    $definitions = spectre_icons_elementor_get_icon_library_definitions();
+    $stored      = get_option('spectre_icons_elementor_tabs', array());
+    $stored      = is_array($stored) ? $stored : array();
+    $prefs       = array();
+
+    foreach ($definitions as $slug => $def) {
+        $slug = sanitize_key($slug);
+        if ('' === $slug) {
+            continue;
+        }
+
+        $prefs[$slug] = isset($stored[$slug]) ? (bool) $stored[$slug] : true;
+    }
+
+    return $prefs;
+}
+
+/**
+ * Whether a given icon library is enabled in settings.
+ *
+ * @param string                 $slug  Library slug.
+ * @param array<string,bool>|null $prefs Optional preloaded preferences.
+ * @return bool
+ */
+function spectre_icons_elementor_is_library_enabled($slug, $prefs = null) {
+    $slug = sanitize_key($slug);
+    if ('' === $slug) {
+        return false;
+    }
+
+    if (! is_array($prefs)) {
+        $prefs = spectre_icons_elementor_get_icon_library_preferences();
+    }
+
+    return isset($prefs[$slug]) ? (bool) $prefs[$slug] : true;
+}
+
+/**
  * Build preview config for Elementor.
  *
  * NOTE: Informational only. Does NOT register manifests or query icon slugs.
@@ -109,6 +152,7 @@ function spectre_icons_elementor_register_manifest_libraries($libraries) {
     }
 
     $defs      = spectre_icons_elementor_get_icon_library_definitions();
+    $prefs     = spectre_icons_elementor_get_icon_library_preferences();
     $base_dir  = trailingslashit(SPECTRE_ICONS_PATH . 'assets/manifests/');
     $base_real = realpath($base_dir);
 
@@ -118,6 +162,9 @@ function spectre_icons_elementor_register_manifest_libraries($libraries) {
     foreach ($defs as $slug => $def) {
         $slug = sanitize_key($slug);
         if ('' === $slug) {
+            continue;
+        }
+        if (! spectre_icons_elementor_is_library_enabled($slug, $prefs)) {
             continue;
         }
 
