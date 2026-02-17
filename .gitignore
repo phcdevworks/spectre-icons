@@ -1,2 +1,28 @@
+# Logs
+logs
+*.log
+
+# Dependencies
+vendor
+
+# Build artifacts
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# WordPress/PHP specific
 tmp-elementor
-vendor/
+wp-content/uploads/*
+wp-content/cache/*
+
+# OS files
+Thumbs.db
