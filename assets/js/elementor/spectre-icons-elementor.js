@@ -5,6 +5,7 @@
   const libraries = config.libraries || {};
 
   const libraryIds = Object.keys(libraries);
+  const disabledLibraryIds = libraryIds.filter((libraryId) => libraries[libraryId] && false === libraries[libraryId].enabled);
 
   if (!libraryIds.length) {
     return;
@@ -157,6 +158,33 @@
     observedRoots.add(root);
   };
 
+  const hideDisabledLibrariesInModal = (scope) => {
+    if (!scope || !scope.querySelectorAll || !disabledLibraryIds.length) {
+      return;
+    }
+
+    disabledLibraryIds.forEach((libraryId) => {
+      const selectors = [
+        `[data-library="${libraryId}"]`,
+        `[data-tab="${libraryId}"]`,
+        `[data-icon-library="${libraryId}"]`,
+        `[data-name="${libraryId}"]`,
+        `[data-value="${libraryId}"]`,
+        `[aria-controls*="${libraryId}"]`,
+        `[id*="${libraryId}"]`,
+      ];
+
+      const matches = scope.querySelectorAll(selectors.join(','));
+      matches.forEach((match) => {
+        const tabLike = match.closest('[role="tab"], .elementor-component-tab, .elementor-icons-manager__tab, li, button');
+        const target = tabLike || match;
+
+        target.style.display = 'none';
+        target.setAttribute('aria-hidden', 'true');
+      });
+    });
+  };
+
   const processElement = (node) => {
     if (!node) {
       return;
@@ -224,6 +252,14 @@
       const matches = scope.querySelectorAll(settings.selector);
       matches.forEach((match) => renderIcon(match, libraryId));
     });
+
+    const modal = scope.id === 'elementor-icons-manager-modal'
+      ? scope
+      : (scope.querySelector ? scope.querySelector('#elementor-icons-manager-modal') : null);
+
+    if (modal) {
+      hideDisabledLibrariesInModal(modal);
+    }
   };
 
   const startScopedRefresh = (scope, interval = 400) => {
@@ -249,6 +285,7 @@
 
     if (modal) {
       startScopedRefresh(modal, 200);
+      hideDisabledLibrariesInModal(modal);
     }
   };
 

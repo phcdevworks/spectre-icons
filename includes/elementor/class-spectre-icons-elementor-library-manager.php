@@ -154,13 +154,20 @@ if (! class_exists('Spectre_Icons_Elementor_Library_Manager')) :
                 if (empty($library['config']) || ! is_array($library['config'])) {
                     continue;
                 }
-
-                $enabled = isset($prefs[$slug]) ? (bool) $prefs[$slug] : true;
-                if (! $enabled || isset($tabs[$slug])) {
+                if (isset($tabs[$slug])) {
                     continue;
                 }
 
-                $tabs[$slug] = $library['config'];
+                $enabled = isset($prefs[$slug]) ? (bool) $prefs[$slug] : true;
+                $tab_config = $library['config'];
+
+                // Keep render callbacks available for existing content, but block
+                // new selections by emptying the picker list when disabled.
+                if (! $enabled) {
+                    $tab_config['icons'] = array();
+                }
+
+                $tabs[$slug] = $tab_config;
             }
 
             return $tabs;

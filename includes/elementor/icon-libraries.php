@@ -152,7 +152,6 @@ function spectre_icons_elementor_register_manifest_libraries($libraries) {
     }
 
     $defs      = spectre_icons_elementor_get_icon_library_definitions();
-    $prefs     = spectre_icons_elementor_get_icon_library_preferences();
     $base_dir  = trailingslashit(SPECTRE_ICONS_PATH . 'assets/manifests/');
     $base_real = realpath($base_dir);
 
@@ -164,10 +163,6 @@ function spectre_icons_elementor_register_manifest_libraries($libraries) {
         if ('' === $slug) {
             continue;
         }
-        if (! spectre_icons_elementor_is_library_enabled($slug, $prefs)) {
-            continue;
-        }
-
         $manifest_file = isset($def['manifest_file']) ? sanitize_file_name((string) $def['manifest_file']) : '';
         if ('' === $manifest_file) {
             continue;
