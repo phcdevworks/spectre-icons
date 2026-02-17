@@ -1,11 +1,25 @@
 {
-	"recommendations": [
-		"bmewburn.vscode-intelephense-client",
-		"xdebug.php-debug",
-		"github.copilot",
-		"github.copilot-chat",
-		"editorconfig.editorconfig",
-		"esbenp.prettier-vscode",
-		"GitHub.github-vscode-theme"
-	]
+  "recommendations": [
+    // AI Assistants
+    "github.copilot",
+    "github.copilot-chat",
+    "openai.chatgpt",
+    // PHP Development
+    "bmewburn.vscode-intelephense-client",
+    "xdebug.php-debug",
+    // Code Quality
+    "editorconfig.editorconfig",
+    "streetsidesoftware.code-spell-checker",
+    "usernamehw.errorlens",
+    // Theming & Icons
+    "zhuangtongfa.material-theme",
+    "pkief.material-icon-theme",
+    // Git & Version Control
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    // Utilities
+    "christian-kohler.path-intellisense",
+    "zignd.html-css-class-completion",
+    "formulahendry.auto-rename-tag"
+  ]
 }

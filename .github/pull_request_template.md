@@ -6,8 +6,8 @@
 
 ## Testing
 
-- [ ] `npm test`
-- [ ] `npm run build`
+- [ ] `bin/lint-php.sh`
+- [ ] Tested in WordPress environment
 - [ ] Other (describe):
 
 ## Screenshots (if UI)

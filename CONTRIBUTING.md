@@ -1,17 +1,85 @@
 # Contributing to Spectre Icons
 
-Thanks for helping improve Spectre Icons! This WordPress plugin provides curated icon libraries for Elementor with manifest-driven performance and seamless color integration. Keeping changes intentional and well-documented ensures a stable experience for all WordPress users.
+Thanks for helping improve Spectre Icons! This WordPress plugin provides curated icon libraries for Elementor with manifest-driven performance and seamless color integration.
+
+## Development Philosophy
+
+This plugin follows a **WordPress and PHP-first** approach:
+
+### 1. WordPress Plugin Architecture
+
+**Purpose**: Integration with WordPress core and Elementor page builder
+
+**Key Components**:
+
+- Plugin bootstrap and activation hooks
+- Admin settings panel for library management
+- SVG sanitization and security
+
+**Rules**:
+
+- Follow WordPress Coding Standards (WPCS)
+- Use proper WordPress hooks and filters
+- Maintain backward compatibility with WordPress 6.0+
+- Never execute code without proper capability checks
+
+**Status**: v1.1.0 with full Elementor integration
+
+### 2. Icon Library System
+
+**Purpose**: Manifest-driven icon loading for optimal performance
+
+**Ships**:
+
+- JSON manifests for fast icon lookups
+- SVG files organized by library
+- Admin UI for toggling libraries
+
+**Rules**:
+
+- Always update manifests when adding icons
+- Ensure GPL-compatible licensing
+- Keep SVG files optimized and clean
+
+**Status**: Lucide and Font Awesome Free fully integrated
+
+### 3. Elementor Integration
+
+**Purpose**: Seamless icon injection into Elementor's icon controls
+
+**Key mechanism**:
+
+- Custom icon libraries registered via Elementor's API
+- Live preview injection in editor
+- Color inheritance and branding support
+
+**Rules**:
+
+- Test both editor and frontend rendering
+- Ensure compatibility with all icon widgets
+- Follow Elementor's icon library structure
+
+**Status**: Full support for Elementor 3.x+
+
+### Golden Rule (Non-Negotiable)
+
+**WordPress standards. Security first. Performance always.**
+
+- All code follows WordPress Coding Standards
+- All output is escaped, all input is sanitized
+- SVGs are validated and sanitized before rendering
+- Manifest loading is optimized for performance
 
 ## Development Setup
 
-1. Clone the repo:
+1. Clone the repository:
 
 ```bash
 git clone https://github.com/phcdevworks/spectre-icons.git
 cd spectre-icons
 ```
 
-2. Install development dependencies (for code quality checks):
+2. Install development dependencies:
 
 ```bash
 composer install
@@ -26,79 +94,98 @@ vendor/bin/phpcs --standard=WordPress spectre-icons.php includes/
 
 ## Project Structure
 
-- `spectre-icons.php` – Plugin bootstrap and core definitions
-- `includes/elementor/` – Elementor-specific integration
-  - `class-spectre-icons-elementor-library-manager.php` – Library registration
-  - `class-spectre-icons-elementor-manifest-renderer.php` – SVG rendering engine
-  - `class-spectre-icons-elementor-settings.php` – Admin settings UI
-  - `icon-libraries.php` – Library definitions and registration
-  - `integration-hooks.php` – WordPress/Elementor hooks
-- `assets/iconpacks/` – Raw SVG files organized by library
-- `assets/manifests/` – JSON manifests
-- `assets/js/` – Client-side SVG injection
-- `assets/css/` – Icon styling and color inheritance
-- `.wordpress-org/` – WordPress.org plugin directory assets
+```
+spectre-icons/
+├── spectre-icons.php            # Plugin bootstrap
+├── includes/
+│   ├── class-spectre-icons-svg-sanitizer.php
+│   └── elementor/
+│       ├── class-spectre-icons-elementor-library-manager.php
+│       ├── class-spectre-icons-elementor-manifest-renderer.php
+│       ├── class-spectre-icons-elementor-settings.php
+│       ├── icon-libraries.php
+│       └── integration-hooks.php
+├── assets/
+│   ├── iconpacks/               # Raw SVG files
+│   ├── manifests/               # JSON manifests
+│   ├── js/                      # Client-side scripts
+│   └── css/                     # Styles
+└── .wordpress-org/              # WordPress.org assets
+```
 
-## Guidelines
+**Responsibilities**:
 
-### Icons & Manifests
+- **Plugin developers**: Edit PHP files and WordPress integration
+- **Icon maintainers**: Update icon packs and manifests
+- **Frontend developers**: Update JavaScript and CSS assets
+
+## Contribution Guidelines
+
+### Icon & Manifest Development
 
 1. **Source SVGs**: Place icon files in `assets/iconpacks/<library-name>/`
-2. **Commit both**: Check in both the SVG files and the JSON manifests
-3. **Icon licensing**: Ensure any new icon packs have compatible licenses (GPL-compatible)
+2. **Update manifests**: Regenerate JSON manifests after adding icons
+3. **Licensing**: Ensure GPL-compatible licenses for all icon packs
+4. **Testing**: Verify icons render correctly in Elementor
 
-### PHP & WordPress Standards
+### PHP & WordPress Development
 
-- Follow WordPress Coding Standards (WPCS)
-- Use proper escaping (`esc_html`, `esc_attr`) for all output
-- Sanitize all input (`sanitize_text_field`, `sanitize_key`)
-- Add `phpcs:ignore` comments only when necessary with clear justification
+- Follow WordPress Coding Standards for PHP
+- Use proper escaping and sanitization
+- Add comments for complex logic
 - Test with PHP 7.4+ and 8.x
 - Ensure WordPress 6.0+ compatibility
 
-### Elementor Integration
+### Code Quality
 
-- Test changes with Elementor 3.x+ (editor and frontend)
-- Verify icon picker functionality and live preview
-- Ensure color inheritance works across all icon widgets (Icon, Icon Box, Icon List, Social Icons)
-- Test both "Official Color" branding and custom color picker modes
+- Run `bin/lint-php.sh` before committing
+- Use `phpcs` to check WordPress coding standards
+- Test in both Elementor editor and frontend
+- Verify no JavaScript console errors
+- Check color inheritance and branding features
 
 ### Documentation
 
-- Update `README.MD` when adding features or changing usage
-- Update `readme.txt` for WordPress.org changelog
-- Add inline comments for complex logic
-- Document filter hooks and action hooks for extensibility
+- Update README.md when adding features
+- Include code examples for new features
+- Document breaking changes in commit messages
+- Keep inline comments clear and concise
 
 ## Pull Request Process
 
-1. Create a feature branch from `main`
-2. Make your changes with proper testing:
+1. **Branch from `main`**
+2. **Make your changes** and test locally:
    - Run `bin/lint-php.sh` for syntax checks
-   - Test in a WordPress + Elementor environment
-3. Update documentation (`README.MD`, `readme.txt`) as needed
-4. Open a PR with:
-   - Clear description of the change
-   - Screenshots/videos if UI-related
-   - Testing steps performed
+   - Test in WordPress + Elementor environment
+   - Verify icon rendering and color controls
+3. **Update documentation** (README.md, readme.txt) as needed
+4. **Open a PR** describing:
+   - The motivation for the change
+   - What was changed
+   - Testing notes (WordPress version, Elementor version tested)
+5. **Respond to feedback** and make requested changes
 
-## Testing Checklist
+## Known Gaps (Not Done Yet)
 
-Before submitting a PR, verify:
+- Gutenberg (Block Editor) integration
+- Beaver Builder support
+- Additional icon library integrations
+- Advanced icon animation options
+- Icon search and filtering improvements
+- Custom icon upload functionality
 
-- [ ] PHP syntax is valid (`bin/lint-php.sh`)
-- [ ] Icons render correctly in Elementor editor
-- [ ] Icons display properly on frontend
-- [ ] Color customization works (custom colors)
-- [ ] Official branding works (white icons on branded backgrounds)
-- [ ] No JavaScript console errors
-- [ ] Settings page functions correctly
-- [ ] Compatible with WordPress 6.0+ and Elementor 3.x+
+## Questions or Issues?
 
-## Questions?
+Please open an issue or discussion on GitHub if you're unsure about the best approach for a change. Coordinating early avoids conflicts with:
 
-Open an issue on GitHub or start a discussion if you're unsure about the best way to approach a change.
+- WordPress plugin architecture
+- Elementor compatibility
+- Icon library structure
+
+## Code of Conduct
+
+This project adheres to the [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to the project maintainers.
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under GPL-2.0-or-later.
+By contributing, you agree that your contributions will be licensed under the GPL-2.0-or-later License.
