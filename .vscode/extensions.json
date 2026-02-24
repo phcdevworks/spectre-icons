@@ -3,7 +3,6 @@
     // AI Assistants
     "github.copilot",
     "github.copilot-chat",
-    "openai.chatgpt",
     // PHP Development
     "bmewburn.vscode-intelephense-client",
     "xdebug.php-debug",
@@ -15,7 +14,6 @@
     "zhuangtongfa.material-theme",
     "pkief.material-icon-theme",
     // Git & Version Control
-    "eamodio.gitlens",
     "mhutchie.git-graph",
     // Utilities
     "christian-kohler.path-intellisense",

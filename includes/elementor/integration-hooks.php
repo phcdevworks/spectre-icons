@@ -135,9 +135,11 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 
         $prefix_raw = isset($def['class_prefix']) ? (string) $def['class_prefix'] : '';
         $prefix     = preg_replace('/[^a-z0-9\-_]/i', '', $prefix_raw);
+        $label      = isset($def['label']) ? (string) $def['label'] : $slug;
 
         $libraries[$slug] = array(
             'json'     => SPECTRE_ICONS_URL . 'assets/manifests/' . $manifest_file,
+            'label'    => $label,
             'prefix'   => $prefix,
             'selector' => $prefix ? '[class*="' . $prefix . '"]' : '',
             'style'    => (false !== strpos($slug, 'lucide')) ? 'outline' : 'filled',
