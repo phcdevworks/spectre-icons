@@ -5,12 +5,6 @@
   const libraries = config.libraries || {};
 
   const libraryIds = Object.keys(libraries);
-  const disabledLibraries = libraryIds
-    .filter((libraryId) => libraries[libraryId] && false === libraries[libraryId].enabled)
-    .map((libraryId) => ({
-      id: libraryId,
-      label: libraries[libraryId] && libraries[libraryId].label ? String(libraries[libraryId].label).trim() : '',
-    }));
 
   if (!libraryIds.length) {
     return;
@@ -174,60 +168,7 @@
     observedRoots.add(root);
   };
 
-  const hideDisabledLibrariesInModal = (scope) => {
-    if (!scope || !scope.querySelectorAll || !disabledLibraries.length) {
-      return;
-    }
 
-    disabledLibraries.forEach((library) => {
-      const libraryId = library.id;
-      const libraryLabel = library.label.toLowerCase();
-      const selectors = [
-        `[data-library="${libraryId}"]`,
-        `[data-tab="${libraryId}"]`,
-        `[data-icon-library="${libraryId}"]`,
-        `[data-name="${libraryId}"]`,
-        `[data-value="${libraryId}"]`,
-        `[data-id="${libraryId}"]`,
-        `[href*="${libraryId}"]`,
-        `[aria-controls*="${libraryId}"]`,
-        `[id*="${libraryId}"]`,
-      ];
-
-      const matches = scope.querySelectorAll(selectors.join(','));
-      matches.forEach((match) => {
-        const tabLike = match.closest('[role="tab"], .elementor-component-tab, .elementor-icons-manager__tab, li, button');
-        const target = tabLike || match;
-
-        target.style.display = 'none';
-        target.setAttribute('aria-hidden', 'true');
-      });
-
-      const possibleTabs = scope.querySelectorAll('[role="tab"], .elementor-component-tab, .elementor-icons-manager__tab, li, button, a');
-      possibleTabs.forEach((tab) => {
-        const text = (tab.textContent || '').trim().toLowerCase();
-        const idLike = `${tab.id || ''} ${tab.getAttribute('href') || ''} ${tab.getAttribute('aria-controls') || ''}`.toLowerCase();
-        const matchesLabel = libraryLabel && text === libraryLabel;
-        const matchesSlug = idLike.includes(libraryId.toLowerCase());
-
-        if (!matchesLabel && !matchesSlug) {
-          return;
-        }
-
-        tab.style.display = 'none';
-        tab.setAttribute('aria-hidden', 'true');
-
-        const controls = tab.getAttribute('aria-controls');
-        if (controls) {
-          const panel = scope.querySelector(`#${escapeSelector(controls)}`);
-          if (panel) {
-            panel.style.display = 'none';
-            panel.setAttribute('aria-hidden', 'true');
-          }
-        }
-      });
-    });
-  };
 
   const processElement = (node) => {
     if (!node) {
@@ -297,13 +238,7 @@
       matches.forEach((match) => renderIcon(match, libraryId));
     });
 
-    const modal = scope.id === 'elementor-icons-manager-modal'
-      ? scope
-      : (scope.querySelector ? scope.querySelector('#elementor-icons-manager-modal') : null);
 
-    if (modal) {
-      hideDisabledLibrariesInModal(modal);
-    }
   };
 
   const startScopedRefresh = (scope, interval = 400) => {
@@ -329,7 +264,6 @@
 
     if (modal) {
       startScopedRefresh(modal, 200);
-      hideDisabledLibrariesInModal(modal);
     }
   };
 
