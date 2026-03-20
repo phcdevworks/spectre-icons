@@ -92,6 +92,32 @@ function spectre_icons_elementor_enqueue_styles() {
         array(),
         defined('SPECTRE_ICONS_VERSION') ? SPECTRE_ICONS_VERSION : '1.0.0'
     );
+
+    // Hide disabled tabs dynamically via CSS to prevent UI flashing in Elementor's React interface.
+    if (function_exists('spectre_icons_elementor_get_icon_library_definitions') && function_exists('spectre_icons_elementor_is_library_enabled')) {
+        $definitions = spectre_icons_elementor_get_icon_library_definitions();
+        $hidden_css  = '';
+
+        foreach ($definitions as $slug => $def) {
+            $slug_clean = sanitize_key($slug);
+            if ('' === $slug_clean) {
+                continue;
+            }
+
+            if (! spectre_icons_elementor_is_library_enabled($slug_clean)) {
+                $escaped_slug = esc_attr($slug_clean);
+                // Target Elementor's various tab and control attributes dynamically.
+                $hidden_css .= sprintf(
+                    '[data-library="%1$s"], [data-tab="%1$s"], [data-icon-library="%1$s"], [data-name="%1$s"], [data-value="%1$s"], [data-id="%1$s"], [href*="%1$s"], [aria-controls*="%1$s"], [id*="%1$s"] { display: none !important; } ',
+                    $escaped_slug
+                );
+            }
+        }
+
+        if ('' !== $hidden_css) {
+            wp_add_inline_style('spectre-icons-elementor', $hidden_css);
+        }
+    }
 }
 
 /**
