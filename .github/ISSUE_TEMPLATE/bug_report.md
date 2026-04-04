@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Report a bug affecting icon registration, rendering, settings, or builder behavior
 labels: bug
 ---
 
@@ -16,8 +16,11 @@ labels: bug
 
 ## Environment
 
-- Version:
-- Node/NPM:
+- Plugin version:
+- WordPress version:
+- PHP version:
+- Elementor version:
 - OS:
+- Browser:
 
 ## Additional Context
