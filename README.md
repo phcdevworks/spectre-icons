@@ -59,6 +59,7 @@ Clone the repository into your WordPress plugins directory or symlink it into
 `wp-content/plugins/`, then lint the PHP before testing:
 
 ```bash
+composer update
 bin/lint-php.sh
 ```
 
@@ -171,6 +172,47 @@ Key source areas:
 - `assets/manifests/` for bundled library manifests
 - `assets/js/` for editor and frontend injection behavior
 - `assets/css/` for icon styling
+
+### Testing
+
+Fast PHP coverage now lives under `tests/phpunit/` and exercises the
+manifest-driven plugin seams without needing a full WordPress boot:
+
+```bash
+composer update
+composer test
+```
+
+That suite covers icon library preferences, manifest-backed registration,
+renderer output, SVG sanitization, Elementor tab registration, and preview
+asset config generation.
+
+The Playwright smoke test remains the real editor-path check for preview
+behavior:
+
+```bash
+npm install
+npm run test:e2e:smoke
+```
+
+Browser coverage is organized by product area so future builder integrations
+can slot in alongside Elementor cleanly:
+
+- `tests/e2e/main/` for shared product/admin behavior
+- `tests/e2e/elementor/` for Elementor-specific picker and preview flows
+- `tests/e2e/support/` for shared Playwright helpers
+
+Useful browser commands:
+
+- `npm run test:e2e:main`
+- `npm run test:e2e:elementor`
+- `npm run test:e2e:smoke`
+
+Optional Playwright environment variables:
+
+- `SPECTRE_E2E_BASE_URL`
+- `SPECTRE_E2E_ADMIN_USER`
+- `SPECTRE_E2E_ADMIN_PASSWORD`
 
 When changing builder integration or rendering behavior, validate the real user
 path:

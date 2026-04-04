@@ -8,6 +8,8 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ### Added
 
+- Added a PHPUnit harness for icon library preferences, manifest-backed
+  registration, inline SVG rendering, and Elementor preview/config behavior.
 - Added per-library enablement controls so individual bundled icon libraries can
   be turned on or off from the Elementor settings flow.
 - Added GitHub Actions support for WordPress.org deployment and related release
@@ -17,6 +19,8 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ### Changed
 
+- Added runnable `composer` and `npm` test scripts plus Playwright environment
+  variable support for local preview smoke testing.
 - Refined the Elementor integration and manifest validation paths to keep
   registration behavior stricter, safer, and easier to extend.
 - Refreshed the documentation set to better match current PHCDevworks project
