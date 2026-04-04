@@ -27,7 +27,14 @@ export async function addIconWidget(page: Page) {
 }
 
 export async function openIconPicker(page: Page) {
-  await page.locator('[data-setting="selected_icon"]').click();
+  const trigger = page
+    .getByRole('button', { name: /Icon Library/i })
+    .or(page.locator('[data-setting="selected_icon"]').locator('..'))
+    .or(page.getByText('Icon Library', { exact: true }))
+    .first();
+
+  await expect(trigger).toBeVisible();
+  await trigger.click();
   await expect(getIconManagerModal(page)).toBeVisible();
 }
 
@@ -52,6 +59,14 @@ export async function dismissEditorOverlays(page: Page) {
 
 export async function ensureLibraryTabVisible(page: Page, librarySlug: string) {
   const tab = getLibraryTab(page, librarySlug);
+  await expect(tab).toBeVisible();
+  await tab.click();
+}
+
+export async function selectLibraryByLabel(page: Page, label: string) {
+  const modal = getIconManagerModal(page);
+  const tab = modal.getByText(label, { exact: true }).first();
+
   await expect(tab).toBeVisible();
   await tab.click();
 }
@@ -87,10 +102,18 @@ export async function selectFirstRenderedSpectreIcon(page: Page) {
 
   await expect(iconCandidate).toBeVisible();
   await iconCandidate.click();
+
+  const insertButton = modal.getByRole('button', { name: /^Insert$/i }).first();
+  await expect(insertButton).toBeVisible();
+  await insertButton.click();
+  await expect(modal).toBeHidden();
 }
 
 export function getEditorPreviewIcon(page: Page): Locator {
-  return page.locator('.elementor-widget-icon svg, .elementor-icon svg').first();
+  return page
+    .frameLocator('iframe')
+    .locator('[data-widget_type="icon.default"], .elementor-widget-icon')
+    .first();
 }
 
 export async function publishElementorPage(page: Page) {
