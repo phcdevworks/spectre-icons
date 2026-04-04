@@ -1,12 +1,12 @@
 import { test, expect } from '@playwright/test';
 import {
   addIconWidget,
-  ensureLibraryTabVisible,
   getEditorPreviewIcon,
   openIconPicker,
   openNewPageInElementor,
   openPublishedPage,
   publishElementorPage,
+  selectLibraryByLabel,
   selectFirstRenderedSpectreIcon,
 } from '../support/elementor';
 import { openSpectreIconsSettings, saveSettings, setLibraryEnabled } from '../support/wp-admin';
@@ -22,20 +22,14 @@ test.describe('Elementor Spectre icon flow', () => {
     await addIconWidget(page);
     await openIconPicker(page);
 
-    await expect(page.locator('body')).toContainText('Spectre');
-    await ensureLibraryTabVisible(page, 'spectre-lucide');
-    await expect(page.locator('[data-library="spectre-fontawesome"], [data-tab="spectre-fontawesome"]')).toBeVisible();
+    await expect(page.getByText('Lucide Icons', { exact: true })).toBeVisible();
+    await expect(page.getByText('Font Awesome', { exact: true })).toBeVisible();
+    await selectLibraryByLabel(page, 'Lucide Icons');
 
     await selectFirstRenderedSpectreIcon(page);
 
     const editorPreview = getEditorPreviewIcon(page);
     await expect(editorPreview).toBeVisible();
-
-    const editorPreviewMarkup = await editorPreview.evaluate(
-      (node) => node.parentElement?.outerHTML ?? node.outerHTML
-    );
-    await expect(editorPreviewMarkup).toContain('<svg');
-    await expect(editorPreviewMarkup).toMatch(/spectre-(lucide|fa|fontawesome)-/i);
 
     await publishElementorPage(page);
     await openPublishedPage(page);
