@@ -8,11 +8,15 @@
   },
   "scripts": {
     "test": "npm run test:e2e",
+    "test:php": "composer test",
     "test:e2e": "playwright test",
-    "test:e2e:main": "playwright test tests/e2e/main",
     "test:e2e:elementor": "playwright test tests/e2e/elementor",
-    "test:e2e:smoke": "playwright test tests/e2e/elementor/icon-preview.spec.ts",
-    "test:e2e:headed": "playwright test --headed"
+    "test:e2e:smoke": "playwright test tests/e2e/smoke.spec.ts",
+    "test:e2e:headed": "playwright test --headed",
+    "wp-env:start": "npx wp-env start",
+    "wp-env:stop": "npx wp-env stop",
+    "wp-env:install-elementor": "npx wp-env run cli wp plugin install elementor --activate",
+    "test:e2e:setup": "npm run wp-env:start && npm run wp-env:install-elementor"
   },
   "repository": {
     "type": "git",

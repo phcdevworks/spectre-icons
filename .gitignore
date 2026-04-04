@@ -24,9 +24,12 @@ yarn-error.log*
 *.sw?
 
 # WordPress/PHP specific
+.wp-env/
 tmp-elementor
 wp-content/uploads/*
 wp-content/cache/*
+test-results/
+playwright-report/
 
 # OS files
 Thumbs.db
