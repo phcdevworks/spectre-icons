@@ -11,8 +11,13 @@ export async function openNewPageInElementor(page: Page) {
     .or(page.getByRole('link', { name: /Edit with Elementor/i }))
     .first();
   await expect(editWithElementor).toBeVisible();
-  await editWithElementor.click();
-  await page.waitForLoadState('networkidle');
+
+  await Promise.all([
+    page.waitForURL(/elementor/i),
+    editWithElementor.click(),
+  ]);
+
+  await expect(page.getByPlaceholder('Search Widget...')).toBeVisible();
 }
 
 export async function addIconWidget(page: Page) {
@@ -45,6 +50,12 @@ export async function dismissEditorOverlays(page: Page) {
   }
 }
 
+export async function ensureLibraryTabVisible(page: Page, librarySlug: string) {
+  const tab = getLibraryTab(page, librarySlug);
+  await expect(tab).toBeVisible();
+  await tab.click();
+}
+
 export function getIconManagerModal(page: Page): Locator {
   return page.locator('#elementor-icons-manager-modal');
 }
@@ -68,14 +79,6 @@ export function getLibraryTab(page: Page, libraryName: string): Locator {
     .first();
 }
 
-export async function expectLibraryTabVisible(page: Page, librarySlug: string) {
-  await expect(getLibraryTab(page, librarySlug)).toBeVisible();
-}
-
-export async function expectLibraryTabHidden(page: Page, librarySlug: string) {
-  await expect(getLibraryTab(page, librarySlug)).toHaveCount(0);
-}
-
 export async function selectFirstRenderedSpectreIcon(page: Page) {
   const modal = getIconManagerModal(page);
   const iconCandidate = modal
@@ -84,4 +87,54 @@ export async function selectFirstRenderedSpectreIcon(page: Page) {
 
   await expect(iconCandidate).toBeVisible();
   await iconCandidate.click();
+}
+
+export function getEditorPreviewIcon(page: Page): Locator {
+  return page.locator('.elementor-widget-icon svg, .elementor-icon svg').first();
+}
+
+export async function publishElementorPage(page: Page) {
+  const publishButton = page
+    .locator(
+      [
+        '#elementor-panel-saver-button-publish',
+        '.elementor-panel-footer-saver-publish button',
+        'button:has-text("Publish")',
+        'button:has-text("Update")',
+      ].join(', ')
+    )
+    .first();
+
+  await expect(publishButton).toBeVisible();
+  await publishButton.click();
+
+  const viewPageLink = page
+    .getByRole('link', { name: /view page|have a look/i })
+    .or(page.getByRole('button', { name: /view page|have a look/i }))
+    .first();
+
+  await expect(viewPageLink).toBeVisible({ timeout: 30_000 });
+}
+
+export async function openPublishedPage(page: Page) {
+  const viewPageLink = page
+    .getByRole('link', { name: /view page|have a look/i })
+    .or(page.getByRole('button', { name: /view page|have a look/i }))
+    .first();
+
+  await expect(viewPageLink).toBeVisible();
+
+  if (await viewPageLink.evaluate((element) => element.tagName.toLowerCase() === 'a')) {
+    const href = await viewPageLink.getAttribute('href');
+
+    if (!href) {
+      throw new Error('Published page link did not expose an href.');
+    }
+
+    await page.goto(href, { waitUntil: 'domcontentloaded' });
+    return;
+  }
+
+  await viewPageLink.click();
+  await page.waitForLoadState('domcontentloaded');
 }
