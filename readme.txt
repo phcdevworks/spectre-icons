@@ -84,6 +84,18 @@ Future releases will support Gutenberg, Beaver Builder, and other popular page b
 3. Open the Elementor editor on any page
 4. Use any icon widget and select "Lucide Icons" or "Font Awesome" from the picker tabs
 
+= Development & Testing =
+
+Contributor workflows include:
+
+* PHPUnit coverage for icon library registration, manifest rendering, preview config, and Elementor tab behavior
+* Playwright smoke coverage for the real Elementor preview path
+
+Typical local commands:
+
+* `composer test`
+* `npm run test:e2e:smoke`
+
 == Frequently Asked Questions ==
 
 = Which page builders are supported? =

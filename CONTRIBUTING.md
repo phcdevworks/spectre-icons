@@ -40,15 +40,29 @@ Clone the repository and install PHP tooling:
 ```bash
 git clone https://github.com/phcdevworks/spectre-icons.git
 cd spectre-icons
-composer install
+composer update
 ```
 
 Run the baseline checks:
 
 ```bash
 bin/lint-php.sh
+composer test
 vendor/bin/phpcs --standard=WordPress spectre-icons.php includes/
 ```
+
+Run the preview smoke test when touching editor behavior:
+
+```bash
+npm install
+npm run test:e2e:smoke
+```
+
+Playwright suites are grouped by product area:
+
+- `tests/e2e/main/` for shared admin and product-level flows
+- `tests/e2e/elementor/` for Elementor-specific integration coverage
+- `tests/e2e/support/` for reusable login and editor helpers
 
 ## Key source areas
 
@@ -88,6 +102,7 @@ vendor/bin/phpcs --standard=WordPress spectre-icons.php includes/
 
 Before opening a pull request for meaningful changes, validate as relevant:
 
+- PHPUnit coverage passes for manifest, renderer, and library-management paths
 - plugin activation works cleanly
 - icon libraries still register correctly
 - enabled and disabled library controls behave correctly

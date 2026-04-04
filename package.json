@@ -7,7 +7,12 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run test:e2e",
+    "test:e2e": "playwright test",
+    "test:e2e:main": "playwright test tests/e2e/main",
+    "test:e2e:elementor": "playwright test tests/e2e/elementor",
+    "test:e2e:smoke": "playwright test tests/e2e/elementor/icon-preview.spec.ts",
+    "test:e2e:headed": "playwright test --headed"
   },
   "repository": {
     "type": "git",

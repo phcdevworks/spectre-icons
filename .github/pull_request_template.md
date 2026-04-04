@@ -7,6 +7,7 @@
 ## Testing
 
 - [ ] `bin/lint-php.sh`
+- [ ] `composer test`
 - [ ] `vendor/bin/phpcs --standard=WordPress spectre-icons.php includes/`
 - [ ] Tested in WordPress environment
 - [ ] Tested in Elementor editor and frontend
