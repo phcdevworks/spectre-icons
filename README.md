@@ -1,213 +1,206 @@
 # Spectre Icons
 
-Spectre Icons brings modern SVG icon libraries like Lucide and Font Awesome directly into WordPress builders—delivering a unified, performance-first icon system that replaces dozens of fragmented icon plugins.
+[![GitHub issues](https://img.shields.io/github/issues/phcdevworks/spectre-icons)](https://github.com/phcdevworks/spectre-icons/issues)
+[![GitHub pulls](https://img.shields.io/github/issues-pr/phcdevworks/spectre-icons)](https://github.com/phcdevworks/spectre-icons/pulls)
+[![License](https://img.shields.io/github/license/phcdevworks/spectre-icons)](LICENSE)
 
-> 📋 **[View Roadmap](https://github.com/phcdevworks/spectre-icons/blob/main/ROADMAP.md)** | 🤝 **[Contributing Guide](CONTRIBUTING.md)** | 📝 **[Changelog](CHANGELOG.md)** | 🔌 **[WordPress Plugin Directory](https://wordpress.org/plugins/spectre-icons/)**
+`Spectre Icons` is the PHCDevworks WordPress plugin for expanding native icon
+library support in builders through manifest-driven registration, inline SVG
+rendering, and builder-aware integration.
 
-## Overview
+Maintained by PHCDevworks, it is focused on solving a specific product problem:
+builder icon libraries are limited, fragmented, and often spread across
+multiple plugins. Spectre Icons keeps icon-library expansion centralized in one
+plugin while preserving clean rendering, reliable registration, and room for
+additional builder support over time.
 
-`Spectre Icons` is a WordPress plugin that integrates curated icon libraries directly into page builders. Currently ships with full **Elementor integration**, with architecture designed to support Gutenberg, Beaver Builder, and other builders in future releases. It consumes thousands of SVG icons from Lucide and Font Awesome Free, delivering them as inline SVGs with proper color inheritance, official branding support, and live preview injection.
+[Contributing](CONTRIBUTING.md) | [Changelog](CHANGELOG.md) |
+[Security Policy](SECURITY.md)
 
-- ✅ Manifest-driven icon loading for optimal performance
-- ✅ Inline SVG rendering with theme color inheritance
-- ✅ Official branding support for social media icons
-- ✅ Custom color control via page builder color pickers
-- ✅ Live preview injection in builder editors
-- ✅ Admin control panel to toggle icon libraries
-- ✅ Modular architecture for future builder integrations
+## Key capabilities
 
-**Current Integration:**
-
-- Elementor 3.x+ (full support)
-
-**Requirements:**
-
-- WordPress 6.0+
-- PHP 7.4+ (8.x supported)
+- Registers curated icon libraries from JSON manifests instead of scattering
+  builder-specific icon definitions throughout the codebase
+- Integrates icon libraries directly into Elementor with builder-aware library
+  registration and picker support
+- Renders icons as inline SVG for frontend and editor consistency
+- Supports theme-friendly color inheritance and builder color controls
+- Includes branding-aware rendering support for social icon workflows
+- Lets site owners enable or disable bundled icon libraries from plugin
+  settings
+- Keeps architecture modular so future builder support can be added cleanly
 
 ## Installation
 
-### Via WordPress.org
+### WordPress admin
 
-```
-1. Navigate to Plugins → Add New
-2. Search for "Spectre Icons"
-3. Click Install Now → Activate
-4. Configure at Settings → Spectre Icons
-```
+Install from the WordPress plugin directory and activate the plugin:
 
-### Manual Install
+1. Go to `Plugins -> Add New`
+2. Search for `Spectre Icons`
+3. Click `Install Now`
+4. Activate the plugin
+5. Open `Settings -> Spectre Icons`
 
-```
-1. Download plugin ZIP
-2. Upload via Plugins → Add New → Upload Plugin
-3. Activate and configure
-```
+### Manual install
 
-### From Source
+Upload the plugin ZIP through the WordPress admin, then activate it:
+
+1. Download the plugin ZIP
+2. Go to `Plugins -> Add New -> Upload Plugin`
+3. Upload the ZIP file
+4. Activate the plugin
+5. Open `Settings -> Spectre Icons`
+
+### Development install
+
+Clone the repository into your WordPress plugins directory or symlink it into
+`wp-content/plugins/`, then lint the PHP before testing:
 
 ```bash
-# Lint PHP
 bin/lint-php.sh
-
-# Install as plugin (symlink or copy to wp-content/plugins/)
 ```
 
-## Usage
+## Quick start
 
-### 1. Enable Icon Libraries
+### Enable icon libraries
 
-Navigate to **Settings → Spectre Icons** and toggle which icon libraries appear in Elementor's icon picker.
+Go to `Settings -> Spectre Icons` and enable the icon libraries you want to
+expose in supported builders.
 
-### 2. Use Icons in Elementor
+### Use icons in Elementor
 
-Open any Elementor widget that supports icons:
+Open any Elementor widget that supports icons and choose a Spectre Icons tab
+from the picker.
 
-- Icon widget
-- Icon Box widget
-- Icon List widget
-- Social Icons widget
+Current builder support:
 
-Select "Lucide Icons" or "Font Awesome" from the picker tabs.
+- Elementor 3.x+
 
-### 3. Customize Colors
+Typical supported Elementor icon workflows include:
 
-**Custom Colors:**
-Use Elementor's color picker to set any icon color.
+- Icon
+- Icon Box
+- Icon List
+- Social Icons
 
-**Official Branding (Social Icons):**
-Select "Official Color" mode for automatic white icons on branded backgrounds (Facebook blue, Twitter blue, etc.).
+### Color and branding behavior
 
-## How It Works
+Icons inherit color cleanly through builder controls and frontend styling.
+Where builder workflows support it, branding-aware icon output can be used for
+official social icon presentation.
 
+## Included icon libraries
+
+- `Lucide Icons`
+- `Font Awesome Free`
+
+The bundled packs are treated as locked source assets in this repository.
+Registration, manifest handling, rendering behavior, and admin controls can
+evolve, but the SVG source files themselves are not intended to be edited as
+part of normal plugin work.
+
+## What this plugin owns
+
+- Plugin bootstrap and package structure
+- Builder integration logic
+- Icon library registration
+- Manifest loading and validation
+- Inline SVG rendering behavior
+- Admin settings and library enable/disable controls
+- Editor preview integration
+- Compatibility improvements for supported and future builders
+
+### Current architecture shape
+
+The plugin is organized around these responsibilities:
+
+- `spectre-icons.php` bootstraps the plugin and loads integration code
+- `includes/elementor/` contains Elementor-specific registration, rendering,
+  settings, and integration hooks
+- `assets/manifests/` contains the manifest files used as the registration
+  source for bundled libraries
+- `assets/iconpacks/` contains the locked bundled icon assets
+- `assets/js/` contains editor and frontend preview behavior
+- `assets/css/` contains icon styling and color-related behavior
+
+## What this plugin does not own
+
+- General design-system infrastructure
+- Broader Spectre system architecture
+- Unrelated builder features outside icon-library support
+- Theme framework behavior
+- Component-library delivery outside icon concerns
+
+Spectre Icons is a focused product. Its job is to expand builder icon libraries
+cleanly, not to become a general WordPress UI framework.
+
+## How it works
+
+The runtime flow is intentionally simple:
+
+1. Bundled icon packs are indexed through JSON manifests in `assets/manifests/`
+2. Builder integration registers those manifests as available icon libraries
+3. The renderer resolves icon slugs from registered manifests
+4. Icons are output as inline SVG in supported editor and frontend contexts
+5. Styles and scripts handle preview behavior, color inheritance, and builder UX
+
+## Requirements and compatibility
+
+- WordPress 6.0+
+- PHP 7.4+
+- Elementor 3.x+ for current active builder support
+
+The plugin is designed to preserve existing Elementor support first and make
+future builder support additive rather than destructive.
+
+## Development
+
+Lint PHP:
+
+```bash
+bin/lint-php.sh
 ```
-1. SVG packs → assets/iconpacks/
-2. JSON manifests (assets/manifests/)
-3. Plugin registers manifests as Elementor libraries
-4. JavaScript injects inline SVGs in editor + frontend
-5. CSS handles color inheritance + branding
-```
 
-## Project Structure
+Key source areas:
 
-```
-spectre-icons/
-├── spectre-icons.php              # Plugin bootstrap
-├── includes/elementor/            # Elementor integration
-│   ├── class-*-library-manager.php    # Library registration
-│   ├── class-*-manifest-renderer.php  # SVG rendering engine
-│   ├── class-*-settings.php           # Admin settings
-│   └── icon-libraries.php             # Library definitions
-├── assets/
-│   ├── iconpacks/                 # Raw SVG files
-│   ├── manifests/                 # JSON manifests
-│   ├── js/                        # Client-side SVG injection
-│   └── css/                       # Icon styling
-└── .wordpress-org/                # Plugin directory assets
-```
+- `spectre-icons.php` for plugin bootstrap and core loading
+- `includes/elementor/` for Elementor integration
+- `includes/class-spectre-icons-svg-sanitizer.php` for SVG sanitization logic
+- `assets/manifests/` for bundled library manifests
+- `assets/js/` for editor and frontend injection behavior
+- `assets/css/` for icon styling
 
-## Adding Custom Icon Packs
+When changing builder integration or rendering behavior, validate the real user
+path:
 
-### 1. Add SVG Files
-
-```
-assets/iconpacks/your-pack-name/
-```
-
-### 2. Register Library
-
-Add definition to `includes/elementor/icon-libraries.php`:
-
-```php
-'your-pack-slug' => array(
-    'label'            => __( 'Your Pack Name', 'spectre-icons' ),
-    'description'      => __( 'Description.', 'spectre-icons' ),
-    'manifest'         => 'spectre-your-pack.json',
-    'display_prefix'   => 'yourpack',
-    'class_prefix'     => 'yourpack-',
-    'label_icon'       => 'eicon-star',
-    'style'            => 'outline', // or 'filled'
-    'preview_selector' => 'i[class*="yourpack-"]',
-),
-```
-
-### 3. Test
-
-Enable at **Settings → Spectre Icons**, refresh Elementor editor, verify picker + frontend.
-
-## Troubleshooting
-
-| Issue                         | Solution                                                                                                                                                                                  |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Icons not rendering           | • Verify manifests exist (`assets/manifests/*.json`)<br>• Check DevTools Network tab (200 OK)<br>• Enable library at **Settings → Spectre Icons**<br>• Hard refresh editor (Ctrl+Shift+R) |
-| Custom colors not working     | • Verify color picker has value set<br>• Check CSS loads in DevTools<br>• Ensure NOT using "Official Color" mode                                                                          |
-| Official branding not working | • Select "Official Color" (not "Custom")<br>• Use Social Icons widget specifically<br>• Check CSS specificity in DevTools                                                                 |
-| PHP errors in logs            | • Debug notices require `WP_DEBUG` enabled<br>• Verify manifests exist and are readable<br>• Check library registration in code                                                           |
-
-## Repository Layout
-
-| Folder                | Responsibility                                                       |
-| --------------------- | -------------------------------------------------------------------- |
-| `spectre-icons.php`   | Plugin bootstrap and core definitions                                |
-| `includes/elementor/` | Elementor-specific integration (library manager, renderer, settings) |
-| `assets/iconpacks/`   | Raw SVG files organized by library                                   |
-| `assets/manifests/`   | JSON manifests                                                       |
-| `assets/js/`          | Client-side SVG injection for editor and frontend                    |
-| `assets/css/`         | Icon styling, color inheritance, and branding support                |
-| `.wordpress-org/`     | WordPress.org plugin directory assets (banners, icons)               |
-
-## Part of the Spectre Suite
-
-- **Spectre Tokens** – Design token foundation
-- **Spectre UI** – Core styling layer
-- **Spectre Icons** – Icon library for WordPress (this plugin)
-- **Spectre Blocks** – WordPress block library
-- **Spectre Astro** – Astro integration
-- **Spectre 11ty** – Eleventy integration
+- plugin activation works cleanly
+- icon libraries still register correctly
+- enabled and disabled library controls behave correctly
+- Elementor picker integration still works
+- icons render in both editor and frontend
+- no bundled libraries disappear unexpectedly
 
 ## Contributing
 
-Issues and pull requests are welcome. For detailed contribution guidelines, see **[CONTRIBUTING.md](CONTRIBUTING.md)**.
+PHCDevworks maintains this repository as a focused WordPress plugin product.
+
+When contributing:
+
+- keep scope centered on icon-library expansion for builders
+- treat bundled icon pack SVG files as locked source assets
+- prefer manifest-driven registration over scattered hardcoded builder logic
+- preserve backward compatibility where reasonably possible
+- validate builder-facing behavior when changing integration code
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
 
 ## License
 
-GPL-2.0-or-later © PHCDevworks
+The plugin code is licensed under `GPL-2.0-or-later`. See [LICENSE](LICENSE).
 
-**Bundled Icon Libraries:**
+Bundled icon libraries retain their own upstream licenses:
 
-- **Lucide** – ISC License ([lucide.dev](https://lucide.dev))
-- **Font Awesome Free** – CC BY 4.0 (icons) / MIT (code) ([fontawesome.com/license](https://fontawesome.com/license/free))
-
-See **[LICENSE.md](LICENSE.md)** for details.
-
----
-
-## ❤️ Support Spectre
-
-If Spectre Icons helps your workflow, consider sponsoring:
-
-- [GitHub Sponsors](https://github.com/sponsors/phcdevworks)
-- [Buy Me a Coffee](https://buymeacoffee.com/phcdevworks)
-
-## Icon Attributions
-
-This plugin bundles icons from Font Awesome Free and Lucide.
-
-**Font Awesome Free**
-Font Awesome Free is licensed under CC BY 4.0 (icons) and MIT (code).
-https://fontawesome.com/license/free
-
-**Lucide Icons**
-Lucide is licensed under the ISC License (MIT-compatible).
-https://lucide.dev
-
-## Contributing
-
-Contributions are welcome! Please:
-
-1. Keep changes small and focused
-2. Follow WordPress coding standards
-3. Test with Elementor thoroughly
-4. Update documentation as needed
-
-Open an issue or submit a pull request on [GitHub](https://github.com/phcdevworks/spectre-icons).
+- `Lucide` is licensed under ISC
+- `Font Awesome Free` icons are licensed under CC BY 4.0 and related code is
+  licensed under MIT
