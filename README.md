@@ -4,9 +4,9 @@
 [![GitHub pulls](https://img.shields.io/github/issues-pr/phcdevworks/spectre-icons)](https://github.com/phcdevworks/spectre-icons/pulls)
 [![License](https://img.shields.io/github/license/phcdevworks/spectre-icons)](LICENSE)
 
-`Spectre Icons` is the PHCDevworks WordPress plugin for expanding native icon
-library support in builders through manifest-driven registration, inline SVG
-rendering, and builder-aware integration.
+`Spectre Icons` is the standalone PHCDevworks WordPress plugin product for
+expanding native icon library support in builders through manifest-driven
+registration, inline SVG rendering, and builder-aware integration.
 
 Maintained by PHCDevworks, it is focused on solving a specific product problem:
 builder icon libraries are limited, fragmented, and often spread across
@@ -15,7 +15,8 @@ plugin while preserving clean rendering, reliable registration, and room for
 additional builder support over time.
 
 [Contributing](CONTRIBUTING.md) | [Changelog](CHANGELOG.md) |
-[Security Policy](SECURITY.md)
+[Security Policy](SECURITY.md) |
+[WordPress Plugin Directory](https://wordpress.org/plugins/spectre-icons/)
 
 ## Key capabilities
 
