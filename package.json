@@ -1,0 +1,27 @@
+{
+  "name": "spectre-icons",
+  "version": "1.1.0",
+  "description": "[![GitHub issues](https://img.shields.io/github/issues/phcdevworks/spectre-icons)](https://github.com/phcdevworks/spectre-icons/issues) [![GitHub pulls](https://img.shields.io/github/issues-pr/phcdevworks/spectre-icons)](https://github.com/phcdevworks/spectre-icons/pulls) [![License](https://img.shields.io/github/license/phcdevworks/spectre-icons)](LICENSE)",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phcdevworks/spectre-icons.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/phcdevworks/spectre-icons/issues"
+  },
+  "homepage": "https://github.com/phcdevworks/spectre-icons#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1"
+  }
+}
