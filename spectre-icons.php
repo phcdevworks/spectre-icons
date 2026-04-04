@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: Spectre Icons
  * Plugin URI: https://github.com/phcdevworks/spectre-icons
@@ -15,15 +14,17 @@
  * Requires at least: 6.0
  * Requires PHP: 7.4
  * Tested up to: 6.9
+ *
+ * @package SpectreIcons
  */
 
-if (! defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define('SPECTRE_ICONS_VERSION', '1.1.0');
-define('SPECTRE_ICONS_PATH', plugin_dir_path(__FILE__));
-define('SPECTRE_ICONS_URL', plugin_dir_url(__FILE__));
+define( 'SPECTRE_ICONS_VERSION', '1.1.0' );
+define( 'SPECTRE_ICONS_PATH', plugin_dir_path( __FILE__ ) );
+define( 'SPECTRE_ICONS_URL', plugin_dir_url( __FILE__ ) );
 
 $spectre_icons_includes = array(
 	'includes/elementor/class-spectre-icons-elementor-library-manager.php',
@@ -34,9 +35,9 @@ $spectre_icons_includes = array(
 	'includes/elementor/integration-hooks.php',
 );
 
-foreach ($spectre_icons_includes as $spectre_icons_file) {
-	$path = SPECTRE_ICONS_PATH . $spectre_icons_file;
-	if (file_exists($path)) {
-		require_once $path;
+foreach ( $spectre_icons_includes as $spectre_icons_file ) {
+	$spectre_icons_include_path = SPECTRE_ICONS_PATH . $spectre_icons_file;
+	if ( file_exists( $spectre_icons_include_path ) ) {
+		require_once $spectre_icons_include_path;
 	}
 }
