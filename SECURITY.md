@@ -1,95 +1,70 @@
 # Security Policy
 
-## Supported Versions
+## Supported versions
 
-We aim to support the latest published version of Spectre Icons. Security updates are applied to the current major version only.
+Security fixes are applied to the latest published release line of Spectre
+Icons.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.x.x   | :white_check_mark: |
-| < 1.0   | :x:                |
+| Version | Supported |
+| ------- | --------- |
+| 1.x     | Yes       |
+| < 1.0   | No        |
 
-**Please ensure you are using the most recent version** of both:
+Use the most recent plugin release whenever possible. Older releases may not
+receive security fixes.
 
-- This plugin
-- Dependencies (updated in `composer.json`)
+## Reporting a vulnerability
 
-Older releases may not receive security fixes.
+Do not open public issues for suspected security vulnerabilities.
 
-## Reporting a Vulnerability
+Use GitHub Security Advisories to report vulnerabilities privately:
 
-If you discover a security vulnerability, please **DO NOT** open a public issue. Security issues should be reported privately to protect users.
+- [Report a vulnerability](https://github.com/phcdevworks/spectre-icons/security/advisories/new)
 
-### How to Report
+If GitHub Security Advisories are unavailable for your report, contact the
+maintainers privately through GitHub rather than posting details publicly.
 
-**Preferred method**: Use [GitHub Security Advisories](https://github.com/phcdevworks/spectre-icons/security/advisories/new) to privately report vulnerabilities
+## What to include
 
-**Alternative methods**:
+Please include as much of the following as you can:
 
-- Email the maintainers at [security contact - see repository]
-- Direct message maintainers through GitHub
+- a clear description of the issue and potential impact
+- affected versions, if known
+- reproduction steps or a proof of concept
+- any relevant environment details such as WordPress, PHP, and Elementor
+  versions
+- suggested mitigations, if you have them
 
-### What to Include
+## What to expect
 
-Please provide as much detail as possible to help us reproduce and assess impact:
-
-1. **Description of the vulnerability** and potential impact
-2. **Steps to reproduce** or proof-of-concept code
-3. **Affected versions** (if known)
-4. **Potential attack scenarios**
-5. **Suggested mitigation** (if you have ideas)
-
-### What to Expect
-
-1. **Acknowledgment**: We will acknowledge receipt within **48 hours**
-2. **Assessment**: We will investigate and provide an initial assessment within **5 business days**
-3. **Updates**: We will keep you informed of the fix status throughout the process
-4. **Resolution**: We will work on a fix and coordinate disclosure timing with you
-5. **Credit**: We will credit you in the security advisory (unless you prefer to remain anonymous)
-
-## Responsible Disclosure
-
-We appreciate responsible disclosure and will work with you to:
-
-- Understand the scope and severity of the issue
-- Develop and test a fix
-- Coordinate public disclosure timing
-- Credit your contribution (if desired)
-
-**Please allow us reasonable time to address the issue before public disclosure.**
-
-## Security Best Practices
-
-When using Spectre Icons:
-
-1. **Keep dependencies updated** to the latest versions
-2. **Monitor dependencies** for known vulnerabilities
-3. **Use HTTPS** for all production sites
-4. **Follow WordPress security best practices** for plugin development
-5. **Sanitize user input** in WordPress templates
-6. **Verify icon manifest files** are from trusted sources before deploying
+- acknowledgment within a reasonable time after receipt
+- review and triage of the report
+- follow-up questions if reproduction details are needed
+- coordinated disclosure once a fix or mitigation is ready
 
 ## Scope
 
-This security policy covers:
+This policy covers security issues in:
 
-- The Spectre Icons plugin code
-- WordPress plugin integration
-- SVG rendering and sanitization
-- Elementor integration code
+- the Spectre Icons plugin code
+- builder integration code maintained in this repository
+- manifest loading, registration, and rendering logic
+- SVG sanitization and related output handling
 
-This policy does **NOT** cover:
+This policy does not cover:
 
-- Vulnerabilities in WordPress core (report to [WordPress HackerOne](https://hackerone.com/wordpress))
-- Vulnerabilities in Elementor (report to their maintainers)
-- Issues in other dependencies (report to their maintainers)
-- Server configuration issues
+- WordPress core vulnerabilities
+- Elementor vulnerabilities outside this repository
+- server, hosting, or deployment misconfiguration
+- vulnerabilities in third-party services or projects that are not maintained in
+  this repository
 
-## Contact
+## Security expectations for contributors
 
-For security-related questions that aren't vulnerabilities:
+When contributing to Spectre Icons:
 
-- Open a [GitHub Discussion](https://github.com/phcdevworks/spectre-icons/discussions)
-- Tag maintainers in relevant issues
-
-Thank you for helping keep this plugin and our community safe!
+- sanitize input and escape output consistently
+- keep manifest and path handling defensive
+- preserve or improve SVG sanitization behavior
+- avoid introducing brittle builder hooks or unsafe rendering shortcuts
+- report security concerns privately before discussing them publicly

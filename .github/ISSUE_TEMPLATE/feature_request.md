@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest a builder-focused product improvement for Spectre Icons
 labels: enhancement
 ---
 
@@ -9,5 +9,7 @@ labels: enhancement
 ## Proposal
 
 ## Alternatives Considered
+
+## Builder or workflow impact
 
 ## Additional Context
