@@ -41,6 +41,7 @@ export async function loginToWordPress(page: Page) {
   }
 
   await page.waitForURL(/wp-admin/);
+  await expect(page.locator('#wpadminbar')).toBeVisible();
 }
 
 export async function gotoAdmin(page: Page, path: string) {
