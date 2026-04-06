@@ -248,21 +248,21 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 				return array();
 			}
 
-			$data = json_decode( $contents, true );
-
-			if ( null === $data && JSON_ERROR_NONE !== json_last_error() ) {
+			try {
+				$data = json_decode( $contents, true, 512, JSON_THROW_ON_ERROR );
+			} catch ( JsonException $e ) {
 				self::log_debug(
 					sprintf(
 						'JSON decode error in manifest for library "%1$s": %2$s',
 						$library_slug,
-						json_last_error_msg()
+						$e->getMessage()
 					)
 				);
 				self::$icons_cache[ $library_slug ] = array();
 				return array();
 			}
 
-			if ( ! is_array( $data ) ) {
+			if ( ! is_array( $data ) || empty( $data ) ) {
 				self::log_debug( sprintf( 'Manifest for library "%s" did not decode to an array.', $library_slug ) );
 				self::$icons_cache[ $library_slug ] = array();
 				return array();
@@ -479,12 +479,12 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		 */
 		private static function build_svg_from_manifest_icon( array $icon_data ) {
 			// If manifest already stores full SVG markup, just use it.
-			if ( ! empty( $icon_data['svg'] ) && is_string( $icon_data['svg'] ) ) {
+			if ( isset( $icon_data['svg'] ) && is_string( $icon_data['svg'] ) && '' !== $icon_data['svg'] ) {
 				return Spectre_Icons_SVG_Sanitizer::sanitize( $icon_data['svg'] );
 			}
 
 			// If manifest stores inner markup (paths/group), wrap it in a basic SVG shell.
-			if ( ! empty( $icon_data['body'] ) && is_string( $icon_data['body'] ) ) {
+			if ( isset( $icon_data['body'] ) && is_string( $icon_data['body'] ) && '' !== $icon_data['body'] ) {
 				$body = $icon_data['body'];
 
 				// Basic Lucide-like defaults; tweak as needed or read from manifest.
