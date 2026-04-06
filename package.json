@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/phcdevworks/spectre-icons#readme",
   "devDependencies": {
-    "@playwright/test": "^1.59.1"
+    "@playwright/test": "^1.59.1",
+    "@wordpress/env": "^10.14.0"
   }
 }
