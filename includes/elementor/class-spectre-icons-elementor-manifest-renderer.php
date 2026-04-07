@@ -289,12 +289,16 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 					if ( '' === $slug ) {
 						continue;
 					}
-					if ( is_string( $icon_entry ) ) {
+					if ( is_string( $icon_entry ) && '' !== trim( $icon_entry ) ) {
 						$icons[ $slug ] = array( 'svg' => $icon_entry );
 						continue;
 					}
 					if ( is_array( $icon_entry ) ) {
-						$icons[ $slug ] = $icon_entry;
+						$has_svg  = isset( $icon_entry['svg'] ) && is_string( $icon_entry['svg'] ) && '' !== trim( $icon_entry['svg'] );
+						$has_body = isset( $icon_entry['body'] ) && is_string( $icon_entry['body'] ) && '' !== trim( $icon_entry['body'] );
+						if ( $has_svg || $has_body ) {
+							$icons[ $slug ] = $icon_entry;
+						}
 					}
 				}
 			} else {
@@ -306,12 +310,18 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 					if ( '' === $slug ) {
 						continue;
 					}
-					if ( isset( $icon_entry['svg'] ) && is_string( $icon_entry['svg'] ) ) {
+
+					$has_svg  = isset( $icon_entry['svg'] ) && is_string( $icon_entry['svg'] ) && '' !== trim( $icon_entry['svg'] );
+					$has_body = isset( $icon_entry['body'] ) && is_string( $icon_entry['body'] ) && '' !== trim( $icon_entry['body'] );
+
+					if ( $has_svg || $has_body ) {
 						$icons[ $slug ] = $icon_entry;
-						continue;
 					}
-					$icons[ $slug ] = $icon_entry;
 				}
+			}
+
+			if ( empty( $icons ) ) {
+				self::log_debug( sprintf( 'Manifest for library "%s" contained no valid icons.', $library_slug ) );
 			}
 
 			self::$icons_cache[ $library_slug ] = $icons;
