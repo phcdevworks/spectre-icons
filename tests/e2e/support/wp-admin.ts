@@ -9,6 +9,8 @@ async function dismissAdminOverlays(page: Page) {
     page.getByRole('button', { name: /^Close$/i }),
     page.getByRole('link', { name: /^Dismiss$/i }),
     page.locator('#wp-pointer-0 button, #wp-pointer-0 a').first(),
+    page.locator('.e-notice__dismiss').first(),
+    page.locator('.elementor-guide-button-skip').first(),
   ];
 
   for (const locator of dismissors) {
