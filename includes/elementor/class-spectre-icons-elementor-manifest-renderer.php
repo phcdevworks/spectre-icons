@@ -161,7 +161,13 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 				return '';
 			}
 
-			$icon_data   = $icons[ $icon_slug ];
+			$icon_data = $icons[ $icon_slug ];
+
+			if ( ! is_array( $icon_data ) ) {
+				self::log_debug( sprintf( 'render_icon: icon "%s" in library "%s" has invalid data structure.', $icon_slug, $library_slug ) );
+				return '';
+			}
+
 			$attributes  = is_array( $attributes ) ? $attributes : array();
 			$tag         = self::sanitize_tag_name( $tag );
 			$attributes  = self::maybe_add_style_class( $attributes, $library_slug );
