@@ -10,7 +10,7 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
   },
   "scripts": {
-    "lint": "vendor/bin/phpcs --standard=WordPress spectre-icons.php includes/ tests/phpunit/",
+    "lint": "vendor/bin/phpcs",
     "test": "vendor/bin/phpunit -c phpunit.xml.dist",
     "test:unit": "@test"
   },

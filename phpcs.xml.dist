@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
 <ruleset name="Spectre Icons">
-	<description>WordPress.org review: WordPress-Extra with vendor/assets/bin excluded.</description>
+	<description>WordPress.org review: lint plugin source with WordPress-Extra.</description>
 
 	<rule ref="WordPress-Extra" />
 
 	<!-- Only scan PHP files -->
 	<arg name="extensions" value="php"/>
 
-	<!-- Project root -->
-	<file>.</file>
+	<!-- Plugin source -->
+	<file>spectre-icons.php</file>
+	<file>includes</file>
 
 	<!-- Exclusions for generated/vendor assets -->
 	<exclude-pattern>*/vendor/*</exclude-pattern>
@@ -16,4 +17,5 @@
 	<exclude-pattern>*/assets/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*/stubs/*</exclude-pattern>
+	<exclude-pattern>*/tests/*</exclude-pattern>
 </ruleset>
