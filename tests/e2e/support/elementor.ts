@@ -45,6 +45,8 @@ export async function dismissEditorOverlays(page: Page) {
     page.getByRole('button', { name: /^Got it$/i }),
     page.getByRole('button', { name: /^Done$/i }),
     page.locator('[aria-label="Close"]').first(),
+    page.locator('.elementor-guide-button-skip').first(),
+    page.locator('.e-notice__dismiss').first(),
   ];
 
   for (const locator of selectors) {

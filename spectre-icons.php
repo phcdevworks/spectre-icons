@@ -22,6 +22,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * PHP version check.
+ */
+if ( version_compare( PHP_VERSION, '7.4', '<' ) ) {
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	add_action(
+		'admin_notices',
+		function () {
+			echo '<div class="notice notice-error"><p>';
+			echo esc_html__( 'Spectre Icons requires PHP 7.4 or higher to function. Please contact your hosting provider to upgrade PHP.', 'spectre-icons' );
+			echo '</p></div>';
+		}
+	);
+	return;
+}
+
 define( 'SPECTRE_ICONS_VERSION', '1.1.0' );
 define( 'SPECTRE_ICONS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SPECTRE_ICONS_URL', plugin_dir_url( __FILE__ ) );
