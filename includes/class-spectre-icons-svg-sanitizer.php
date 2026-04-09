@@ -14,9 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 
-		/**
-		 * Sanitizes raw SVG markup from bundled manifests for safe inline output.
-		 */
+	/**
+	 * Sanitizes raw SVG markup from bundled manifests for safe inline output.
+	 */
 	final class Spectre_Icons_SVG_Sanitizer {
 
 		/**
@@ -71,6 +71,11 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			'y2',
 			'transform',
 			'xmlns',
+			'fill-rule',
+			'clip-rule',
+			'opacity',
+			'fill-opacity',
+			'stroke-opacity',
 			'aria-hidden',
 			'role',
 			'focusable',
@@ -114,8 +119,8 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			$dom = new DOMDocument();
 
 			// Prevent external entity expansion attacks.
-				$dom->resolveExternals   = false; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-				$dom->substituteEntities = false; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$dom->resolveExternals   = false; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$dom->substituteEntities = false; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
 			libxml_use_internal_errors( true );
 			$loaded = $dom->loadXML( $svg, LIBXML_NONET | LIBXML_NOWARNING | LIBXML_NOERROR );
@@ -125,9 +130,9 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 				return '';
 			}
 
-				self::sanitize_node_deep( $dom->documentElement ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			self::sanitize_node_deep( $dom->documentElement ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
-				$clean = $dom->saveXML( $dom->documentElement ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$clean = $dom->saveXML( $dom->documentElement ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
 			return is_string( $clean ) ? $clean : '';
 		}
@@ -156,9 +161,9 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 					$remove = array();
 
 					foreach ( iterator_to_array( $node->attributes ) as $attr ) {
-							$name_raw = (string) $attr->nodeName; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-							$name     = strtolower( $name_raw );
-							$value    = strtolower( preg_replace( '/\s+/', '', (string) $attr->nodeValue ) ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$name_raw = (string) $attr->nodeName; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$name     = strtolower( $name_raw );
+						$value    = strtolower( preg_replace( '/\s+/', '', (string) $attr->nodeValue ) ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
 						// Block any event handlers.
 						if ( 0 === stripos( $name_raw, 'on' ) ) {

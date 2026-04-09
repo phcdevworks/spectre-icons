@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+final class SVGSanitizerTest extends Spectre_Icons_PHPUnit_Test_Case {
+
+	public function test_sanitize_preserves_safe_svg_content(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-camera"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringContainsString( 'viewBox="0 0 24 24"', $sanitized );
+		$this->assertStringContainsString( 'stroke="currentColor"', $sanitized );
+		$this->assertStringContainsString( '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"', $sanitized );
+		$this->assertStringContainsString( '<circle cx="12" cy="13" r="3"', $sanitized );
+	}
+
+	public function test_sanitize_preserves_newly_added_safe_attributes(): void {
+		$svg = '<svg fill-rule="evenodd" clip-rule="evenodd" opacity="0.5" fill-opacity="0.8" stroke-opacity="0.9"><path d="M0 0h24v24H0z"/></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringContainsString( 'fill-rule="evenodd"', $sanitized );
+		$this->assertStringContainsString( 'clip-rule="evenodd"', $sanitized );
+		$this->assertStringContainsString( 'opacity="0.5"', $sanitized );
+		$this->assertStringContainsString( 'fill-opacity="0.8"', $sanitized );
+		$this->assertStringContainsString( 'stroke-opacity="0.9"', $sanitized );
+	}
+
+	public function test_sanitize_removes_dangerous_tags_and_attributes(): void {
+		$svg = '<svg onclick="alert(1)"><script>alert(2)</script><path d="M0 0h24v24H0z"/><foreignObject>Dangerous</foreignObject></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringNotContainsString( 'onclick=', $sanitized );
+		$this->assertStringNotContainsString( '<script', $sanitized );
+		$this->assertStringNotContainsString( '<foreignObject', $sanitized );
+		$this->assertStringContainsString( '<path d="M0 0h24v24H0z"', $sanitized );
+	}
+
+	public function test_sanitize_handles_empty_or_invalid_input(): void {
+		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( '' ) );
+		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( '   ' ) );
+		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( 'not an svg' ) );
+	}
+}
