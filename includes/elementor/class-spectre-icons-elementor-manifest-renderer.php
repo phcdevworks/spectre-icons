@@ -69,7 +69,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 			$slug = sanitize_key( $library_slug );
 
 			if ( '' === $slug ) {
-				self::log_debug( sprintf( 'register_manifest called with invalid library slug "%s".', (string) $library_slug ) );
+				$msg_slug = is_scalar( $library_slug ) ? (string) $library_slug : gettype( $library_slug );
+				self::log_debug( sprintf( 'register_manifest called with invalid library slug "%s".', $msg_slug ) );
 				return;
 			}
 
@@ -110,7 +111,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 			$slug = sanitize_key( $library_slug );
 
 			if ( '' === $slug || ! isset( self::$libraries[ $slug ] ) ) {
-				self::log_debug( sprintf( 'get_icon_slugs called for unknown library "%s".', (string) $library_slug ) );
+				$msg_slug = is_scalar( $library_slug ) ? (string) $library_slug : gettype( $library_slug );
+				self::log_debug( sprintf( 'get_icon_slugs called for unknown library "%s".', $msg_slug ) );
 				return array();
 			}
 
@@ -539,7 +541,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		 */
 		private static function log_debug( $message ) {
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 				error_log( '[Spectre Icons][Manifest Renderer] ' . $message );
 			}
 		}

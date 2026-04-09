@@ -25,6 +25,7 @@ yarn-error.log*
 
 # WordPress/PHP specific
 .wp-env/
+.phpunit.result.cache
 tmp-elementor
 wp-content/uploads/*
 wp-content/cache/*
