@@ -21,12 +21,14 @@ function spectre_icons_elementor_get_icon_library_definitions() {
 			'label_icon'    => 'eicon-check',
 			'manifest_file' => 'spectre-lucide.json',
 			'class_prefix'  => 'spectre-lucide-',
+			'style'         => 'outline',
 		),
 		'spectre-fontawesome' => array(
 			'label'         => 'Font Awesome',
 			'label_icon'    => 'eicon-star',
 			'manifest_file' => 'spectre-fontawesome.json',
 			'class_prefix'  => 'spectre-fa-',
+			'style'         => 'filled',
 		),
 	);
 }
@@ -75,6 +77,41 @@ function spectre_icons_elementor_is_library_enabled( $slug, $prefs = null ) {
 }
 
 /**
+ * Resolve and harden a manifest file path.
+ *
+ * @param string $manifest_file Filename (e.g. 'spectre-lucide.json').
+ * @return string|null Absolute path or null on failure.
+ */
+function spectre_icons_elementor_resolve_manifest_path( $manifest_file ) {
+	$manifest_file = sanitize_file_name( (string) $manifest_file );
+	if ( '' === $manifest_file ) {
+		return null;
+	}
+
+	$base_dir  = trailingslashit( SPECTRE_ICONS_PATH . 'assets/manifests/' );
+	$base_real = realpath( $base_dir );
+
+	// Normalize to a directory prefix to make strpos checks safer.
+	$base_real = $base_real ? trailingslashit( wp_normalize_path( $base_real ) ) : '';
+
+	$manifest_path = $base_dir . $manifest_file;
+
+	// Path hardening: ensure resolved path stays within manifests directory.
+	$real = realpath( $manifest_path );
+	$real = $real ? wp_normalize_path( $real ) : '';
+
+	if ( '' === $base_real || '' === $real || 0 !== strpos( $real, $base_real ) ) {
+		return null;
+	}
+
+	if ( ! file_exists( $real ) ) {
+		return null;
+	}
+
+	return $real;
+}
+
+/**
  * Build preview config for Elementor.
  *
  * NOTE: Informational only. Does NOT register manifests or query icon slugs.
@@ -86,34 +123,16 @@ function spectre_icons_elementor_get_icon_preview_config() {
 	$definitions = spectre_icons_elementor_get_icon_library_definitions();
 	$config      = array();
 
-	$base_dir  = trailingslashit( SPECTRE_ICONS_PATH . 'assets/manifests/' );
-	$base_real = realpath( $base_dir );
-
-	// Normalize to a directory prefix to make strpos checks safer.
-	$base_real = $base_real ? trailingslashit( wp_normalize_path( $base_real ) ) : '';
-
 	foreach ( $definitions as $slug => $def ) {
 		$slug = sanitize_key( $slug );
 		if ( '' === $slug ) {
 			continue;
 		}
 
-		$manifest_file = isset( $def['manifest_file'] ) ? sanitize_file_name( (string) $def['manifest_file'] ) : '';
-		if ( '' === $manifest_file ) {
-			continue;
-		}
+		$manifest_file = isset( $def['manifest_file'] ) ? (string) $def['manifest_file'] : '';
+		$real          = spectre_icons_elementor_resolve_manifest_path( $manifest_file );
 
-		$manifest_path = $base_dir . $manifest_file;
-
-		// Path hardening: ensure resolved path stays within manifests directory.
-		$real = realpath( $manifest_path );
-		$real = $real ? wp_normalize_path( $real ) : '';
-
-		if ( '' === $base_real || '' === $real || 0 !== strpos( $real, $base_real ) ) {
-			continue;
-		}
-
-		if ( ! file_exists( $real ) ) {
+		if ( ! $real ) {
 			continue;
 		}
 
@@ -150,34 +169,17 @@ function spectre_icons_elementor_register_manifest_libraries( $libraries ) {
 		$libraries = array();
 	}
 
-	$defs      = spectre_icons_elementor_get_icon_library_definitions();
-	$base_dir  = trailingslashit( SPECTRE_ICONS_PATH . 'assets/manifests/' );
-	$base_real = realpath( $base_dir );
-
-	// Normalize to a directory prefix to make strpos checks safer.
-	$base_real = $base_real ? trailingslashit( wp_normalize_path( $base_real ) ) : '';
+	$defs = spectre_icons_elementor_get_icon_library_definitions();
 
 	foreach ( $defs as $slug => $def ) {
 		$slug = sanitize_key( $slug );
 		if ( '' === $slug ) {
 			continue;
 		}
-		$manifest_file = isset( $def['manifest_file'] ) ? sanitize_file_name( (string) $def['manifest_file'] ) : '';
-		if ( '' === $manifest_file ) {
-			continue;
-		}
+		$manifest_file = isset( $def['manifest_file'] ) ? (string) $def['manifest_file'] : '';
+		$real          = spectre_icons_elementor_resolve_manifest_path( $manifest_file );
 
-		$manifest_path = $base_dir . $manifest_file;
-
-		// Path hardening: ensure resolved path stays within manifests directory.
-		$real = realpath( $manifest_path );
-		$real = $real ? wp_normalize_path( $real ) : '';
-
-		if ( '' === $base_real || '' === $real || 0 !== strpos( $real, $base_real ) ) {
-			continue;
-		}
-
-		if ( ! file_exists( $real ) ) {
+		if ( ! $real ) {
 			continue;
 		}
 
@@ -190,12 +192,17 @@ function spectre_icons_elementor_register_manifest_libraries( $libraries ) {
 			? $def['label_icon']
 			: '';
 
+		$style = isset( $def['style'] ) ? (string) $def['style'] : '';
+
 		// Register manifest once (authoritative path).
 		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest(
 			$slug,
 			$real,
 			array(
-				'prefix' => $class_prefix,
+				'prefix'  => $class_prefix,
+				'options' => array(
+					'style' => $style,
+				),
 			)
 		);
 
