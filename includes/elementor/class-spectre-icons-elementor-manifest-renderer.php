@@ -202,10 +202,22 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		 */
 		private static function maybe_add_style_class( array $attributes, $library_slug ) {
 			$style_class = '';
-			if ( false !== strpos( $library_slug, 'lucide' ) ) {
+			$library     = isset( self::$libraries[ $library_slug ] ) ? self::$libraries[ $library_slug ] : null;
+			$style       = ( $library && isset( $library['options']['style'] ) ) ? (string) $library['options']['style'] : '';
+
+			if ( 'outline' === $style ) {
 				$style_class = 'spectre-icon--style-outline';
-			} elseif ( false !== strpos( $library_slug, 'fontawesome' ) ) {
+			} elseif ( 'filled' === $style ) {
 				$style_class = 'spectre-icon--style-filled';
+			}
+
+			// Fallback to slug-based detection for backward compatibility or unregistered libraries.
+			if ( '' === $style_class ) {
+				if ( false !== strpos( $library_slug, 'lucide' ) ) {
+					$style_class = 'spectre-icon--style-outline';
+				} elseif ( false !== strpos( $library_slug, 'fontawesome' ) ) {
+					$style_class = 'spectre-icon--style-filled';
+				}
 			}
 
 			if ( '' === $style_class ) {
