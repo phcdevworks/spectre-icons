@@ -162,12 +162,17 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 		$prefix     = preg_replace( '/[^a-z0-9\-_]/i', '', $prefix_raw );
 		$label      = isset( $def['label'] ) ? (string) $def['label'] : $slug;
 
+		$style = isset( $def['style'] ) ? (string) $def['style'] : '';
+		if ( '' === $style ) {
+			$style = ( false !== strpos( $slug, 'lucide' ) ) ? 'outline' : 'filled';
+		}
+
 		$libraries[ $slug ] = array(
 			'json'     => SPECTRE_ICONS_URL . 'assets/manifests/' . $manifest_file,
 			'label'    => $label,
 			'prefix'   => $prefix,
 			'selector' => $prefix ? '[class*="' . $prefix . '"]' : '',
-			'style'    => ( false !== strpos( $slug, 'lucide' ) ) ? 'outline' : 'filled',
+			'style'    => $style,
 			'enabled'  => function_exists( 'spectre_icons_elementor_is_library_enabled' )
 				? spectre_icons_elementor_is_library_enabled( $slug )
 				: true,

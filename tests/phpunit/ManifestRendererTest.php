@@ -74,6 +74,35 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertStringContainsString( 'stroke="currentColor"', $html );
 	}
 
+	public function test_renderer_prioritizes_style_option_over_slug_fallback(): void {
+		$manifest_path = $this->create_temp_manifest(
+			array(
+				'icons' => array(
+					'icon1' => array( 'svg' => '<svg><path d="M0 0" /></svg>' ),
+				),
+			)
+		);
+
+		// slug contains 'lucide' but we force 'filled' style.
+		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest(
+			'forced-filled-lucide',
+			$manifest_path,
+			array(
+				'options' => array( 'style' => 'filled' ),
+			)
+		);
+
+		$html = Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+			array(
+				'library' => 'forced-filled-lucide',
+				'value'   => 'icon1',
+			)
+		);
+
+		$this->assertStringContainsString( 'spectre-icon--style-filled', $html );
+		$this->assertStringNotContainsString( 'spectre-icon--style-outline', $html );
+	}
+
 	public function test_unknown_library_and_unknown_icon_return_empty_output(): void {
 		$this->assertSame(
 			'',
