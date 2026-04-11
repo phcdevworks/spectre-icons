@@ -82,6 +82,8 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			'aria-hidden',
 			'role',
 			'focusable',
+			'preserveaspectratio',
+			'overflow',
 		);
 
 		/**
