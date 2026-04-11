@@ -37,6 +37,15 @@ final class SVGSanitizerTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertStringContainsString( 'vector-effect="non-scaling-stroke"', $sanitized );
 	}
 
+	public function test_sanitize_preserves_layout_attributes(): void {
+		$svg = '<svg preserveAspectRatio="xMidYMid meet" overflow="visible"><path d="M0 0h24v24H0z"/></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringContainsString( 'preserveAspectRatio="xMidYMid meet"', $sanitized );
+		$this->assertStringContainsString( 'overflow="visible"', $sanitized );
+	}
+
 	public function test_sanitize_removes_dangerous_tags_and_attributes(): void {
 		$svg = '<svg onclick="alert(1)"><script>alert(2)</script><path d="M0 0h24v24H0z"/><foreignObject>Dangerous</foreignObject></svg>';
 

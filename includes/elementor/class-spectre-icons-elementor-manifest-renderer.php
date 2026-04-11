@@ -146,7 +146,9 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 			}
 
 			if ( '' === $library_slug || ! isset( self::$libraries[ $library_slug ] ) ) {
-				self::log_debug( sprintf( 'render_icon: unknown library "%s" for icon "%s".', $library_slug, $icon_slug ) );
+				$msg_lib  = is_scalar( $library_slug ) ? (string) $library_slug : gettype( $library_slug );
+				$msg_icon = is_scalar( $icon_slug ) ? (string) $icon_slug : gettype( $icon_slug );
+				self::log_debug( sprintf( 'render_icon: unknown library "%s" for icon "%s".', $msg_lib, $msg_icon ) );
 				return '';
 			}
 

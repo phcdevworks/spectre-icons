@@ -26,6 +26,7 @@ dist/
 
 # WordPress/PHP specific
 .wp-env/
+.phpunit.cache/
 .phpunit.result.cache
 tmp-elementor
 wp-content/uploads/*
