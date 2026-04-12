@@ -137,6 +137,10 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		 * @return string Rendered HTML or empty string on failure.
 		 */
 		public static function render_icon( $icon, $attributes = array(), $tag = 'span' ) {
+			if ( ! is_array( $icon ) && ! is_string( $icon ) ) {
+				return '';
+			}
+
 			// Determine library + icon slug from Elementor's payload.
 			list($library_slug, $icon_slug) = self::extract_slug( $icon );
 
@@ -364,6 +368,10 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		 * @return array{string,string} [ library_slug, icon_slug ]
 		 */
 		private static function extract_slug( $icon ) {
+			if ( ! is_array( $icon ) && ! is_string( $icon ) ) {
+				return array( '', '' );
+			}
+
 			$library_slug = '';
 			$icon_slug    = '';
 
@@ -428,9 +436,12 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 
 			$current_class = '';
 			if ( isset( $attributes['class'] ) ) {
-				$current_class = is_array( $attributes['class'] )
-					? implode( ' ', $attributes['class'] )
-					: (string) $attributes['class'];
+				if ( is_array( $attributes['class'] ) ) {
+					$scalar_classes = array_filter( $attributes['class'], 'is_scalar' );
+					$current_class  = implode( ' ', $scalar_classes );
+				} else {
+					$current_class = (string) $attributes['class'];
+				}
 			}
 
 			$class_attr = trim( $base_class . ' ' . $current_class );
@@ -470,6 +481,10 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 			$parts = array();
 
 			foreach ( $attributes as $name => $value ) {
+				if ( ! is_scalar( $value ) ) {
+					continue;
+				}
+
 				$name    = esc_attr( $name );
 				$value   = esc_attr( (string) $value );
 				$parts[] = sprintf( '%s="%s"', $name, $value );
