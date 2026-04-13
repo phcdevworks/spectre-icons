@@ -59,6 +59,8 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			'cx',
 			'cy',
 			'r',
+			'rx',
+			'ry',
 			'x',
 			'y',
 			'width',
@@ -102,8 +104,8 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 				return '';
 			}
 
-			// Strip anything outside the <svg>…</svg> block.
-			if ( preg_match( '/<svg[\s\S]*?<\/svg>/i', $svg, $match ) ) {
+			// Strip anything outside the <svg>…</svg> block or <svg /> self-closing tag.
+			if ( preg_match( '/<svg(?:[\s\S]*?<\/svg>|[^>]*?\/>)/i', $svg, $match ) ) {
 				$svg = $match[0];
 			} else {
 				return '';

@@ -46,6 +46,24 @@ final class SVGSanitizerTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertStringContainsString( 'overflow="visible"', $sanitized );
 	}
 
+	public function test_sanitize_preserves_rounded_rect_attributes(): void {
+		$svg = '<svg><rect x="0" y="0" width="10" height="10" rx="2" ry="2"/></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringContainsString( 'rx="2"', $sanitized );
+		$this->assertStringContainsString( 'ry="2"', $sanitized );
+	}
+
+	public function test_sanitize_handles_self_closing_svg_tag(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringContainsString( '<svg', $sanitized );
+		$this->assertStringContainsString( 'viewBox="0 0 24 24"', $sanitized );
+	}
+
 	public function test_sanitize_removes_dangerous_tags_and_attributes(): void {
 		$svg = '<svg onclick="alert(1)"><script>alert(2)</script><path d="M0 0h24v24H0z"/><foreignObject>Dangerous</foreignObject></svg>';
 
