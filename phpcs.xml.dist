@@ -10,6 +10,7 @@
 	<!-- Plugin source -->
 	<file>spectre-icons.php</file>
 	<file>includes</file>
+	<file>tests/phpunit</file>
 
 	<!-- Exclusions for generated/vendor assets -->
 	<exclude-pattern>*/vendor/*</exclude-pattern>
@@ -17,5 +18,48 @@
 	<exclude-pattern>*/assets/*</exclude-pattern>
 	<exclude-pattern>*/node_modules/*</exclude-pattern>
 	<exclude-pattern>*/stubs/*</exclude-pattern>
-	<exclude-pattern>*/tests/*</exclude-pattern>
+
+	<!-- Relax rules for tests -->
+	<rule ref="WordPress.Files.FileName">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.PHP.DevelopmentFunctions">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.WP.AlternativeFunctions">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.Security.EscapeOutput">
+		<exclude-pattern>tests/phpunit/bootstrap.php</exclude-pattern>
+	</rule>
+
+	<rule ref="Generic.Files.OneObjectStructurePerFile">
+		<exclude-pattern>tests/phpunit/bootstrap.php</exclude-pattern>
+	</rule>
+
+	<rule ref="Universal.Files.SeparateFunctionsFromOO.Mixed">
+		<exclude-pattern>tests/phpunit/bootstrap.php</exclude-pattern>
+	</rule>
+
+	<rule ref="Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound">
+		<exclude-pattern>tests/phpunit/bootstrap.php</exclude-pattern>
+	</rule>
+
+	<rule ref="Universal.NamingConventions.NoReservedKeywordParameterNames.echoFound">
+		<exclude-pattern>tests/phpunit/bootstrap.php</exclude-pattern>
+	</rule>
+
+
+	<rule ref="PSR1.Files.SideEffects">
+		<exclude-pattern>spectre-icons.php</exclude-pattern>
+		<exclude-pattern>includes/*</exclude-pattern>
+		<exclude-pattern>tests/phpunit/bootstrap.php</exclude-pattern>
+	</rule>
+
+	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter">
+		<exclude-pattern>tests/phpunit/bootstrap.php</exclude-pattern>
+	</rule>
 </ruleset>

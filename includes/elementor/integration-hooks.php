@@ -153,8 +153,8 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 			continue;
 		}
 
-		$manifest_path = SPECTRE_ICONS_PATH . 'assets/manifests/' . $manifest_file;
-		if ( ! file_exists( $manifest_path ) ) {
+		$manifest_path = spectre_icons_elementor_resolve_manifest_path( $manifest_file );
+		if ( ! $manifest_path ) {
 			continue;
 		}
 
