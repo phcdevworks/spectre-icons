@@ -124,7 +124,7 @@ Absolutely. Icons are stored in optimized JSON manifests and loaded on-demand. O
 
 = Can I add my own custom icon packs? =
 
-Yes! The plugin architecture supports custom icon libraries. Add your SVG files to `assets/iconpacks/` and register them in the plugin. See the documentation on GitHub for detailed instructions.
+Yes! The plugin architecture supports custom icon libraries. While bundled packs are locked, you can register your own libraries using a JSON manifest and the `spectre_icons_elementor_icon_libraries` filter.
 
 = Are there any conflicts with other icon plugins? =
 

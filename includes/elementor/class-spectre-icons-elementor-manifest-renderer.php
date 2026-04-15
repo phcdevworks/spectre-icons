@@ -461,6 +461,11 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 					continue;
 				}
 
+				// Defensive hardening: block event handlers from the wrapper.
+				if ( 0 === strpos( $sanitized_name, 'on' ) ) {
+					continue;
+				}
+
 				$prepared[ $sanitized_name ] = $value;
 			}
 

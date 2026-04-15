@@ -143,6 +143,7 @@ The runtime flow is intentionally simple:
 
 1. Bundled icon packs are indexed through JSON manifests in `assets/manifests/`
 2. Builder integration registers those manifests as available icon libraries
+   using the `spectre_icons_elementor_icon_libraries` filter.
 3. The renderer resolves icon slugs from registered manifests
 4. Icons are output as inline SVG in supported editor and frontend contexts
 5. Styles and scripts handle preview behavior, color inheritance, and builder UX
