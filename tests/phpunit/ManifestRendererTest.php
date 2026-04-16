@@ -171,4 +171,36 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertStringContainsString( 'title="Safe Title"', $html );
 		$this->assertStringNotContainsString( 'data-info', $html );
 	}
+
+	public function test_render_icon_blocks_event_handler_attributes(): void {
+		$manifest_path = $this->create_temp_manifest(
+			array(
+				'icons' => array(
+					'test' => array( 'svg' => '<svg><path d="M0 0" /></svg>' ),
+				),
+			)
+		);
+
+		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'xss-test', $manifest_path );
+
+		$html = Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+			array(
+				'library' => 'xss-test',
+				'value'   => 'test',
+			),
+			array(
+				'onclick'     => 'alert(1)',
+				'ONMOUSEOVER' => 'bad()',
+				'  onclick'   => 'bypass',
+				'on'          => 'valid',
+				'common'      => 'safe',
+			)
+		);
+
+		$this->assertStringNotContainsString( 'onclick', $html );
+		$this->assertStringNotContainsString( 'ONMOUSEOVER', $html );
+		$this->assertStringContainsString( 'common="safe"', $html );
+		$this->assertStringNotContainsString( 'bypass', $html );
+		$this->assertStringNotContainsString( 'on="valid"', $html );
+	}
 }
