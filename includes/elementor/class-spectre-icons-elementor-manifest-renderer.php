@@ -456,12 +456,12 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 					continue;
 				}
 
-				$sanitized_name = sanitize_key( $name );
+				$sanitized_name = sanitize_key( (string) $name );
 				if ( '' === $sanitized_name ) {
 					continue;
 				}
 
-				// Defensive hardening: block event handlers from the wrapper.
+				// Block any event handlers (e.g. onclick, onmouseover).
 				if ( 0 === strpos( $sanitized_name, 'on' ) ) {
 					continue;
 				}
@@ -574,6 +574,10 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		 * @return void
 		 */
 		private static function log_debug( $message ) {
+			if ( ! is_string( $message ) ) {
+				return;
+			}
+
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 				error_log( '[Spectre Icons][Manifest Renderer] ' . $message );
