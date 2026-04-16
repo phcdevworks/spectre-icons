@@ -172,7 +172,7 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertStringNotContainsString( 'data-info', $html );
 	}
 
-	public function test_render_icon_strips_event_handlers_from_wrapper_attributes(): void {
+	public function test_render_icon_blocks_event_handler_attributes(): void {
 		$manifest_path = $this->create_temp_manifest(
 			array(
 				'icons' => array(
@@ -190,13 +190,17 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 			),
 			array(
 				'onclick'     => 'alert(1)',
-				'onmouseover' => 'bad()',
-				'title'       => 'Safe',
+				'ONMOUSEOVER' => 'bad()',
+				'  onclick'   => 'bypass',
+				'on'          => 'valid',
+				'common'      => 'safe',
 			)
 		);
 
-		$this->assertStringContainsString( 'title="Safe"', $html );
 		$this->assertStringNotContainsString( 'onclick', $html );
-		$this->assertStringNotContainsString( 'onmouseover', $html );
+		$this->assertStringNotContainsString( 'ONMOUSEOVER', $html );
+		$this->assertStringContainsString( 'common="safe"', $html );
+		$this->assertStringNotContainsString( 'bypass', $html );
+		$this->assertStringNotContainsString( 'on="valid"', $html );
 	}
 }
