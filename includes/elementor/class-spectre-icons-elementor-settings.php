@@ -110,12 +110,14 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 
 			$clean = array();
 
-			// Persist explicit false values for unchecked boxes.
 			if ( ! empty( $allowed ) ) {
+				// Persist values ONLY for allowed libraries.
 				foreach ( array_keys( $allowed ) as $slug ) {
+					// Checkboxes not present in $_POST are effectively false.
 					$clean[ $slug ] = ! empty( $value[ $slug ] );
 				}
 			} else {
+				// Fallback if definitions are missing (should be rare).
 				foreach ( $value as $slug => $enabled ) {
 					$slug = sanitize_key( $slug );
 					if ( '' === $slug ) {
