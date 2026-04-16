@@ -8,6 +8,9 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ### Added
 
+- Added defensive hardening to the icon renderer to strip event handler
+  attributes from wrapper tags.
+- Added explicit icon slug sanitization to the library manager validation path.
 - Added a PHPUnit harness for icon library preferences, manifest-backed
   registration, inline SVG rendering, and Elementor preview/config behavior.
 - Added per-library enablement controls so individual bundled icon libraries can
@@ -31,6 +34,9 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ### Fixed
 
+- Improved settings sanitization to strictly follow the allowed library list.
+- Updated documentation and FAQs to clarify the manifest-driven architecture
+  for custom icon libraries.
 - Hidden icon libraries no longer remain visible in the Elementor icon modal
   after being disabled in plugin settings.
 - Improved sanitization, labeling, and path hardening across manifest loading,

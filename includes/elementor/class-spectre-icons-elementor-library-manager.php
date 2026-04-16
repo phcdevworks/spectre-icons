@@ -160,8 +160,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Library_Manager' ) ) :
 			? preg_replace( '/[^a-z0-9\-_]/i', '', (string) $config['prefix'] )
 			: '';
 
-			// Icons list must be an array.
-			$config['icons'] = is_array( $config['icons'] ) ? $config['icons'] : array();
+			// Icons list must be an array of sanitized slugs.
+			$config['icons'] = is_array( $config['icons'] ) ? array_map( 'sanitize_key', $config['icons'] ) : array();
 
 			$library['config'] = $config;
 			$library['label']  = $config['label'];
