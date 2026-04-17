@@ -94,4 +94,26 @@ final class ManifestHardeningTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertSame( array(), $slugs );
 		unlink( $path );
 	}
+
+	public function test_get_icons_handles_invalid_icons_key_resiliently(): void {
+		$manifest_path = $this->create_temp_manifest(
+			array(
+				'icons' => 'not-an-array',
+			)
+		);
+
+		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'invalid-icons-test', $manifest_path );
+		$slugs = Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( 'invalid-icons-test' );
+
+		$this->assertSame( array(), $slugs );
+	}
+
+	public function test_get_icons_handles_empty_manifest_resiliently(): void {
+		$manifest_path = $this->create_temp_manifest( array() );
+
+		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'empty-test', $manifest_path );
+		$slugs = Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( 'empty-test' );
+
+		$this->assertSame( array(), $slugs );
+	}
 }
