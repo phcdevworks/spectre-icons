@@ -300,8 +300,14 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 			 * - Top-level wrapper: [ 'icons' => [ 'arrow-right' => '<svg...>', ... ] ]
 			 * - Indexed list: [ [ 'slug' => 'arrow-right', ... ], ... ]
 			 */
-			if ( isset( $data['icons'] ) && is_array( $data['icons'] ) ) {
-				$data = $data['icons'];
+			if ( isset( $data['icons'] ) ) {
+				if ( is_array( $data['icons'] ) ) {
+					$data = $data['icons'];
+				} else {
+					self::log_debug( sprintf( 'Manifest for library "%s" has "icons" key but it is not an array.', $library_slug ) );
+					self::$icons_cache[ $library_slug ] = array();
+					return array();
+				}
 			}
 
 			$icons = array();
@@ -389,10 +395,10 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 					$value = (string) $icon['icon'];
 				}
 
-				if ( '' !== $value ) {
+				if ( '' !== trim( $value ) ) {
 					// Example values:
 					// - 'spectre-lucide arrow-right'
-						// - 'arrow-right'.
+					// - 'arrow-right'.
 					$parts = preg_split( '/\s+/', trim( $value ) );
 					$slug  = end( $parts ); // Last token is usually the icon identifier.
 
