@@ -46,6 +46,17 @@ final class SVGSanitizerTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertStringContainsString( 'overflow="visible"', $sanitized );
 	}
 
+	public function test_sanitize_preserves_accessibility_and_identity_attributes(): void {
+		$svg = '<svg id="my-icon" aria-label="Camera" aria-labelledby="title-id" aria-describedby="desc-id"><path d="M0 0h24v24H0z"/></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringContainsString( 'id="my-icon"', $sanitized );
+		$this->assertStringContainsString( 'aria-label="Camera"', $sanitized );
+		$this->assertStringContainsString( 'aria-labelledby="title-id"', $sanitized );
+		$this->assertStringContainsString( 'aria-describedby="desc-id"', $sanitized );
+	}
+
 	public function test_sanitize_preserves_rounded_rect_attributes(): void {
 		$svg = '<svg><rect x="0" y="0" width="10" height="10" rx="2" ry="2"/></svg>';
 
