@@ -10,6 +10,11 @@ reflects WordPress plugin releases for Spectre Icons.
 
 - Added defensive hardening to the icon renderer to strip event handler
   attributes from wrapper tags.
+- Added support for SVG accessibility attributes (`aria-label`,
+  `aria-labelledby`, `aria-describedby`) and identification (`id`) in the SVG
+  sanitizer.
+- Improved manifest loading resilience in the renderer to handle malformed or
+  unexpected manifest structures gracefully.
 - Added explicit icon slug sanitization to the library manager validation path.
 - Added a PHPUnit harness for icon library preferences, manifest-backed
   registration, inline SVG rendering, and Elementor preview/config behavior.

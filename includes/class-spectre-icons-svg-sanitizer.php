@@ -82,10 +82,14 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			'fill-opacity',
 			'stroke-opacity',
 			'aria-hidden',
+			'aria-label',
+			'aria-labelledby',
+			'aria-describedby',
 			'role',
 			'focusable',
 			'preserveaspectratio',
 			'overflow',
+			'id',
 		);
 
 		/**

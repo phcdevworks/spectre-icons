@@ -300,11 +300,22 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 			 * - Top-level wrapper: [ 'icons' => [ 'arrow-right' => '<svg...>', ... ] ]
 			 * - Indexed list: [ [ 'slug' => 'arrow-right', ... ], ... ]
 			 */
-			if ( isset( $data['icons'] ) && is_array( $data['icons'] ) ) {
-				$data = $data['icons'];
+			if ( isset( $data['icons'] ) ) {
+				if ( is_array( $data['icons'] ) ) {
+					$data = $data['icons'];
+				} else {
+					self::log_debug( sprintf( 'Manifest for library "%s" has non-array "icons" key.', $library_slug ) );
+					self::$icons_cache[ $library_slug ] = array();
+					return array();
+				}
 			}
 
 			$icons = array();
+
+			if ( empty( $data ) ) {
+				self::$icons_cache[ $library_slug ] = array();
+				return array();
+			}
 
 			// Associative array keyed by slug.
 			$is_assoc = array_keys( $data ) !== range( 0, count( $data ) - 1 );
