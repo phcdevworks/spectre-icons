@@ -30,7 +30,7 @@ jobs:
         run: composer validate --no-check-lock
 
       - name: Install Composer dependencies
-        run: composer update --no-interaction --prefer-dist
+        run: composer update --no-interaction --prefer-dist --no-audit
 
       - name: Run PHPUnit
         run: composer test

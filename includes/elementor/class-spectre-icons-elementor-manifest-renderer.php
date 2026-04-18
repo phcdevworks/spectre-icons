@@ -304,7 +304,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 				if ( is_array( $data['icons'] ) ) {
 					$data = $data['icons'];
 				} else {
-					self::log_debug( sprintf( 'Manifest for library "%s" has "icons" key but it is not an array.', $library_slug ) );
+					self::log_debug( sprintf( 'Manifest for library "%s" has non-array "icons" key.', $library_slug ) );
 					self::$icons_cache[ $library_slug ] = array();
 					return array();
 				}
