@@ -400,10 +400,10 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 					$value = (string) $icon['icon'];
 				}
 
-				if ( '' !== $value ) {
+				if ( '' !== trim( $value ) ) {
 					// Example values:
 					// - 'spectre-lucide arrow-right'
-						// - 'arrow-right'.
+					// - 'arrow-right'.
 					$parts = preg_split( '/\s+/', trim( $value ) );
 					$slug  = end( $parts ); // Last token is usually the icon identifier.
 
