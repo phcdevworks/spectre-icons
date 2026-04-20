@@ -141,6 +141,9 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 				return '';
 			}
 
+			$attributes = is_array( $attributes ) ? $attributes : array();
+			$tag        = is_string( $tag ) ? $tag : 'span';
+
 			// Determine library + icon slug from Elementor's payload.
 			list($library_slug, $icon_slug) = self::extract_slug( $icon );
 
@@ -445,13 +448,18 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 				$base_class = $library['prefix'] . $icon_slug;
 			}
 
-			$current_class = '';
-			if ( isset( $attributes['class'] ) ) {
-				if ( is_array( $attributes['class'] ) ) {
-					$scalar_classes = array_filter( $attributes['class'], 'is_scalar' );
+			$current_class   = '';
+			$lowercase_attrs = array();
+			foreach ( $attributes as $name => $value ) {
+				$lowercase_attrs[ strtolower( (string) $name ) ] = $value;
+			}
+
+			if ( isset( $lowercase_attrs['class'] ) ) {
+				if ( is_array( $lowercase_attrs['class'] ) ) {
+					$scalar_classes = array_filter( $lowercase_attrs['class'], 'is_scalar' );
 					$current_class  = implode( ' ', $scalar_classes );
 				} else {
-					$current_class = (string) $attributes['class'];
+					$current_class = (string) $lowercase_attrs['class'];
 				}
 			}
 
@@ -462,7 +470,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 			}
 
 			// Copy through remaining attributes with sanitized names.
-			foreach ( $attributes as $name => $value ) {
+			foreach ( $lowercase_attrs as $name => $value ) {
 				if ( 'class' === $name ) {
 					continue;
 				}
@@ -590,7 +598,11 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		 */
 		private static function log_debug( $message ) {
 			if ( ! is_string( $message ) ) {
-				return;
+				if ( is_scalar( $message ) ) {
+					$message = (string) $message;
+				} else {
+					$message = wp_json_encode( $message );
+				}
 			}
 
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
