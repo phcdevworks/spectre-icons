@@ -501,7 +501,11 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 					continue;
 				}
 
-				$name    = esc_attr( $name );
+				$name = esc_attr( (string) $name );
+				if ( '' === $name ) {
+					continue;
+				}
+
 				$value   = esc_attr( (string) $value );
 				$parts[] = sprintf( '%s="%s"', $name, $value );
 			}

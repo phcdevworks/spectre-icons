@@ -8,6 +8,10 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ### Added
 
+- Updated verified WordPress compatibility to 6.7 in plugin metadata and documentation.
+- Hardened SVG sanitization regex to better handle self-closing and multi-line tags.
+- Improved attribute rendering safety in the manifest renderer.
+
 - Added defensive hardening to the icon renderer to strip event handler
   attributes from wrapper tags.
 - Added support for SVG accessibility attributes (`aria-label`,
