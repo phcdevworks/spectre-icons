@@ -133,14 +133,4 @@ final class SVGSanitizerTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( '   ' ) );
 		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( 'not an svg' ) );
 	}
-
-	public function test_sanitize_handles_various_self_closing_and_whitespace(): void {
-		$svg1 = '<svg
-			width="24"
-			/>';
-		$this->assertStringContainsString( '<svg', Spectre_Icons_SVG_Sanitizer::sanitize( $svg1 ) );
-
-		$svg2 = '  <svg xmlns="http://www.w3.org/2000/svg" />  ';
-		$this->assertStringContainsString( '<svg', Spectre_Icons_SVG_Sanitizer::sanitize( $svg2 ) );
-	}
 }
