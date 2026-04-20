@@ -451,7 +451,12 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 			$current_class   = '';
 			$lowercase_attrs = array();
 			foreach ( $attributes as $name => $value ) {
-				$lowercase_attrs[ strtolower( (string) $name ) ] = $value;
+				$normalized_name = strtolower( (string) $name );
+				if ( isset( $lowercase_attrs[ $normalized_name ] ) ) {
+					self::log_debug( sprintf( 'Duplicate attribute key after case-normalization: "%s".', $normalized_name ) );
+					continue;
+				}
+				$lowercase_attrs[ $normalized_name ] = $value;
 			}
 
 			if ( isset( $lowercase_attrs['class'] ) ) {
@@ -601,7 +606,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 				if ( is_scalar( $message ) ) {
 					$message = (string) $message;
 				} else {
-					$message = wp_json_encode( $message );
+					$encoded = wp_json_encode( $message );
+					$message = false !== $encoded ? $encoded : 'Unable to encode debug message.';
 				}
 			}
 
