@@ -388,14 +388,14 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 
 			// Elementor passes an array.
 			if ( is_array( $icon ) ) {
-				if ( ! empty( $icon['library'] ) ) {
+				if ( ! empty( $icon['library'] ) && is_scalar( $icon['library'] ) ) {
 					$library_slug = sanitize_key( (string) $icon['library'] );
 				}
 
 				$value = '';
-				if ( ! empty( $icon['value'] ) ) {
+				if ( ! empty( $icon['value'] ) && is_scalar( $icon['value'] ) ) {
 					$value = (string) $icon['value'];
-				} elseif ( ! empty( $icon['icon'] ) ) {
+				} elseif ( ! empty( $icon['icon'] ) && is_scalar( $icon['icon'] ) ) {
 					// Fallback key used in some Elementor versions.
 					$value = (string) $icon['icon'];
 				}

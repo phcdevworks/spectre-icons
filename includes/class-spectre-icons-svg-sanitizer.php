@@ -90,6 +90,9 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			'preserveaspectratio',
 			'overflow',
 			'id',
+			'href',
+			'xlink:href',
+			'xmlns:xlink',
 		);
 
 		/**
@@ -182,14 +185,16 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 							continue;
 						}
 
-						// Block any href variants + xlink namespace.
-						if ( 'href' === $name || 'xlink:href' === $name || 'xmlns:xlink' === $name ) {
-							$remove[] = $name_raw;
-							continue;
+						// Allow href/xlink:href only for local fragment identifiers.
+						if ( 'href' === $name || 'xlink:href' === $name ) {
+							if ( 0 !== strpos( (string) $attr->nodeValue, '#' ) ) {
+								$remove[] = $name_raw;
+								continue;
+							}
 						}
 
-						// Block javascript: and data: urls anywhere.
-						if ( 0 === strpos( $value, 'javascript:' ) || 0 === strpos( $value, 'data:' ) ) {
+						// Block javascript: and data: urls anywhere (case-insensitive).
+						if ( false !== stripos( $value, 'javascript:' ) || false !== stripos( $value, 'data:' ) ) {
 							$remove[] = $name_raw;
 							continue;
 						}

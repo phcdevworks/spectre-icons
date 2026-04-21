@@ -133,4 +133,41 @@ final class SVGSanitizerTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( '   ' ) );
 		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( 'not an svg' ) );
 	}
+
+	public function test_sanitize_preserves_xlink_and_xmlns_xlink_attributes_for_local_refs(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#my-id" /></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringContainsString( 'xmlns:xlink', $sanitized );
+		$this->assertStringContainsString( 'xlink:href="#my-id"', $sanitized );
+	}
+
+	public function test_sanitize_removes_external_xlink_href(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg"><use xlink:href="https://evil.com/icon.svg#id" /></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringNotContainsString( 'xlink:href', $sanitized );
+	}
+
+	public function test_sanitize_removes_nested_dangerous_tags(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg"><g><script>alert(1)</script><circle cx="5" cy="5" r="5" /></g></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringNotContainsString( '<script', $sanitized );
+		$this->assertStringContainsString( '<circle', $sanitized );
+	}
+
+	public function test_sanitize_removes_javascript_and_data_urls(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0" fill="url(javascript:alert(1))" stroke="url(DATA:image/png;base64,123)" /></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringNotContainsString( 'javascript:', $sanitized );
+		$this->assertStringNotContainsString( 'DATA:', $sanitized );
+		$this->assertStringNotContainsString( 'data:', $sanitized );
+		$this->assertStringContainsString( '<path d="M0 0"', $sanitized );
+	}
 }
