@@ -133,4 +133,32 @@ final class SVGSanitizerTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( '   ' ) );
 		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( 'not an svg' ) );
 	}
+
+	public function test_sanitize_removes_xlink_and_xmlns_xlink_attributes(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#my-id" /></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringNotContainsString( 'xmlns:xlink', $sanitized );
+		$this->assertStringNotContainsString( 'xlink:href', $sanitized );
+	}
+
+	public function test_sanitize_removes_nested_dangerous_tags(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg"><g><script>alert(1)</script><circle cx="5" cy="5" r="5" /></g></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringNotContainsString( '<script', $sanitized );
+		$this->assertStringContainsString( '<circle', $sanitized );
+	}
+
+	public function test_sanitize_removes_javascript_and_data_urls(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0" fill="url(javascript:alert(1))" stroke="url(data:image/png;base64,123)" /></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringNotContainsString( 'javascript:', $sanitized );
+		$this->assertStringNotContainsString( 'data:', $sanitized );
+		$this->assertStringContainsString( '<path d="M0 0"', $sanitized );
+	}
 }
