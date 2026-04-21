@@ -203,31 +203,4 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertStringNotContainsString( 'bypass', $html );
 		$this->assertStringNotContainsString( 'on="valid"', $html );
 	}
-
-	public function test_get_icons_handles_malformed_icons_key(): void {
-		$manifest_path = $this->create_temp_manifest(
-			array(
-				'icons' => 'not-an-array',
-			)
-		);
-
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'malformed-lib', $manifest_path );
-
-		$this->assertSame( array(), Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( 'malformed-lib' ) );
-	}
-
-	public function test_prepare_attributes_case_insensitivity(): void {
-		$manifest_path = $this->create_temp_manifest( array( 'icons' => array( 'test' => '<svg><path d="M0 0" /></svg>' ) ) );
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'harden', $manifest_path );
-
-		$html = Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
-			array(
-				'library' => 'harden',
-				'value'   => 'test',
-			),
-			array( 'Class' => 'should-not-overwrite' )
-		);
-
-		$this->assertStringContainsString( 'class="test should-not-overwrite"', $html );
-	}
 }

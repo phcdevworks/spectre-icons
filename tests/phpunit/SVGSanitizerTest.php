@@ -99,19 +99,38 @@ final class SVGSanitizerTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertStringContainsString( 'id="desc-id"', $sanitized );
 	}
 
+	public function test_sanitize_handles_multi_line_self_closing_svg_tag(): void {
+		$svg = '<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+		/>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringContainsString( '<svg', $sanitized );
+		$this->assertStringContainsString( 'viewBox="0 0 24 24"', $sanitized );
+	}
+
+	public function test_sanitize_handles_multi_line_svg_block(): void {
+		$svg = '<svg
+			xmlns="http://www.w3.org/2000/svg"
+			viewBox="0 0 24 24"
+		>
+			<path d="M0 0h24v24H0z"/>
+		</svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringContainsString( '<svg', $sanitized );
+		$this->assertStringContainsString( 'viewBox="0 0 24 24"', $sanitized );
+		$this->assertStringContainsString( '<path', $sanitized );
+	}
+
 	public function test_sanitize_handles_empty_or_invalid_input(): void {
 		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( '' ) );
 		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( '   ' ) );
 		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( 'not an svg' ) );
-	}
-
-	public function test_sanitize_handles_various_self_closing_and_whitespace(): void {
-		$svg1 = '<svg
-			width="24"
-			/>';
-		$this->assertStringContainsString( '<svg', Spectre_Icons_SVG_Sanitizer::sanitize( $svg1 ) );
-
-		$svg2 = '  <svg xmlns="http://www.w3.org/2000/svg" />  ';
-		$this->assertStringContainsString( '<svg', Spectre_Icons_SVG_Sanitizer::sanitize( $svg2 ) );
 	}
 }
