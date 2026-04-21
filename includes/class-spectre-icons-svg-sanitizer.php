@@ -109,7 +109,7 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			}
 
 			// Strip anything outside the <svg>…</svg> block or <svg /> self-closing tag.
-			if ( preg_match( '/<svg(?:[\s\S]*?<\/svg>|[\s\S]*?\/>)/i', $svg, $match ) ) {
+			if ( preg_match( '/<svg(?:[\s\S]*?<\/svg>|[\s\S]*?\/?>)/i', $svg, $match ) ) {
 				$svg = $match[0];
 			} else {
 				return '';
