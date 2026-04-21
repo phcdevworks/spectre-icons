@@ -122,6 +122,10 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			$svg = preg_replace( '/\son[a-z]+\s*=\s*"[^"]*"/i', '', $svg );
 			$svg = preg_replace( "/\son[a-z]+\s*=\s*'[^']*'/i", '', $svg );
 
+			// Remove xlink and namespaced attributes (best-effort pre-strip).
+			$svg = preg_replace( '/\s(?:xmlns|xlink):[a-z0-9-]+\s*=\s*"[^"]*"/i', '', $svg );
+			$svg = preg_replace( "/\s(?:xmlns|xlink):[a-z0-9-]+\s*=\s*'[^']*'/i", '', $svg );
+
 			// Prevent DOCTYPE/entity tricks (DOMDocument can parse DOCTYPE in XML mode).
 			$svg = preg_replace( '/<!DOCTYPE[\s\S]*?>/i', '', $svg );
 			$svg = preg_replace( '/<!ENTITY[\s\S]*?>/i', '', $svg );
@@ -182,14 +186,16 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 							continue;
 						}
 
-						// Block any href variants + xlink namespace.
-						if ( 'href' === $name || 'xlink:href' === $name || 'xmlns:xlink' === $name ) {
-							$remove[] = $name_raw;
-							continue;
+						// Allow href/xlink:href only for local fragment identifiers.
+						if ( 'href' === $name || 'xlink:href' === $name ) {
+							if ( 0 !== strpos( (string) $attr->nodeValue, '#' ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+								$remove[] = $name_raw;
+								continue;
+							}
 						}
 
-						// Block javascript: and data: urls anywhere.
-						if ( 0 === strpos( $value, 'javascript:' ) || 0 === strpos( $value, 'data:' ) ) {
+						// Block javascript: and data: urls anywhere (case-insensitive).
+						if ( false !== stripos( $value, 'javascript:' ) || false !== stripos( $value, 'data:' ) ) {
 							$remove[] = $name_raw;
 							continue;
 						}

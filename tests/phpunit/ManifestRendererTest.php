@@ -143,6 +143,19 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertSame( '', Spectre_Icons_Elementor_Manifest_Renderer::render_icon( true ) );
 	}
 
+	public function test_render_icon_handles_malformed_array_payload_gracefully(): void {
+		// Non-scalar 'value' should be handled without triggering warnings.
+		$this->assertSame(
+			'',
+			Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+				array(
+					'library' => 'test-lib',
+					'value'   => array( 'invalid' ),
+				)
+			)
+		);
+	}
+
 	public function test_render_icon_filters_non_scalar_attributes_and_classes(): void {
 		$manifest_path = $this->create_temp_manifest(
 			array(
