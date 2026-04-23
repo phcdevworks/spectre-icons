@@ -134,13 +134,23 @@ final class SVGSanitizerTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( 'not an svg' ) );
 	}
 
-	public function test_sanitize_removes_xlink_and_xmlns_xlink_attributes(): void {
-		$svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#my-id" /></svg>';
+	public function test_sanitize_permits_safe_xlink_and_href_attributes(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#my-id" href="#my-id" /></svg>';
 
 		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
 
-		$this->assertStringNotContainsString( 'xmlns:xlink', $sanitized );
+		$this->assertStringContainsString( 'xmlns:xlink', $sanitized );
+		$this->assertStringContainsString( 'xlink:href="#my-id"', $sanitized );
+		$this->assertStringContainsString( 'href="#my-id"', $sanitized );
+	}
+
+	public function test_sanitize_removes_unsafe_xlink_and_href_attributes(): void {
+		$svg = '<svg xmlns="http://www.w3.org/2000/svg"><use xlink:href="https://evil.com" href="http://evil.com" /></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
 		$this->assertStringNotContainsString( 'xlink:href', $sanitized );
+		$this->assertStringNotContainsString( 'href="http', $sanitized );
 	}
 
 	public function test_sanitize_removes_nested_dangerous_tags(): void {
