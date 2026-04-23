@@ -44,7 +44,7 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 		/**
 		 * Allowed attributes for SVG elements.
 		 *
-		 * NOTE: We allow local fragment identifiers for href/xlink:href.
+		 * NOTE: href/xlink:href are allowed only for local fragments. style and on* handlers are blocked.
 		 *
 		 * @var string[]
 		 */

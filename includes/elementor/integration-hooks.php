@@ -28,7 +28,7 @@ function spectre_icons_elementor_bootstrap() {
 		return;
 	}
 
-	// Version check: require Elementor 3.0.0+.
+	// Version check for Elementor.
 	if ( defined( 'ELEMENTOR_VERSION' ) && version_compare( ELEMENTOR_VERSION, '3.0.0', '<' ) ) {
 		add_action( 'admin_notices', 'spectre_icons_elementor_old_elementor_notice' );
 		return;
@@ -59,6 +59,32 @@ function spectre_icons_elementor_bootstrap() {
 add_action( 'plugins_loaded', 'spectre_icons_elementor_bootstrap', 20 );
 
 /**
+ * Admin notice when Elementor version is too old.
+ *
+ * Scoped strictly to Plugins screen.
+ *
+ * @return void
+ */
+function spectre_icons_elementor_old_elementor_notice() {
+	if (
+		! is_admin() ||
+		wp_doing_ajax() ||
+		! current_user_can( 'activate_plugins' )
+	) {
+		return;
+	}
+
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+	if ( ! $screen || 'plugins' !== $screen->id ) {
+		return;
+	}
+
+	echo '<div class="notice notice-error"><p>';
+	echo esc_html__( 'Spectre Icons requires Elementor 3.0.0 or higher. Please upgrade Elementor to use this plugin.', 'spectre-icons' );
+	echo '</p></div>';
+}
+
+/**
  * Admin notice when Elementor is missing.
  *
  * Scoped strictly to Plugins screen.
@@ -82,25 +108,6 @@ function spectre_icons_elementor_missing_elementor_notice() {
 
 	echo '<div class="notice notice-warning"><p>';
 	echo esc_html__( 'Spectre Icons requires Elementor to be active.', 'spectre-icons' );
-	echo '</p></div>';
-}
-
-/**
- * Admin notice when Elementor version is too old.
- *
- * @return void
- */
-function spectre_icons_elementor_old_elementor_notice() {
-	if (
-		! is_admin() ||
-		wp_doing_ajax() ||
-		! current_user_can( 'activate_plugins' )
-	) {
-		return;
-	}
-
-	echo '<div class="notice notice-error"><p>';
-	echo esc_html__( 'Spectre Icons requires Elementor 3.0.0 or higher. Please update Elementor to use Spectre Icons.', 'spectre-icons' );
 	echo '</p></div>';
 }
 
