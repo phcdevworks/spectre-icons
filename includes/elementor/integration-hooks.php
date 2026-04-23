@@ -28,7 +28,7 @@ function spectre_icons_elementor_bootstrap() {
 		return;
 	}
 
-	// Version check for Elementor.
+	// Version check: require Elementor 3.0.0+.
 	if ( defined( 'ELEMENTOR_VERSION' ) && version_compare( ELEMENTOR_VERSION, '3.0.0', '<' ) ) {
 		add_action( 'admin_notices', 'spectre_icons_elementor_old_elementor_notice' );
 		return;
@@ -80,7 +80,7 @@ function spectre_icons_elementor_old_elementor_notice() {
 	}
 
 	echo '<div class="notice notice-error"><p>';
-	echo esc_html__( 'Spectre Icons requires Elementor 3.0.0 or higher. Please upgrade Elementor to use this plugin.', 'spectre-icons' );
+	echo esc_html__( 'Spectre Icons requires Elementor 3.0.0 or higher. Please update Elementor to use Spectre Icons.', 'spectre-icons' );
 	echo '</p></div>';
 }
 
