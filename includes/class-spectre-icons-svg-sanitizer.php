@@ -44,7 +44,7 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 		/**
 		 * Allowed attributes for SVG elements.
 		 *
-		 * NOTE: We intentionally do NOT allow href/xlink:href, style, or any on* handlers.
+		 * NOTE: We allow local fragment identifiers for href/xlink:href.
 		 *
 		 * @var string[]
 		 */
@@ -90,6 +90,9 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			'preserveaspectratio',
 			'overflow',
 			'id',
+			'href',
+			'xlink:href',
+			'xmlns:xlink',
 		);
 
 		/**
@@ -121,10 +124,6 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			// Remove inline event handlers (best-effort pre-strip).
 			$svg = preg_replace( '/\son[a-z]+\s*=\s*"[^"]*"/i', '', $svg );
 			$svg = preg_replace( "/\son[a-z]+\s*=\s*'[^']*'/i", '', $svg );
-
-			// Remove xlink and namespaced attributes (best-effort pre-strip).
-			$svg = preg_replace( '/\s(?:xmlns|xlink):[a-z0-9-]+\s*=\s*"[^"]*"/i', '', $svg );
-			$svg = preg_replace( "/\s(?:xmlns|xlink):[a-z0-9-]+\s*=\s*'[^']*'/i", '', $svg );
 
 			// Prevent DOCTYPE/entity tricks (DOMDocument can parse DOCTYPE in XML mode).
 			$svg = preg_replace( '/<!DOCTYPE[\s\S]*?>/i', '', $svg );
