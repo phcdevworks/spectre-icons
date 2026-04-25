@@ -151,7 +151,7 @@ function spectre_icons_elementor_get_icon_preview_config() {
 			'prefix'          => $class_prefix,
 			'render_callback' => array( 'Spectre_Icons_Elementor_Manifest_Renderer', 'render_icon' ),
 			'native'          => false,
-			'ver'             => '0.1.0',
+			'ver'             => defined( 'SPECTRE_ICONS_VERSION' ) ? SPECTRE_ICONS_VERSION : '1.1.0',
 		);
 	}
 
@@ -217,7 +217,7 @@ function spectre_icons_elementor_register_manifest_libraries( $libraries ) {
 				'icons'           => Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( $slug ),
 				'render_callback' => array( 'Spectre_Icons_Elementor_Manifest_Renderer', 'render_icon' ),
 				'native'          => false,
-				'ver'             => '0.1.0',
+				'ver'             => defined( 'SPECTRE_ICONS_VERSION' ) ? SPECTRE_ICONS_VERSION : '1.1.0',
 			),
 		);
 	}

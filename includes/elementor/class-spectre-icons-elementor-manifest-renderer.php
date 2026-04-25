@@ -535,9 +535,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		/**
 		 * Build an SVG string from a manifest icon entry.
 		 *
-		 * Adjust this method to match your actual manifest schema.
-		 *
-		 * Common patterns:
+		 * Supports two manifest shapes:
 		 * - $icon_data['svg']  contains full <svg>...</svg>
 		 * - $icon_data['body'] contains inner SVG markup (paths, etc.)
 		 *
