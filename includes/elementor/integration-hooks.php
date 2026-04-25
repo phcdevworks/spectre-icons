@@ -196,7 +196,11 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 
 		$style = isset( $def['style'] ) ? (string) $def['style'] : '';
 		if ( '' === $style ) {
-			$style = ( false !== strpos( $slug, 'lucide' ) ) ? 'outline' : 'filled';
+			if ( false !== strpos( $slug, 'lucide' ) ) {
+				$style = 'outline';
+			} elseif ( false !== strpos( $slug, 'fontawesome' ) ) {
+				$style = 'filled';
+			}
 		}
 
 		$libraries[ $slug ] = array(

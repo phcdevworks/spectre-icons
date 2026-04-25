@@ -10,6 +10,9 @@ reflects WordPress plugin releases for Spectre Icons.
 
 - Hardened SVG sanitizer to permit local fragment identifiers in `href` and `xlink:href` attributes.
 - Added Elementor version compatibility enforcement (3.0.0+).
+- Aligned icon style fallback logic in `integration-hooks.php` with the manifest renderer.
+- Hardened plugin bootstrap by using direct `require_once` for core includes.
+- Removed legacy `window.SpectreElementorIconsConfig` JS configuration support.
 - Updated verified WordPress compatibility to 6.7 in plugin metadata and documentation.
 - Hardened SVG sanitization regex to better handle self-closing and multi-line tags.
 - Improved attribute rendering safety in the manifest renderer.
