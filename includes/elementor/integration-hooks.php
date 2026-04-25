@@ -121,7 +121,7 @@ function spectre_icons_elementor_enqueue_styles() {
 		'spectre-icons-elementor',
 		SPECTRE_ICONS_URL . 'assets/css/admin/spectre-icons-admin.css',
 		array(),
-		defined( 'SPECTRE_ICONS_VERSION' ) ? SPECTRE_ICONS_VERSION : '1.0.0'
+		SPECTRE_ICONS_VERSION
 	);
 
 	// Hide disabled tabs dynamically via CSS to prevent UI flashing in Elementor's React interface.
@@ -167,7 +167,7 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 		'spectre-icons-elementor-js',
 		SPECTRE_ICONS_URL . 'assets/js/elementor/spectre-icons-elementor.js',
 		array( 'jquery' ),
-		defined( 'SPECTRE_ICONS_VERSION' ) ? SPECTRE_ICONS_VERSION : '1.0.0',
+		SPECTRE_ICONS_VERSION,
 		true
 	);
 

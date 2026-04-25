@@ -1,7 +1,7 @@
 {
   "name": "spectre-icons",
   "version": "1.1.0",
-  "description": "[![GitHub issues](https://img.shields.io/github/issues/phcdevworks/spectre-icons)](https://github.com/phcdevworks/spectre-icons/issues) [![GitHub pulls](https://img.shields.io/github/issues-pr/phcdevworks/spectre-icons)](https://github.com/phcdevworks/spectre-icons/pulls) [![License](https://img.shields.io/github/license/phcdevworks/spectre-icons)](LICENSE)",
+  "description": "Spectre Icons brings modern SVG icon libraries like Lucide and Font Awesome into WordPress builders.",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -24,7 +24,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "GPL-2.0-or-later",
   "type": "commonjs",
   "bugs": {
     "url": "https://github.com/phcdevworks/spectre-icons/issues"
@@ -32,6 +32,6 @@
   "homepage": "https://github.com/phcdevworks/spectre-icons#readme",
   "devDependencies": {
     "@playwright/test": "^1.59.1",
-    "@wordpress/env": "^11.3.0"
+    "@wordpress/env": "^11.4.0"
   }
 }
