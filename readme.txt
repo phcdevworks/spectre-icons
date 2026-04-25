@@ -155,7 +155,7 @@ Yes! Spectre Icons works anywhere Elementor can be used, including WooCommerce p
 * Renamed internal stub path variables for better code clarity (534bd47, 4cec228)
 * Replaced (void) with unset in log_debug methods (c1b3a96)
 * Updated plugin description for clarity and consistency (7e8312f)
-* Updated 'Tested up to' to WordPress 6.9 (8f313f2)
+* Updated 'Tested up to' to WordPress 6.7 (8f313f2)
 * Updated plugin and author URIs in header (1a38008)
 * Updated CHANGELOG formatting for consistency (1a6e92c)
 * Updated license file handling in build workflow (31b7aae)
