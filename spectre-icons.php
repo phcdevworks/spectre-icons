@@ -52,8 +52,5 @@ $spectre_icons_includes = array(
 );
 
 foreach ( $spectre_icons_includes as $spectre_icons_file ) {
-	$spectre_icons_include_path = SPECTRE_ICONS_PATH . $spectre_icons_file;
-	if ( file_exists( $spectre_icons_include_path ) ) {
-		require_once $spectre_icons_include_path;
-	}
+	require_once SPECTRE_ICONS_PATH . $spectre_icons_file;
 }
