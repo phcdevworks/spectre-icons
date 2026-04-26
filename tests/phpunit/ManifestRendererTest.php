@@ -216,4 +216,64 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertStringNotContainsString( 'bypass', $html );
 		$this->assertStringNotContainsString( 'on="valid"', $html );
 	}
+
+	public function test_render_icon_handles_edge_case_slug_extraction(): void {
+		$manifest_path = $this->create_temp_manifest(
+			array(
+				'icons' => array(
+					'test' => array( 'svg' => '<svg><path d="M0 0" /></svg>' ),
+				),
+			)
+		);
+
+		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'slug-test', $manifest_path );
+
+		// Test null icon.
+		$this->assertSame( '', Spectre_Icons_Elementor_Manifest_Renderer::render_icon( null ) );
+
+		// Test empty string icon.
+		$this->assertSame( '', Spectre_Icons_Elementor_Manifest_Renderer::render_icon( '' ) );
+
+		// Test non-scalar value in icon array.
+		$this->assertSame(
+			'',
+			Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+				array(
+					'library' => 'slug-test',
+					'value'   => array( 'not', 'scalar' ),
+				)
+			)
+		);
+
+		// Test empty value in icon array.
+		$this->assertSame(
+			'',
+			Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+				array(
+					'library' => 'slug-test',
+					'value'   => '',
+				)
+			)
+		);
+
+		// Test non-existent icon in array.
+		$this->assertSame(
+			'',
+			Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+				array(
+					'library' => 'slug-test',
+					'value'   => 'non-existent',
+				)
+			)
+		);
+
+		// Test valid icon in array.
+		$html = Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+			array(
+				'library' => 'slug-test',
+				'value'   => 'test',
+			)
+		);
+		$this->assertStringContainsString( '<svg', $html );
+	}
 }
