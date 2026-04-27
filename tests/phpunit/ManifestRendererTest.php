@@ -276,4 +276,33 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 		);
 		$this->assertStringContainsString( '<svg', $html );
 	}
+
+	public function test_extract_slug_handles_space_separated_string_input(): void {
+		$manifest_path = $this->create_temp_manifest(
+			array(
+				'icons' => array(
+					'camera' => array( 'svg' => '<svg><path d="M0 0" /></svg>' ),
+				),
+			)
+		);
+
+		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'space-test', $manifest_path );
+
+		// Test space-separated string.
+		$html = Spectre_Icons_Elementor_Manifest_Renderer::render_icon( 'space-test camera' );
+		$this->assertStringContainsString( '<svg', $html );
+
+		// Test single slug (unknown library).
+		$this->assertSame( '', Spectre_Icons_Elementor_Manifest_Renderer::render_icon( 'camera' ) );
+	}
+
+	public function test_register_manifest_handles_invalid_slug_types(): void {
+		// Non-scalar should return early.
+		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( array( 'not' => 'scalar' ), '/path' );
+		$this->assertSame( array(), Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( 'not-scalar' ) );
+	}
+
+	public function test_get_icon_slugs_handles_invalid_slug_types(): void {
+		$this->assertSame( array(), Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( array( 'invalid' ) ) );
+	}
 }
