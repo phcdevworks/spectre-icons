@@ -66,7 +66,12 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		 * @return void
 		 */
 		public static function register_manifest( $library_slug, $manifest_path, array $args = array() ) {
-			$slug = sanitize_key( $library_slug );
+			if ( ! is_scalar( $library_slug ) ) {
+				self::log_debug( sprintf( 'register_manifest called with non-scalar library slug: %s.', gettype( $library_slug ) ) );
+				return;
+			}
+
+			$slug = sanitize_key( (string) $library_slug );
 
 			if ( '' === $slug ) {
 				$msg_slug = is_scalar( $library_slug ) ? (string) $library_slug : gettype( $library_slug );
@@ -108,7 +113,11 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		 * @return array<string>       Icon slugs (may be empty).
 		 */
 		public static function get_icon_slugs( $library_slug ) {
-			$slug = sanitize_key( $library_slug );
+			if ( ! is_scalar( $library_slug ) ) {
+				return array();
+			}
+
+			$slug = sanitize_key( (string) $library_slug );
 
 			if ( '' === $slug || ! isset( self::$libraries[ $slug ] ) ) {
 				$msg_slug = is_scalar( $library_slug ) ? (string) $library_slug : gettype( $library_slug );
@@ -409,9 +418,15 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 
 					$icon_slug = sanitize_key( $slug );
 				}
-			} elseif ( is_string( $icon ) ) {
-				// When called manually with a slug string.
-				$icon_slug = sanitize_key( $icon );
+			} elseif ( is_string( $icon ) && '' !== trim( $icon ) ) {
+				// When called manually with a slug string or space-separated library/slug string.
+				$parts = preg_split( '/\s+/', trim( $icon ) );
+				if ( count( $parts ) > 1 ) {
+					$library_slug = sanitize_key( $parts[0] );
+					$icon_slug    = sanitize_key( end( $parts ) );
+				} else {
+					$icon_slug = sanitize_key( $parts[0] );
+				}
 			}
 
 			// Strip library prefix if Elementor stored a prefixed slug.
@@ -587,9 +602,11 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		 * @return void
 		 */
 		private static function log_debug( $message ) {
-			if ( ! is_string( $message ) ) {
+			if ( ! is_scalar( $message ) ) {
 				return;
 			}
+
+			$message = (string) $message;
 
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log

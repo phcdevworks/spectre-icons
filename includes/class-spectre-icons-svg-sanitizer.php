@@ -39,6 +39,8 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			'symbol',
 			'title',
 			'desc',
+			'clippath',
+			'mask',
 		);
 
 		/**
@@ -75,6 +77,8 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			'xmlns',
 			'fill-rule',
 			'clip-rule',
+			'clip-path',
+			'mask',
 			'stroke-dasharray',
 			'stroke-dashoffset',
 			'stroke-miterlimit',
@@ -104,7 +108,13 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 		 * @return string Safe SVG markup (may be empty).
 		 */
 		public static function sanitize( $svg ) {
-			if ( ! is_string( $svg ) || '' === trim( $svg ) ) {
+			if ( ! is_scalar( $svg ) ) {
+				return '';
+			}
+
+			$svg = (string) $svg;
+
+			if ( '' === trim( $svg ) ) {
 				return '';
 			}
 
@@ -121,7 +131,7 @@ if ( ! class_exists( 'Spectre_Icons_SVG_Sanitizer' ) ) :
 			}
 
 			// Remove dangerous containers (best-effort pre-strip).
-			$svg = preg_replace( '/<\/?(script|foreignObject|iframe|object|embed)[^>]*>/i', '', $svg );
+			$svg = (string) preg_replace( '/<\/?(script|foreignObject|iframe|object|embed)[^>]*>/i', '', $svg );
 
 			// Remove inline event handlers (best-effort pre-strip).
 			$svg = preg_replace( '/\son[a-z]+\s*=\s*"[^"]*"/i', '', $svg );

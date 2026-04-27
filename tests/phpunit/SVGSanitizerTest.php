@@ -171,4 +171,22 @@ final class SVGSanitizerTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertStringNotContainsString( 'data:', $sanitized );
 		$this->assertStringContainsString( '<path d="M0 0"', $sanitized );
 	}
+
+	public function test_sanitize_preserves_clippath_and_mask(): void {
+		$svg = '<svg><defs><clipPath id="cp"><rect width="10" height="10"/></clipPath><mask id="m"><circle r="5"/></mask></defs><g clip-path="url(#cp)" mask="url(#m)"><path d="M0 0h20v20H0z"/></g></svg>';
+
+		$sanitized = Spectre_Icons_SVG_Sanitizer::sanitize( $svg );
+
+		$this->assertStringContainsString( '<clippath', strtolower( $sanitized ) );
+		$this->assertStringContainsString( '<mask', strtolower( $sanitized ) );
+		$this->assertStringContainsString( 'clip-path="url(#cp)"', $sanitized );
+		$this->assertStringContainsString( 'mask="url(#m)"', $sanitized );
+	}
+
+	public function test_sanitize_handles_non_string_scalar_input(): void {
+		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( null ) );
+		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( array() ) );
+		// A number that doesn't look like SVG should return empty.
+		$this->assertSame( '', Spectre_Icons_SVG_Sanitizer::sanitize( 123 ) );
+	}
 }
