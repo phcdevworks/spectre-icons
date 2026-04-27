@@ -19,39 +19,39 @@
  * @package SpectreIcons
  */
 
-if (! defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 /**
  * PHP version check.
  */
-if (version_compare(PHP_VERSION, '7.4', '<')) {
-    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-    add_action(
-        'admin_notices',
-        function () {
-            echo '<div class="notice notice-error"><p>';
-            echo esc_html__('Spectre Icons requires PHP 7.4 or higher to function. Please contact your hosting provider to upgrade PHP.', 'spectre-icons');
-            echo '</p></div>';
-        }
-    );
-    return;
+if ( version_compare( PHP_VERSION, '7.4', '<' ) ) {
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	add_action(
+		'admin_notices',
+		function () {
+			echo '<div class="notice notice-error"><p>';
+			echo esc_html__( 'Spectre Icons requires PHP 7.4 or higher to function. Please contact your hosting provider to upgrade PHP.', 'spectre-icons' );
+			echo '</p></div>';
+		}
+	);
+	return;
 }
 
-define('SPECTRE_ICONS_VERSION', '1.1.0');
-define('SPECTRE_ICONS_PATH', plugin_dir_path(__FILE__));
-define('SPECTRE_ICONS_URL', plugin_dir_url(__FILE__));
+define( 'SPECTRE_ICONS_VERSION', '1.1.0' );
+define( 'SPECTRE_ICONS_PATH', plugin_dir_path( __FILE__ ) );
+define( 'SPECTRE_ICONS_URL', plugin_dir_url( __FILE__ ) );
 
 $spectre_icons_includes = array(
-    'includes/elementor/class-spectre-icons-elementor-library-manager.php',
-    'includes/elementor/class-spectre-icons-elementor-manifest-renderer.php',
-    'includes/elementor/class-spectre-icons-elementor-settings.php',
-    'includes/class-spectre-icons-svg-sanitizer.php',
-    'includes/elementor/icon-libraries.php',
-    'includes/elementor/integration-hooks.php',
+	'includes/elementor/class-spectre-icons-elementor-library-manager.php',
+	'includes/elementor/class-spectre-icons-elementor-manifest-renderer.php',
+	'includes/elementor/class-spectre-icons-elementor-settings.php',
+	'includes/class-spectre-icons-svg-sanitizer.php',
+	'includes/elementor/icon-libraries.php',
+	'includes/elementor/integration-hooks.php',
 );
 
-foreach ($spectre_icons_includes as $spectre_icons_file) {
-    require_once SPECTRE_ICONS_PATH . $spectre_icons_file;
+foreach ( $spectre_icons_includes as $spectre_icons_file ) {
+	require_once SPECTRE_ICONS_PATH . $spectre_icons_file;
 }
