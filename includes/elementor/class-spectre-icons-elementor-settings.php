@@ -188,6 +188,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 			}
 
 			echo '</div>';
+			echo '<p class="description">' . esc_html__( 'Unchecked libraries are hidden from the Elementor icon picker. Icons already placed on your site will continue to render.', 'spectre-icons' ) . '</p>';
 		}
 
 		/**

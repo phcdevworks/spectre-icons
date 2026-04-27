@@ -5,6 +5,7 @@
   const libraries = config.libraries || {};
 
   const libraryIds = Object.keys(libraries);
+  const disabledLibraryIds = libraryIds.filter((id) => libraries[id] && libraries[id].enabled === false);
 
   if (!libraryIds.length) {
     return;
@@ -141,6 +142,27 @@
     });
   };
 
+  const hideDisabledTabs = (scope) => {
+    if (!scope || !disabledLibraryIds.length) {
+      return;
+    }
+
+    disabledLibraryIds.forEach((id) => {
+      [
+        '[data-tab="' + id + '"]',
+        '[data-library="' + id + '"]',
+        '[data-icon-library="' + id + '"]',
+        '[data-name="' + id + '"]',
+      ].forEach((sel) => {
+        try {
+          scope.querySelectorAll(sel).forEach((el) => {
+            el.style.setProperty('display', 'none', 'important');
+          });
+        } catch (_) {}
+      });
+    });
+  };
+
   const observeRoot = (root) => {
     if (!root || observedRoots.has(root)) {
       return;
@@ -186,8 +208,10 @@
 
     if ('elementor-icons-manager-modal' === node.id || (node.matches && node.matches('#elementor-icons-manager-modal'))) {
       ensureModalRefreshLoop();
+      hideDisabledTabs(node);
     } else if (node.querySelector && node.querySelector('#elementor-icons-manager-modal')) {
       ensureModalRefreshLoop();
+      hideDisabledTabs(node.querySelector('#elementor-icons-manager-modal'));
     }
 
     if ('elementor-panel' === node.id || (node.matches && node.matches('#elementor-panel'))) {
@@ -238,7 +262,7 @@
       matches.forEach((match) => renderIcon(match, libraryId));
     });
 
-
+    hideDisabledTabs(scope);
   };
 
   const startScopedRefresh = (scope, interval = 400) => {
