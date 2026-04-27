@@ -1,6 +1,6 @@
 {
   "name": "spectre-icons",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Spectre Icons brings modern SVG icon libraries like Lucide and Font Awesome into WordPress builders.",
   "main": "index.js",
   "directories": {
