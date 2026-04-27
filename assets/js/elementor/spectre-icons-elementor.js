@@ -148,6 +148,9 @@
     }
 
     disabledLibraryIds.forEach((id) => {
+      const settings = libraries[id];
+
+      // Data attribute selectors (Elementor 3.x).
       [
         '[data-tab="' + id + '"]',
         '[data-library="' + id + '"]',
@@ -160,6 +163,18 @@
           });
         } catch (_) {}
       });
+
+      // Label text match for Elementor v4 tab links (no data attributes).
+      if (settings && settings.label) {
+        const label = settings.label;
+        try {
+          scope.querySelectorAll('.elementor-icons-manager__tab-link').forEach((el) => {
+            if ((el.textContent || '').trim() === label) {
+              el.style.setProperty('display', 'none', 'important');
+            }
+          });
+        } catch (_) {}
+      }
     });
   };
 
