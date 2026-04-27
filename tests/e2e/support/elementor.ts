@@ -118,6 +118,13 @@ export function getEditorPreviewIcon(page: Page): Locator {
     .first();
 }
 
+export async function getEditorPostUrl(page: Page): Promise<string> {
+  const url = new URL(page.url());
+  const postId = url.searchParams.get('post') || url.searchParams.get('p');
+  if (!postId) throw new Error(`Could not extract post ID from editor URL: ${page.url()}`);
+  return `/?p=${postId}`;
+}
+
 export async function publishElementorPage(page: Page) {
   const publishButton = page
     .locator(

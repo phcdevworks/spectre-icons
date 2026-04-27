@@ -1,3 +1,4 @@
 {
+  "core": "WordPress/WordPress#6.7",
   "plugins": ["."]
 }
