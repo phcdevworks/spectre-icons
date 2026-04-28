@@ -26,6 +26,25 @@ export async function addIconWidget(page: Page) {
   await page.getByText('Icon', { exact: true }).click();
 }
 
+export async function addWidget(page: Page, label: string) {
+  const widgetSearch = page.getByPlaceholder('Search Widget...');
+  await widgetSearch.fill(label);
+  await page.getByText(label, { exact: true }).first().click();
+}
+
+export async function expandFirstRepeaterItem(page: Page) {
+  const toggle = page
+    .getByRole('complementary')
+    .first()
+    .getByRole('listitem')
+    .first()
+    .getByRole('button')
+    .filter({ hasNotText: /^(Duplicate|Remove)$/i })
+    .first();
+  await expect(toggle).toBeVisible();
+  await toggle.click();
+}
+
 export async function openIconPicker(page: Page) {
   const trigger = page
     .getByRole('button', { name: /Icon Library/i })
