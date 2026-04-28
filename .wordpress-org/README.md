@@ -37,6 +37,9 @@ Yes. Uncheck a library under **Settings → Spectre Icons** to hide it from the 
 **Why does the plugin use JSON manifests?**
 Manifests keep SVG markup out of PHP files and allow the plugin to load icons efficiently. The bundled manifests are locked assets — no CLI script is needed.
 
+**Can I add my own icon packs?**
+Custom icon library registration is a pro feature.
+
 ## Changelog
 
 ### 1.2.0
