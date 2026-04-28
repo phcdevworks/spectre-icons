@@ -5,7 +5,7 @@
 **Requires at least:** 6.0
 **Tested up to:** 6.7
 **Requires PHP:** 7.4
-**Stable tag:** 1.0.0
+**Stable tag:** 1.2.0
 **License:** GPLv2 or later
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@ Curated SVG icon libraries for Elementor with fast manifests, inline rendering, 
 
 ## Description
 
-Spectre Icons exposes Spectre’s icon packs inside Elementor’s icon picker, renders them as inline SVGs on the frontend, and keeps everything modular for future builder support. Key features:
+Spectre Icons exposes Spectre's icon packs inside Elementor's icon picker, renders them as inline SVGs on the frontend, and keeps everything modular for future builder support. Key features:
 
 - Toggle individual libraries from **Settings → Spectre Icons**
 - Manifest-driven SVG rendering for Lucide + Font Awesome
@@ -23,19 +23,35 @@ Spectre Icons exposes Spectre’s icon packs inside Elementor’s icon picker, r
 ## Installation
 
 1. Upload the plugin folder to `/wp-content/plugins/` or install the ZIP via the WordPress dashboard.
-2. Activate **Spectre Icons** through the “Plugins” screen.
-3. (Optional) Run `php bin/generate-icon-manifests.php` if you customize icon packs.
-4. Visit **Settings → Spectre Icons** and enable the icon libraries you want.
+2. Activate **Spectre Icons** through the "Plugins" screen.
+3. Visit **Settings → Spectre Icons** and enable the icon libraries you want.
 
 ## Frequently Asked Questions
 
 **Do I need Elementor installed?**
-Yes, the current integration targets Elementor. The architecture is modular for future support.
+Yes, the current integration targets Elementor 3.0+ and 4.x. The architecture is modular for future builder support.
 
-**Why do I need JSON manifests?**
-Manifests keep SVG markup out of PHP files and let the plugin load icons quickly. Generate them with the provided CLI script whenever you update icon packs.
+**Can I disable individual icon libraries?**
+Yes. Uncheck a library under **Settings → Spectre Icons** to hide it from the Elementor icon picker. Icons already placed on your site will continue to render.
+
+**Why does the plugin use JSON manifests?**
+Manifests keep SVG markup out of PHP files and allow the plugin to load icons efficiently. The bundled manifests are locked assets — no CLI script is needed.
 
 ## Changelog
+
+### 1.2.0
+
+- Added per-library enable/disable controls with reliable Elementor v4 picker hiding.
+- Disabled libraries are hidden from the icon picker; existing icons continue to render.
+- Hardened SVG sanitizer, manifest renderer, and plugin bootstrap.
+- Added PHPUnit and Playwright e2e coverage for Icon, Icon Box, Icon List, and Social Icons.
+- Updated WordPress compatibility to 6.7.
+
+### 1.1.0
+
+- Added SPDX license metadata and finalized bundled icon attribution.
+- Refined Elementor manifest rendering, integration hooks, and SVG sanitization.
+- Updated plugin metadata and release packaging for WordPress.org readiness.
 
 ### 1.0.0
 
@@ -43,10 +59,6 @@ Manifests keep SVG markup out of PHP files and let the plugin load icons quickly
 - Align Elementor editor config and asset enqueues.
 - Ensure Lucide outline icons render correctly.
 - Clean up WP.org ZIP packaging.
-
-### 0.1.0
-
-- Initial release with Spectre Icons core, Elementor integration, and Lucide/Font Awesome libraries.
 
 ## License
 
