@@ -77,7 +77,7 @@ from the picker.
 
 Current builder support:
 
-- Elementor 3.x+
+- Elementor 3.x / 4.x
 
 Typical supported Elementor icon workflows include:
 
@@ -152,7 +152,7 @@ The runtime flow is intentionally simple:
 
 - WordPress 6.0+
 - PHP 7.4+
-- Elementor 3.x+ for current active builder support
+- Elementor 3.x / 4.x for current active builder support
 
 The plugin is designed to preserve existing Elementor support first and make
 future builder support additive rather than destructive.

@@ -6,53 +6,60 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-04-28
+
 ### Added
 
-- Hardened SVG sanitizer to permit local fragment identifiers in `href` and `xlink:href` attributes.
+- Added per-library enablement controls so individual bundled icon libraries can
+  be turned on or off from the Elementor settings flow.
+- Disabled libraries are now hidden from the Elementor icon picker while existing
+  icons on the site continue to render — uses JS-based tab hiding to work
+  reliably with Elementor v4's React-rendered picker.
 - Added Elementor version compatibility enforcement (3.0.0+).
-- Aligned icon style fallback logic in `integration-hooks.php` with the manifest renderer.
-- Hardened plugin bootstrap by using direct `require_once` for core includes.
-- Removed legacy `window.SpectreElementorIconsConfig` JS configuration support.
-- Updated verified WordPress compatibility to 6.7 in plugin metadata and documentation.
-- Hardened SVG sanitization regex to better handle self-closing and multi-line tags.
-- Improved attribute rendering safety in the manifest renderer.
-
+- Added a PHPUnit harness for icon library preferences, manifest-backed
+  registration, inline SVG rendering, and Elementor preview/config behavior.
+- Added Playwright e2e coverage for Icon, Icon Box, Icon List, and Social Icons
+  widgets across editor preview and frontend rendering paths.
+- Added GitHub Actions support for WordPress.org deployment and related release
+  automation.
+- Added repository maintenance files including `AGENTS.md` and `.editorconfig`
+  to align the project with the broader PHCDevworks workflow.
 - Added defensive hardening to the icon renderer to strip event handler
   attributes from wrapper tags.
 - Added support for SVG accessibility attributes (`aria-label`,
   `aria-labelledby`, `aria-describedby`) and identification (`id`) in the SVG
   sanitizer.
-- Improved manifest loading resilience in the renderer to handle malformed or
-  unexpected manifest structures gracefully.
 - Added explicit icon slug sanitization to the library manager validation path.
-- Added a PHPUnit harness for icon library preferences, manifest-backed
-  registration, inline SVG rendering, and Elementor preview/config behavior.
-- Added per-library enablement controls so individual bundled icon libraries can
-  be turned on or off from the Elementor settings flow.
-- Added GitHub Actions support for WordPress.org deployment and related release
-  automation.
-- Added repository maintenance files including `AGENTS.md` and `.editorconfig`
-  to align the project with the broader PHCDevworks workflow.
 
 ### Changed
 
-- Added runnable `composer` and `npm` test scripts plus Playwright environment
-  variable support for local preview smoke testing.
+- Hardened SVG sanitizer to permit local fragment identifiers in `href` and
+  `xlink:href` attributes.
+- Hardened SVG sanitization regex to better handle self-closing and multi-line
+  tags.
+- Hardened plugin bootstrap by using direct `require_once` for core includes.
+- Improved attribute rendering safety in the manifest renderer.
+- Improved manifest loading resilience in the renderer to handle malformed or
+  unexpected manifest structures gracefully.
+- Aligned icon style fallback logic in `integration-hooks.php` with the manifest
+  renderer.
 - Refined the Elementor integration and manifest validation paths to keep
   registration behavior stricter, safer, and easier to extend.
+- Added runnable `composer` and `npm` test scripts plus Playwright environment
+  variable support for local preview smoke testing.
+- Updated build and deployment workflows for WordPress.org packaging, asset
+  handling, and SVN release steps.
 - Refreshed the documentation set to better match current PHCDevworks project
   standards while keeping the repository focused on builder icon-library
   expansion.
-- Updated build and deployment workflows for WordPress.org packaging, asset
-  handling, and SVN release steps.
+- Updated verified WordPress compatibility to 6.7 in plugin metadata.
+- Removed legacy `window.SpectreElementorIconsConfig` JS configuration support.
 
 ### Fixed
 
-- Improved settings sanitization to strictly follow the allowed library list.
-- Updated documentation and FAQs to clarify the manifest-driven architecture
-  for custom icon libraries.
 - Hidden icon libraries no longer remain visible in the Elementor icon modal
   after being disabled in plugin settings.
+- Improved settings sanitization to strictly follow the allowed library list.
 - Improved sanitization, labeling, and path hardening across manifest loading,
   library configuration, and SVG rendering code.
 - Tightened WordPress.org deployment authentication and packaging behavior to
@@ -132,7 +139,8 @@ reflects WordPress plugin releases for Spectre Icons.
 - Improved editor tooling support with updated local diagnostics and stub
   configuration for PHP development.
 
-[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.1.0...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.2.0...HEAD
+[1.2.0]: https://github.com/phcdevworks/spectre-icons/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/phcdevworks/spectre-icons/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/phcdevworks/spectre-icons/compare/0.0.1...1.0.0
 [0.0.1]: https://github.com/phcdevworks/spectre-icons/tree/0.0.1
