@@ -6,8 +6,12 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-04-28
+
 ### Added
 
+- Hardened internal debug logging to improve observability for non-scalar messages.
+- Synchronized versioning and WordPress compatibility metadata across all product manifests.
 - Hardened SVG sanitizer to permit local fragment identifiers in `href` and `xlink:href` attributes.
 - Added Elementor version compatibility enforcement (3.0.0+).
 - Aligned icon style fallback logic in `integration-hooks.php` with the manifest renderer.
@@ -132,7 +136,8 @@ reflects WordPress plugin releases for Spectre Icons.
 - Improved editor tooling support with updated local diagnostics and stub
   configuration for PHP development.
 
-[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.1.0...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.2.0...HEAD
+[1.2.0]: https://github.com/phcdevworks/spectre-icons/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/phcdevworks/spectre-icons/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/phcdevworks/spectre-icons/compare/0.0.1...1.0.0
 [0.0.1]: https://github.com/phcdevworks/spectre-icons/tree/0.0.1
