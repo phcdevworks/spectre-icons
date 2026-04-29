@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: Spectre Icons
  * Plugin URI: https://github.com/phcdevworks/spectre-icons

@@ -603,7 +603,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Manifest_Renderer' ) ) :
 		 */
 		private static function log_debug( $message ) {
 			if ( ! is_scalar( $message ) ) {
-				$message = sprintf( 'Non-scalar message received: %s', gettype( $message ) );
+				$message = sprintf( 'Non-scalar message type: %s', gettype( $message ) );
 			}
 
 			$message = (string) $message;
