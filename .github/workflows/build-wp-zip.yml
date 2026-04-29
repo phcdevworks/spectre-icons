@@ -48,7 +48,7 @@ jobs:
           cp "$ROOT/${MAIN_FILE}" "$DEST/"
           cp "$ROOT/readme.txt" "$DEST/"
 
-          for d in includes assets build languages vendor; do
+          for d in includes assets build languages; do
             if [ -d "$ROOT/$d" ]; then
               cp -R "$ROOT/$d" "$DEST/"
             fi
@@ -65,9 +65,9 @@ jobs:
           test -f "$DEST/${MAIN_FILE}"
           test -f "$DEST/readme.txt"
 
-          # Build zip without an extra top-level folder
+          # Build zip with plugin slug as top-level folder (required for WP manual installs)
           rm -f "$ROOT/${ZIP_PATH}"
-          ( cd "$DEST" && zip -r "$ROOT/${ZIP_PATH}" . -x "*.DS_Store" )
+          ( cd "$OUT" && zip -r "$ROOT/${ZIP_PATH}" "${PLUGIN_SLUG}" -x "*.DS_Store" )
 
           echo "Built $ROOT/${ZIP_PATH}"
           unzip -l "$ROOT/${ZIP_PATH}"
