@@ -10,6 +10,9 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ### Added
 
+- Hardened internal debug logging to improve observability for non-scalar messages.
+- Synchronized versioning and WordPress compatibility metadata across all product manifests.
+- Hardened SVG sanitizer to permit local fragment identifiers in `href` and `xlink:href` attributes.
 - Added per-library enablement controls so individual bundled icon libraries can
   be turned on or off from the Elementor settings flow.
 - Disabled libraries are now hidden from the Elementor icon picker while existing
