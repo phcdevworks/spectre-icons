@@ -8,260 +8,87 @@ Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Curated SVG icon libraries for Elementor with fast manifests, inline rendering, and color controls.
+Adds Lucide and Font Awesome icon libraries to Elementor's icon picker, rendered as inline SVG.
 
 == Description ==
 
-Spectre Icons brings modern SVG icon libraries like Lucide and Font Awesome directly into WordPress builders—delivering a unified, performance-first icon system that replaces dozens of fragmented icon plugins.
+Spectre Icons registers curated SVG icon libraries inside Elementor's icon picker and renders them as inline SVGs on the frontend.
 
-Plugin Directory: https://wordpress.org/plugins/spectre-icons/
+* Enable or disable individual libraries from Settings → Spectre Icons
+* Manifest-driven rendering for Lucide and Font Awesome Free
+* Inline SVG injection in editor preview and frontend
+* Disabled libraries are hidden from the picker; existing icons keep rendering
+* Theme-friendly color inheritance through builder color controls
 
-= Key Features =
-
-* **Manifest-driven icon loading** for optimal performance
-* **Inline SVG rendering** with theme color inheritance
-* **Official branding support** for social media icons
-* **Custom color control** via page builder color pickers
-* **Live preview injection** in builder editors
-* **Admin control panel** to toggle icon libraries
-* **Modular architecture** for future builder integrations
-
-= Current Integration =
-
-* Elementor 3.x+ (full support)
-
-Future releases will support Gutenberg, Beaver Builder, and other popular page builders.
-
-= Included Icon Libraries =
-
-* **Lucide Icons** - Modern, clean outline icons (ISC License)
-* **Font Awesome Free** - Popular icon library with solid, regular, and brand styles (CC BY 4.0 icons / MIT code)
-
-= Perfect For =
-
-* Elementor designers who need modern icon libraries
-* Developers building custom WordPress themes
-* Agencies managing multiple client sites
-* Anyone tired of installing multiple icon plugins
-
-= How It Works =
-
-1. SVG icon packs are stored in optimized JSON manifests
-2. Plugin registers manifests as Elementor libraries
-3. JavaScript injects inline SVGs in editor and frontend
-4. CSS handles color inheritance and official branding
-
-= Use Cases =
-
-* Add custom icons to any Elementor widget (Icon, Icon Box, Icon List, Social Icons)
-* Create branded social media icon sets with official colors
-* Build custom icon layouts with full color control
-* Maintain consistent icon styles across your entire site
+Supported widgets: Icon, Icon Box, Icon List, Social Icons.
 
 == Installation ==
 
-= Automatic Installation =
+= From the WordPress admin =
 
-1. Log in to your WordPress dashboard
-2. Navigate to **Plugins → Add New**
-3. Search for "Spectre Icons"
-4. Click **Install Now** → **Activate**
-5. Navigate to **Settings → Spectre Icons** to configure
+1. Go to Plugins → Add New
+2. Search for "Spectre Icons"
+3. Click Install Now, then Activate
+4. Go to Settings → Spectre Icons and enable the libraries you want
 
-= Manual Installation =
+= Manual install =
 
-1. Download the plugin ZIP file
-2. Log in to your WordPress dashboard
-3. Navigate to **Plugins → Add New → Upload Plugin**
-4. Choose the ZIP file and click **Install Now**
-5. Click **Activate Plugin**
-6. Navigate to **Settings → Spectre Icons** to configure
-
-= After Activation =
-
-1. Go to **Settings → Spectre Icons**
-2. Toggle which icon libraries you want to enable
-3. Open the Elementor editor on any page
-4. Use any icon widget and select "Lucide Icons" or "Font Awesome" from the picker tabs
-
-= Development & Testing =
-
-Contributor workflows include:
-
-* PHPUnit coverage for icon library registration, manifest rendering, preview config, and Elementor tab behavior
-* Playwright smoke coverage for the real Elementor preview path
-
-Typical local commands:
-
-* `composer test`
-* `npm run test:e2e:smoke`
+1. Download the plugin ZIP
+2. Go to Plugins → Add New → Upload Plugin
+3. Upload the ZIP, activate it, then go to Settings → Spectre Icons
 
 == Frequently Asked Questions ==
 
 = Which page builders are supported? =
 
-Currently, Spectre Icons has full support for Elementor 3.x+. Future releases will add support for Gutenberg, Beaver Builder, and other popular page builders.
+Elementor 3.x and 4.x. The architecture is built to support additional builders in future releases.
 
-= How many icons are included? =
+= Can I disable individual icon libraries? =
 
-Thousands! Lucide provides over 1,300 modern outline icons, and Font Awesome Free includes 2,000+ icons across solid, regular, and brand styles.
+Yes. Uncheck a library under Settings → Spectre Icons to hide it from the Elementor icon picker. Icons already placed on your site will continue to render.
 
-= Can I use custom colors with the icons? =
+= Can I add my own icon packs? =
 
-Yes! Use Elementor's color picker to set any custom color for your icons. Icons support full theme color inheritance.
-
-= What is "Official Color" mode? =
-
-For social media icons, selecting "Official Color" mode automatically renders white icons on properly branded backgrounds (Facebook blue, Twitter blue, etc.) according to brand guidelines.
-
-= Do the icons work on the frontend? =
-
-Yes! Icons render as inline SVGs on both the Elementor editor and the frontend, ensuring consistent display and performance.
-
-= Are the icons optimized for performance? =
-
-Absolutely. Icons are stored in optimized JSON manifests and loaded on-demand. Only the icons you use are rendered as inline SVGs.
-
-= Can I add my own custom icon packs? =
-
-Yes! The plugin architecture supports custom icon libraries. While bundled packs are locked, you can register your own libraries using a JSON manifest and the `spectre_icons_elementor_icon_libraries` filter.
-
-= Are there any conflicts with other icon plugins? =
-
-Spectre Icons is designed to work alongside other icon plugins. However, you can disable libraries you don't need to keep your icon picker clean.
-
-= Does this work with WooCommerce? =
-
-Yes! Spectre Icons works anywhere Elementor can be used, including WooCommerce product pages and shop layouts.
+Custom icon library registration is a pro feature.
 
 = What are the system requirements? =
 
-* WordPress 6.0 or higher
-* PHP 7.4 or higher (PHP 8.x supported)
-* Elementor 3.x or higher
+WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x.
 
 == Changelog ==
 
-= 1.1.0 - 2026-01-11 =
+= 1.2.0 =
 
-**Added**
-* Icon attribution sections for Font Awesome and Lucide in documentation (c4df46c)
-* SPDX license identifier to plugin header (26d2038)
-* GNU General Public License version 2 (852dced)
+* Added per-library enable/disable controls with reliable Elementor v4 picker hiding
+* Disabled libraries are hidden from the icon picker; existing placed icons keep rendering
+* Hardened SVG sanitizer, manifest renderer, and plugin bootstrap
+* Added PHPUnit and Playwright e2e test coverage
+* Updated WordPress compatibility to 6.7
 
-**Changed**
-* Improved Elementor integration and SVG sanitization logic (98aef3d)
-* Updated readme formatting and converted markdown links to plain URLs (f375196)
-* Renamed internal stub path variables for better code clarity (534bd47, 4cec228)
-* Replaced (void) with unset in log_debug methods (c1b3a96)
-* Updated plugin description for clarity and consistency (7e8312f)
-* Updated 'Tested up to' to WordPress 6.7 (8f313f2)
-* Updated plugin and author URIs in header (1a38008)
-* Updated CHANGELOG formatting for consistency (1a6e92c)
-* Updated license file handling in build workflow (31b7aae)
-* Updated zip build to exclude top-level plugin folder (1d2e199)
+= 1.1.0 =
 
-**Fixed**
-* Removed screenshots section from readme.txt for WordPress.org submission
-* Removed error_log debug statements from production code (12ae914)
+* Added SPDX license metadata and finalized bundled icon attribution
+* Refined Elementor manifest rendering, integration hooks, and SVG sanitization
+* Updated plugin metadata and release packaging for WordPress.org
 
-**Removed**
-* Empty .gitkeep from languages directory (4e613a7)
-* LICENSE.md file (94f636f)
+= 1.0.0 =
 
-**Documentation**
-* Added proper icon attributions for bundled icon libraries (c4df46c)
-* Improved WordPress.org readme.txt formatting and compliance (f375196)
-* Updated changelog and readme for 1.0.0 release (f0551d8)
-
-= 1.0.0 - 2026-01-10 =
-
-**Added**
-* GitHub Actions workflow for building WP ZIP
-* Manifest file fallback logic for icon libraries
-* Style class to icons based on library slug
-
-**Changed**
-* Refactored build workflow and migrated readme to Markdown
-* Refactored WP.org ZIP build to use rsync and improve cleanup
-* Simplified WP zip build workflow and file copying
-* Refactored Elementor integration and manifest handling
-* Refactored plugin structure and updated metadata
-* Refactored SVG sanitizer for stricter, simpler sanitization
-* Refactored Elementor integration hooks for Spectre Icons
-* Refactored icon library registration for Elementor
-* Refactored Elementor settings class for icon libraries
-* Refactored Elementor icon manifest renderer
-* Refactored Spectre icon library manager for clarity and validation
-
-**Fixed**
-* Icon prefix handling and improved style overrides
-* Zip build to avoid nested plugin folder
-
-**Documentation**
-* Revised and expanded README for Spectre Icons plugin
-
-= 0.0.1 - 2025-12-10 =
-
-**Added**
-* Initial release
-* Full Elementor integration
-* Lucide Icons library (1,300+ icons)
-* Font Awesome Free library (2,000+ icons)
-* Admin settings panel
-* SVG sanitization
-* Custom color support
-* Official branding support for social icons
-* Live preview injection in Elementor editor
-* Translation support
-* Comprehensive documentation
+* Fixed manifest loading and icon lookup for prefixed libraries
+* Aligned Elementor editor config and asset enqueues
+* Ensured Lucide outline icons render correctly
+* Cleaned up WordPress.org ZIP packaging
 
 == Upgrade Notice ==
 
-= 1.1.0 =
-WordPress.org submission ready release with improved documentation, icon attributions, and enhanced code quality. Recommended for all users.
-
-= 1.0.0 =
-Major stable release with improved architecture, better performance, and enhanced icon rendering. Recommended for all users.
+= 1.2.0 =
+Adds reliable enable/disable controls for icon libraries. Existing icons on your site are not affected.
 
 == Icon Attributions ==
 
-This plugin bundles icons from Font Awesome Free and Lucide.
-
 = Font Awesome Free =
-Font Awesome Free is licensed under CC BY 4.0 (icons) and MIT (code).
+Licensed under CC BY 4.0 (icons) and MIT (code).
 https://fontawesome.com/license/free
 
 = Lucide Icons =
-Lucide is licensed under the ISC License (MIT-compatible).
+Licensed under the ISC License.
 https://lucide.dev
-
-== Additional Info ==
-
-= Part of the Spectre Suite =
-
-* Spectre Tokens – Design token foundation
-* Spectre UI – Core styling layer
-* Spectre Icons – Icon library for WordPress (this plugin)
-* Spectre Blocks – WordPress block library
-* Spectre Astro – Astro integration
-* Spectre 11ty – Eleventy integration
-
-= Contributing =
-
-Contributions are welcome! Visit our GitHub repository for detailed contribution guidelines:
-https://github.com/phcdevworks/spectre-icons
-
-= Support =
-
-For issues, questions, or feature requests:
-* GitHub Issues: https://github.com/phcdevworks/spectre-icons/issues
-* Documentation: https://github.com/phcdevworks/spectre-icons
-
-= Credits =
-
-Developed by PHCDevworks (https://phcdevworks.com)
-
-Icon libraries:
-* Lucide by Lucide Contributors
-* Font Awesome by Fonticons, Inc.
