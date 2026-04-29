@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: Spectre Icons
  * Plugin URI: https://github.com/phcdevworks/spectre-icons
@@ -14,7 +13,7 @@
  * Domain Path: /languages
  * Requires at least: 6.0
  * Requires PHP: 7.4
- * Tested up to: 6.8.1
+ * Tested up to: 6.7
  *
  * @package SpectreIcons
  */
