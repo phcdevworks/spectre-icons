@@ -1,12 +1,7 @@
 name: Deploy to WordPress.org
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to deploy (e.g., 1.1.0)'
-        required: true
-        type: string
+  workflow_dispatch: {}
 
 permissions:
   contents: read
@@ -31,10 +26,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          VERSION="${{ github.event.inputs.version }}"
-          # Basic sanity: allow digits + dots only (prevents "main", "foo", etc.)
+          VERSION=$(grep -i '^ \* Version:' "$GITHUB_WORKSPACE/${MAIN_FILE}" | head -1 | sed 's/.*Version:[[:space:]]*//' | tr -d '[:space:]')
           if ! echo "$VERSION" | grep -Eq '^[0-9]+(\.[0-9]+)*$'; then
-            echo "ERROR: Invalid version '$VERSION'. Use numeric versions like 1.2.3"
+            echo "ERROR: Could not read a valid version from ${MAIN_FILE} (got: '$VERSION')"
             exit 1
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
@@ -66,7 +60,7 @@ jobs:
           cp "$ROOT/${MAIN_FILE}" "$DIST/"
           cp "$ROOT/readme.txt" "$DIST/"
 
-          for d in includes assets build languages vendor; do
+          for d in includes assets build languages; do
             if [ -d "$ROOT/$d" ]; then
               cp -R "$ROOT/$d" "$DIST/"
             fi
@@ -154,8 +148,6 @@ jobs:
             -m "Tagging version $VERSION" \
             --username "$SVN_USERNAME" \
             --password "$SVN_PASSWORD" \
-            --non-interactive \
-            --no-auth-cache \
             --non-interactive \
             --no-auth-cache
 
