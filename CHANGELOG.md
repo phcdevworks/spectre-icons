@@ -8,11 +8,12 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [1.2.0] - 2026-04-28
 
+Release Title: Library Controls, SVG Hardening, and Test Coverage
+
 ### Added
 
 - Hardened internal debug logging to improve observability for non-scalar messages.
 - Synchronized versioning and WordPress compatibility metadata across all product manifests.
-- Hardened SVG sanitizer to permit local fragment identifiers in `href` and `xlink:href` attributes.
 - Added per-library enablement controls so individual bundled icon libraries can
   be turned on or off from the Elementor settings flow.
 - Disabled libraries are now hidden from the Elementor icon picker while existing
@@ -70,6 +71,8 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [1.1.0] - 2026-01-11
 
+Release Title: License Alignment and WordPress.org Stabilization
+
 ### Added
 
 - Added SPDX license metadata to the plugin header and finalized bundled icon
@@ -96,6 +99,8 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [1.0.0] - 2026-01-10
 
+Release Title: Stable WordPress.org Release
+
 ### Added
 
 - Added the first stable WordPress.org-ready release of Spectre Icons with
@@ -121,6 +126,8 @@ reflects WordPress plugin releases for Spectre Icons.
   favor of static manifests and stricter SVG handling.
 
 ## [0.0.1] - 2025-12-10
+
+Release Title: Initial Public Foundation
 
 ### Added
 
