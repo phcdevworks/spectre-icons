@@ -178,6 +178,36 @@
     });
   };
 
+  const clearIconFromElement = (element) => {
+    if (!element || !element.dataset || !element.dataset.spectreIconKey) {
+      return;
+    }
+
+    const storedKey = element.dataset.spectreIconKey;
+    const colonIdx = storedKey.indexOf('::');
+    if (colonIdx === -1) {
+      return;
+    }
+
+    const storedLibraryId = storedKey.slice(0, colonIdx);
+    const storedSettings = libraries[storedLibraryId];
+
+    if (!storedSettings || !storedSettings.selector) {
+      return;
+    }
+
+    if (element.matches && element.matches(storedSettings.selector)) {
+      return;
+    }
+
+    element.innerHTML = '';
+    element.classList.remove('spectre-icon--rendered');
+    Array.from(element.classList)
+      .filter((c) => c.startsWith('spectre-icon--style-'))
+      .forEach((c) => element.classList.remove(c));
+    delete element.dataset.spectreIconKey;
+  };
+
   const observeRoot = (root) => {
     if (!root || observedRoots.has(root)) {
       return;
@@ -190,6 +220,7 @@
         }
 
         if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          clearIconFromElement(mutation.target);
           processElement(mutation.target);
         }
       });
