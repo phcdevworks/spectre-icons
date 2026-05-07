@@ -17,8 +17,8 @@ final class ManifestHardeningTest extends Spectre_Icons_PHPUnit_Test_Case {
 			)
 		);
 
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'assoc-test', $manifest_path );
-		$slugs = Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( 'assoc-test' );
+		Spectre_Icons_Manifest_Registry::register_manifest( 'assoc-test', $manifest_path );
+		$slugs = Spectre_Icons_Manifest_Registry::get_icon_slugs( 'assoc-test' );
 
 		$this->assertContains( 'valid-svg', $slugs );
 		$this->assertContains( 'valid-body', $slugs );
@@ -58,8 +58,8 @@ final class ManifestHardeningTest extends Spectre_Icons_PHPUnit_Test_Case {
 			)
 		);
 
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'indexed-test', $manifest_path );
-		$slugs = Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( 'indexed-test' );
+		Spectre_Icons_Manifest_Registry::register_manifest( 'indexed-test', $manifest_path );
+		$slugs = Spectre_Icons_Manifest_Registry::get_icon_slugs( 'indexed-test' );
 
 		$this->assertContains( 'valid-svg', $slugs );
 		$this->assertContains( 'valid-body', $slugs );
@@ -78,8 +78,8 @@ final class ManifestHardeningTest extends Spectre_Icons_PHPUnit_Test_Case {
 			)
 		);
 
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'wrapped-test', $manifest_path );
-		$slugs = Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( 'wrapped-test' );
+		Spectre_Icons_Manifest_Registry::register_manifest( 'wrapped-test', $manifest_path );
+		$slugs = Spectre_Icons_Manifest_Registry::get_icon_slugs( 'wrapped-test' );
 
 		$this->assertSame( array( 'wrapped-icon' ), $slugs );
 	}
@@ -88,8 +88,8 @@ final class ManifestHardeningTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$path = tempnam( sys_get_temp_dir(), 'spectre-icons-bad-' );
 		file_put_contents( $path, '{ "unclosed": "json" ' );
 
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'bad-json', $path );
-		$slugs = Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( 'bad-json' );
+		Spectre_Icons_Manifest_Registry::register_manifest( 'bad-json', $path );
+		$slugs = Spectre_Icons_Manifest_Registry::get_icon_slugs( 'bad-json' );
 
 		$this->assertSame( array(), $slugs );
 		unlink( $path );
@@ -102,8 +102,8 @@ final class ManifestHardeningTest extends Spectre_Icons_PHPUnit_Test_Case {
 			)
 		);
 
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'invalid-icons-test', $manifest_path );
-		$slugs = Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( 'invalid-icons-test' );
+		Spectre_Icons_Manifest_Registry::register_manifest( 'invalid-icons-test', $manifest_path );
+		$slugs = Spectre_Icons_Manifest_Registry::get_icon_slugs( 'invalid-icons-test' );
 
 		$this->assertSame( array(), $slugs );
 	}
@@ -111,8 +111,8 @@ final class ManifestHardeningTest extends Spectre_Icons_PHPUnit_Test_Case {
 	public function test_get_icons_handles_empty_manifest_resiliently(): void {
 		$manifest_path = $this->create_temp_manifest( array() );
 
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'empty-test', $manifest_path );
-		$slugs = Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( 'empty-test' );
+		Spectre_Icons_Manifest_Registry::register_manifest( 'empty-test', $manifest_path );
+		$slugs = Spectre_Icons_Manifest_Registry::get_icon_slugs( 'empty-test' );
 
 		$this->assertSame( array(), $slugs );
 	}

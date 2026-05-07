@@ -37,7 +37,7 @@ function spectre_icons_elementor_bootstrap() {
 	$bootstrapped = true;
 
 	$settings = new Spectre_Icons_Elementor_Settings();
-	$manager  = Spectre_Icons_Elementor_Library_Manager::instance( $settings );
+	$manager  = Spectre_Icons_Elementor_Library_Adapter::instance( $settings );
 
 	// Register Elementor icon tabs.
 	add_filter(
@@ -125,8 +125,8 @@ function spectre_icons_elementor_enqueue_styles() {
 	);
 
 	// Hide disabled tabs dynamically via CSS to prevent UI flashing in Elementor's React interface.
-	if ( function_exists( 'spectre_icons_elementor_get_icon_library_definitions' ) && function_exists( 'spectre_icons_elementor_is_library_enabled' ) ) {
-		$definitions = spectre_icons_elementor_get_icon_library_definitions();
+	if ( function_exists( 'spectre_icons_get_library_definitions' ) && function_exists( 'spectre_icons_elementor_is_library_enabled' ) ) {
+		$definitions = spectre_icons_get_library_definitions();
 		$hidden_css  = '';
 
 		foreach ( $definitions as $slug => $def ) {
@@ -171,7 +171,7 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 		true
 	);
 
-	$definitions = spectre_icons_elementor_get_icon_library_definitions();
+	$definitions = spectre_icons_get_library_definitions();
 	$libraries   = array();
 
 	foreach ( $definitions as $slug => $def ) {
@@ -185,7 +185,7 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 			continue;
 		}
 
-		$manifest_path = spectre_icons_elementor_resolve_manifest_path( $manifest_file );
+		$manifest_path = spectre_icons_resolve_manifest_path( $manifest_file );
 		if ( ! $manifest_path ) {
 			continue;
 		}

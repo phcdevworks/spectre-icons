@@ -43,10 +43,15 @@ define( 'SPECTRE_ICONS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SPECTRE_ICONS_URL', plugin_dir_url( __FILE__ ) );
 
 $spectre_icons_includes = array(
-	'includes/elementor/class-spectre-icons-elementor-library-manager.php',
-	'includes/elementor/class-spectre-icons-elementor-manifest-renderer.php',
-	'includes/elementor/class-spectre-icons-elementor-settings.php',
+	// Core — builder-agnostic, no page-builder dependencies.
 	'includes/class-spectre-icons-svg-sanitizer.php',
+	'includes/core/class-spectre-icons-manifest-registry.php',
+	'includes/core/class-spectre-icons-icon-renderer.php',
+	'includes/core/manifest-helpers.php',
+
+	// Elementor integration — depends on core.
+	'includes/elementor/class-spectre-icons-elementor-settings.php',
+	'includes/elementor/class-spectre-icons-elementor-library-adapter.php',
 	'includes/elementor/icon-libraries.php',
 	'includes/elementor/integration-hooks.php',
 );

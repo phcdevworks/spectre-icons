@@ -1,6 +1,9 @@
 <?php
 /**
- * Coordinates Spectre icon libraries with Elementor.
+ * Elementor library adapter for Spectre Icons.
+ *
+ * Validates and registers manifest-backed icon libraries with Elementor's
+ * icons manager. Consumes the builder-agnostic core layer.
  *
  * @package SpectreIcons
  */
@@ -9,12 +12,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Spectre_Icons_Elementor_Library_Manager' ) ) :
+if ( ! class_exists( 'Spectre_Icons_Elementor_Library_Adapter' ) ) :
 
-		/**
-		 * Validates and exposes manifest-backed icon libraries to Elementor.
-		 */
-	final class Spectre_Icons_Elementor_Library_Manager {
+	/**
+	 * Validates and exposes manifest-backed icon libraries to Elementor.
+	 */
+	final class Spectre_Icons_Elementor_Library_Adapter {
 
 		/**
 		 * Singleton instance.
@@ -48,7 +51,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Library_Manager' ) ) :
 		}
 
 		/**
-		 * Return the shared library manager instance.
+		 * Return the shared adapter instance.
 		 *
 		 * @param Spectre_Icons_Elementor_Settings $settings Settings manager instance.
 		 * @return self
@@ -99,7 +102,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Library_Manager' ) ) :
 		}
 
 		/**
-		 * Validate a single library definition before exposing it to Elementor.
+		 * Validate a single library definition against Elementor's tab contract.
 		 *
 		 * @param string $slug    Sanitized library slug.
 		 * @param array  $library Raw library definition.
@@ -127,7 +130,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Library_Manager' ) ) :
 				)
 			);
 
-			// Enforce: must be callable (don’t over-restrict to [Class, method] only).
+			// Enforce: render_callback must be callable.
 			if ( empty( $config['render_callback'] ) || ! is_callable( $config['render_callback'] ) ) {
 				return null;
 			}
@@ -157,8 +160,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Library_Manager' ) ) :
 
 			// Prefix used for classnames (preserve hyphens/trailing hyphen).
 			$config['prefix'] = is_string( $config['prefix'] )
-			? preg_replace( '/[^a-z0-9\-_]/i', '', (string) $config['prefix'] )
-			: '';
+				? preg_replace( '/[^a-z0-9\-_]/i', '', (string) $config['prefix'] )
+				: '';
 
 			// Icons list must be an array of sanitized slugs.
 			$config['icons'] = is_array( $config['icons'] ) ? array_map( 'sanitize_key', $config['icons'] ) : array();
@@ -176,7 +179,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Library_Manager' ) ) :
 		 * @return array
 		 */
 		public function register_additional_tabs( $tabs ) {
-			// Refresh libraries at the moment Elementor asks for them (prevents stale/late filter issues).
+			// Refresh at the moment Elementor asks (prevents stale/late filter issues).
 			$this->load_libraries();
 
 			if ( ! is_array( $tabs ) ) {
@@ -201,7 +204,7 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Library_Manager' ) ) :
 				$enabled    = isset( $prefs[ $slug ] ) ? (bool) $prefs[ $slug ] : true;
 				$tab_config = $library['config'];
 
-				// Keep render callbacks available for existing content, but block
+				// Keep render_callback available for existing content, but block
 				// new selections by emptying the picker list when disabled.
 				if ( ! $enabled ) {
 					$tab_config['icons'] = array();
