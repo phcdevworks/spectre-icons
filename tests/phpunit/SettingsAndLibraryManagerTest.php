@@ -60,7 +60,7 @@ final class SettingsAndLibraryManagerTest extends Spectre_Icons_PHPUnit_Test_Cas
 		);
 
 		$settings = new Spectre_Icons_Elementor_Settings();
-		$manager  = Spectre_Icons_Elementor_Library_Manager::instance( $settings );
+		$manager  = Spectre_Icons_Elementor_Library_Adapter::instance( $settings );
 		$tabs     = $manager->register_additional_tabs( array() );
 
 		$this->assertArrayHasKey( 'custom-library', $tabs );

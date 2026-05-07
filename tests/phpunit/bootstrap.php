@@ -323,10 +323,12 @@ if ( ! function_exists( 'submit_button' ) ) {
 }
 
 require_once SPECTRE_ICONS_PATH . 'includes/class-spectre-icons-svg-sanitizer.php';
-require_once SPECTRE_ICONS_PATH . 'includes/elementor/class-spectre-icons-elementor-manifest-renderer.php';
-require_once SPECTRE_ICONS_PATH . 'includes/elementor/icon-libraries.php';
+require_once SPECTRE_ICONS_PATH . 'includes/core/class-spectre-icons-manifest-registry.php';
+require_once SPECTRE_ICONS_PATH . 'includes/core/class-spectre-icons-icon-renderer.php';
+require_once SPECTRE_ICONS_PATH . 'includes/core/manifest-helpers.php';
 require_once SPECTRE_ICONS_PATH . 'includes/elementor/class-spectre-icons-elementor-settings.php';
-require_once SPECTRE_ICONS_PATH . 'includes/elementor/class-spectre-icons-elementor-library-manager.php';
+require_once SPECTRE_ICONS_PATH . 'includes/elementor/class-spectre-icons-elementor-library-adapter.php';
+require_once SPECTRE_ICONS_PATH . 'includes/elementor/icon-libraries.php';
 require_once SPECTRE_ICONS_PATH . 'includes/elementor/integration-hooks.php';
 
 abstract class Spectre_Icons_PHPUnit_Test_Case extends TestCase {
@@ -341,9 +343,9 @@ abstract class Spectre_Icons_PHPUnit_Test_Case extends TestCase {
 
 		spectre_icons_tests_reset_wordpress_state();
 		add_filter( 'spectre_icons_elementor_icon_libraries', 'spectre_icons_elementor_register_manifest_libraries' );
-		$this->reset_static_property( 'Spectre_Icons_Elementor_Manifest_Renderer', 'libraries', array() );
-		$this->reset_static_property( 'Spectre_Icons_Elementor_Manifest_Renderer', 'icons_cache', array() );
-		$this->reset_static_property( 'Spectre_Icons_Elementor_Library_Manager', 'instance', null );
+		$this->reset_static_property( 'Spectre_Icons_Manifest_Registry', 'libraries', array() );
+		$this->reset_static_property( 'Spectre_Icons_Manifest_Registry', 'icons_cache', array() );
+		$this->reset_static_property( 'Spectre_Icons_Elementor_Library_Adapter', 'instance', null );
 	}
 
 	protected function tearDown(): void {

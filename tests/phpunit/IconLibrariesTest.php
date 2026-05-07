@@ -31,7 +31,7 @@ final class IconLibrariesTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertArrayHasKey( 'spectre-lucide', $config );
 		$this->assertArrayHasKey( 'spectre-fontawesome', $config );
 		$this->assertSame(
-			array( 'Spectre_Icons_Elementor_Manifest_Renderer', 'render_icon' ),
+			array( 'Spectre_Icons_Icon_Renderer', 'render_icon' ),
 			$config['spectre-lucide']['render_callback']
 		);
 		$this->assertStringEndsWith(

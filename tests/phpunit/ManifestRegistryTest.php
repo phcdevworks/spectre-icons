@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
+final class ManifestRegistryTest extends Spectre_Icons_PHPUnit_Test_Case {
 
 	public function test_render_icon_sanitizes_manifest_svg_and_preserves_wrapper_attributes(): void {
 		$manifest_path = $this->create_temp_manifest(
@@ -15,13 +15,13 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 			)
 		);
 
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest(
+		Spectre_Icons_Manifest_Registry::register_manifest(
 			'test-fontawesome',
 			$manifest_path,
 			array( 'prefix' => 'spectre-test-' )
 		);
 
-		$html = Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+		$html = Spectre_Icons_Icon_Renderer::render_icon(
 			array(
 				'library' => 'test-fontawesome',
 				'value'   => 'test-fontawesome arrow-right',
@@ -51,7 +51,7 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 			)
 		);
 
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest(
+		Spectre_Icons_Manifest_Registry::register_manifest(
 			'custom-lucide',
 			$manifest_path,
 			array( 'prefix' => 'spectre-lucide-' )
@@ -59,10 +59,10 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 
 		$this->assertSame(
 			array( 'camera' ),
-			Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( 'custom-lucide' )
+			Spectre_Icons_Manifest_Registry::get_icon_slugs( 'custom-lucide' )
 		);
 
-		$html = Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+		$html = Spectre_Icons_Icon_Renderer::render_icon(
 			array(
 				'library' => 'custom-lucide',
 				'value'   => 'spectre-lucide-camera',
@@ -84,7 +84,7 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 		);
 
 		// slug contains 'lucide' but we force 'filled' style.
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest(
+		Spectre_Icons_Manifest_Registry::register_manifest(
 			'forced-filled-lucide',
 			$manifest_path,
 			array(
@@ -92,7 +92,7 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 			)
 		);
 
-		$html = Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+		$html = Spectre_Icons_Icon_Renderer::render_icon(
 			array(
 				'library' => 'forced-filled-lucide',
 				'value'   => 'icon1',
@@ -106,7 +106,7 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 	public function test_unknown_library_and_unknown_icon_return_empty_output(): void {
 		$this->assertSame(
 			'',
-			Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+			Spectre_Icons_Icon_Renderer::render_icon(
 				array(
 					'library' => 'missing',
 					'value'   => 'missing icon',
@@ -124,11 +124,11 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 			)
 		);
 
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'test-lib', $manifest_path );
+		Spectre_Icons_Manifest_Registry::register_manifest( 'test-lib', $manifest_path );
 
 		$this->assertSame(
 			'',
-			Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+			Spectre_Icons_Icon_Renderer::render_icon(
 				array(
 					'library' => 'test-lib',
 					'value'   => 'test-lib unknown',
@@ -138,16 +138,16 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 	}
 
 	public function test_render_icon_handles_invalid_icon_types_gracefully(): void {
-		$this->assertSame( '', Spectre_Icons_Elementor_Manifest_Renderer::render_icon( null ) );
-		$this->assertSame( '', Spectre_Icons_Elementor_Manifest_Renderer::render_icon( 123 ) );
-		$this->assertSame( '', Spectre_Icons_Elementor_Manifest_Renderer::render_icon( true ) );
+		$this->assertSame( '', Spectre_Icons_Icon_Renderer::render_icon( null ) );
+		$this->assertSame( '', Spectre_Icons_Icon_Renderer::render_icon( 123 ) );
+		$this->assertSame( '', Spectre_Icons_Icon_Renderer::render_icon( true ) );
 	}
 
 	public function test_render_icon_handles_malformed_array_payload_gracefully(): void {
 		// Non-scalar 'value' should be handled without triggering warnings.
 		$this->assertSame(
 			'',
-			Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+			Spectre_Icons_Icon_Renderer::render_icon(
 				array(
 					'library' => 'test-lib',
 					'value'   => array( 'invalid' ),
@@ -165,9 +165,9 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 			)
 		);
 
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'attr-test', $manifest_path );
+		Spectre_Icons_Manifest_Registry::register_manifest( 'attr-test', $manifest_path );
 
-		$html = Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+		$html = Spectre_Icons_Icon_Renderer::render_icon(
 			array(
 				'library' => 'attr-test',
 				'value'   => 'test',
@@ -194,9 +194,9 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 			)
 		);
 
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'xss-test', $manifest_path );
+		Spectre_Icons_Manifest_Registry::register_manifest( 'xss-test', $manifest_path );
 
-		$html = Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+		$html = Spectre_Icons_Icon_Renderer::render_icon(
 			array(
 				'library' => 'xss-test',
 				'value'   => 'test',
@@ -226,18 +226,18 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 			)
 		);
 
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'slug-test', $manifest_path );
+		Spectre_Icons_Manifest_Registry::register_manifest( 'slug-test', $manifest_path );
 
 		// Test null icon.
-		$this->assertSame( '', Spectre_Icons_Elementor_Manifest_Renderer::render_icon( null ) );
+		$this->assertSame( '', Spectre_Icons_Icon_Renderer::render_icon( null ) );
 
 		// Test empty string icon.
-		$this->assertSame( '', Spectre_Icons_Elementor_Manifest_Renderer::render_icon( '' ) );
+		$this->assertSame( '', Spectre_Icons_Icon_Renderer::render_icon( '' ) );
 
 		// Test non-scalar value in icon array.
 		$this->assertSame(
 			'',
-			Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+			Spectre_Icons_Icon_Renderer::render_icon(
 				array(
 					'library' => 'slug-test',
 					'value'   => array( 'not', 'scalar' ),
@@ -248,7 +248,7 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 		// Test empty value in icon array.
 		$this->assertSame(
 			'',
-			Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+			Spectre_Icons_Icon_Renderer::render_icon(
 				array(
 					'library' => 'slug-test',
 					'value'   => '',
@@ -259,7 +259,7 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 		// Test non-existent icon in array.
 		$this->assertSame(
 			'',
-			Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+			Spectre_Icons_Icon_Renderer::render_icon(
 				array(
 					'library' => 'slug-test',
 					'value'   => 'non-existent',
@@ -268,7 +268,7 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 		);
 
 		// Test valid icon in array.
-		$html = Spectre_Icons_Elementor_Manifest_Renderer::render_icon(
+		$html = Spectre_Icons_Icon_Renderer::render_icon(
 			array(
 				'library' => 'slug-test',
 				'value'   => 'test',
@@ -286,23 +286,23 @@ final class ManifestRendererTest extends Spectre_Icons_PHPUnit_Test_Case {
 			)
 		);
 
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( 'space-test', $manifest_path );
+		Spectre_Icons_Manifest_Registry::register_manifest( 'space-test', $manifest_path );
 
 		// Test space-separated string.
-		$html = Spectre_Icons_Elementor_Manifest_Renderer::render_icon( 'space-test camera' );
+		$html = Spectre_Icons_Icon_Renderer::render_icon( 'space-test camera' );
 		$this->assertStringContainsString( '<svg', $html );
 
 		// Test single slug (unknown library).
-		$this->assertSame( '', Spectre_Icons_Elementor_Manifest_Renderer::render_icon( 'camera' ) );
+		$this->assertSame( '', Spectre_Icons_Icon_Renderer::render_icon( 'camera' ) );
 	}
 
 	public function test_register_manifest_handles_invalid_slug_types(): void {
 		// Non-scalar should return early.
-		Spectre_Icons_Elementor_Manifest_Renderer::register_manifest( array( 'not' => 'scalar' ), '/path' );
-		$this->assertSame( array(), Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( 'not-scalar' ) );
+		Spectre_Icons_Manifest_Registry::register_manifest( array( 'not' => 'scalar' ), '/path' );
+		$this->assertSame( array(), Spectre_Icons_Manifest_Registry::get_icon_slugs( 'not-scalar' ) );
 	}
 
 	public function test_get_icon_slugs_handles_invalid_slug_types(): void {
-		$this->assertSame( array(), Spectre_Icons_Elementor_Manifest_Renderer::get_icon_slugs( array( 'invalid' ) ) );
+		$this->assertSame( array(), Spectre_Icons_Manifest_Registry::get_icon_slugs( array( 'invalid' ) ) );
 	}
 }

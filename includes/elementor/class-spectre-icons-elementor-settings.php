@@ -92,8 +92,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		public function sanitize_tabs( $value ) {
 			// Whitelist known library slugs (safe, no side effects).
 			$allowed = array();
-			if ( function_exists( 'spectre_icons_elementor_get_icon_library_definitions' ) ) {
-				$defs = spectre_icons_elementor_get_icon_library_definitions();
+			if ( function_exists( 'spectre_icons_get_library_definitions' ) ) {
+				$defs = spectre_icons_get_library_definitions();
 				if ( is_array( $defs ) ) {
 					foreach ( $defs as $slug => $def ) {
 						$slug = sanitize_key( $slug );
@@ -140,8 +140,8 @@ if ( ! class_exists( 'Spectre_Icons_Elementor_Settings' ) ) :
 		 */
 		public function render_tabs_field() {
 			$libraries = array();
-			if ( function_exists( 'spectre_icons_elementor_get_icon_library_definitions' ) ) {
-				$definitions = spectre_icons_elementor_get_icon_library_definitions();
+			if ( function_exists( 'spectre_icons_get_library_definitions' ) ) {
+				$definitions = spectre_icons_get_library_definitions();
 				if ( is_array( $definitions ) ) {
 					foreach ( $definitions as $slug => $def ) {
 						$slug = sanitize_key( $slug );
