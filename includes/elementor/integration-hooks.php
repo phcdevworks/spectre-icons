@@ -129,8 +129,8 @@ function spectre_icons_elementor_enqueue_styles() {
 		$definitions = spectre_icons_get_library_definitions();
 		$hidden_css  = '';
 
-		foreach ( $definitions as $slug => $def ) {
-			$slug_clean = sanitize_key( $slug );
+		foreach ( array_keys( $definitions ) as $slug ) {
+			$slug_clean = sanitize_key( (string) $slug );
 			if ( '' === $slug_clean ) {
 				continue;
 			}
@@ -236,7 +236,15 @@ function spectre_icons_elementor_manifests_available() {
 		return $cache;
 	}
 
-	$cache = ! empty( spectre_icons_elementor_get_icon_preview_config() );
+	foreach ( spectre_icons_get_library_definitions() as $def ) {
+		$file = isset( $def['manifest_file'] ) ? (string) $def['manifest_file'] : '';
+		if ( '' !== $file && null !== spectre_icons_resolve_manifest_path( $file ) ) {
+			$cache = true;
+			return $cache;
+		}
+	}
+
+	$cache = false;
 	return $cache;
 }
 
