@@ -13,11 +13,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Return all known icon library definitions (hardcoded + auto-discovered).
+ * Return all known icon library definitions.
  *
- * Hardcoded entries are authoritative and win on slug collision.
- * Any *.json file dropped into assets/manifests/ that is not already
- * defined here will be picked up automatically.
+ * Scans assets/manifests/ for *.json files and builds library definitions
+ * from metadata embedded in each manifest header.  Only files that contain
+ * an "icons" key are registered.
+ *
+ * Two slugs are SERIALIZATION-ANCHORED in PHP:
+ *   spectre-lucide      → spectre-lucide.json   (prefix: spectre-lucide-)
+ *   spectre-fontawesome → spectre-fontawesome.json (prefix: spectre-fa-)
+ *
+ * Their manifest_file and class_prefix are locked here because every Elementor
+ * icon saved to the database encodes the prefix in its class value
+ * (e.g. "spectre-lucide-arrow-right").  Changing either field would break
+ * every icon already placed on the site.  All other display metadata
+ * (label, style, label_icon) is read from the JSON header, so the manifests
+ * are self-describing and new libraries require no PHP changes.
  *
  * @return array<string,array>
  */
@@ -28,60 +39,28 @@ function spectre_icons_get_library_definitions() {
 		return $definitions;
 	}
 
-	$hardcoded = array(
-		'spectre-lucide'      => array(
-			'label'         => 'Lucide Icons',
-			'label_icon'    => 'eicon-check',
-			'manifest_file' => 'spectre-lucide.json',
-			'class_prefix'  => 'spectre-lucide-',
-			'style'         => 'outline',
-		),
-		'spectre-fontawesome' => array(
-			'label'         => 'Font Awesome',
-			'label_icon'    => 'eicon-star',
-			'manifest_file' => 'spectre-fontawesome.json',
-			'class_prefix'  => 'spectre-fa-',
-			'style'         => 'filled',
-		),
+	// Slug => [ manifest_filename, class_prefix ].
+	// LOCKED — change only when migrating all serialized icon data in the database.
+	$anchored = array(
+		'spectre-lucide'      => array( 'spectre-lucide.json',      'spectre-lucide-' ),
+		'spectre-fontawesome' => array( 'spectre-fontawesome.json', 'spectre-fa-' ),
 	);
 
-	$discovered = spectre_icons_discover_manifest_files( array_keys( $hardcoded ) );
-
-	// Hardcoded entries win on slug collision.
-	$definitions = array_merge( $discovered, $hardcoded );
-
-	return $definitions;
-}
-
-/**
- * Scan the manifests directory and build library definitions for any JSON
- * files not already covered by the hardcoded list.
- *
- * Manifest files may include optional top-level metadata fields:
- *   - label        (string) Human-readable library name.
- *   - class_prefix (string) CSS class prefix, e.g. "my-icons-".
- *   - style        (string) "outline" or "filled".
- *   - label_icon   (string) eicon-* token for the picker tab (Elementor).
- *
- * If these fields are absent the values are derived from the filename.
- *
- * @param string[] $exclude_slugs Slugs already covered by hardcoded definitions.
- * @return array<string,array>
- */
-function spectre_icons_discover_manifest_files( array $exclude_slugs = array() ) {
 	$manifest_dir = trailingslashit( SPECTRE_ICONS_PATH . 'assets/manifests/' );
 
 	if ( ! is_dir( $manifest_dir ) ) {
-		return array();
+		$definitions = array();
+		return $definitions;
 	}
 
 	$files = glob( $manifest_dir . '*.json' );
 
 	if ( ! is_array( $files ) || empty( $files ) ) {
-		return array();
+		$definitions = array();
+		return $definitions;
 	}
 
-	$discovered = array();
+	$found = array();
 
 	foreach ( $files as $file ) {
 		if ( ! is_file( $file ) || ! is_readable( $file ) ) {
@@ -91,39 +70,42 @@ function spectre_icons_discover_manifest_files( array $exclude_slugs = array() )
 		$filename = basename( $file );
 		$slug     = sanitize_key( substr( $filename, 0, -5 ) ); // strip .json
 
-		if ( '' === $slug || in_array( $slug, $exclude_slugs, true ) ) {
+		if ( '' === $slug ) {
 			continue;
 		}
 
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		$contents = file_get_contents( $file );
-		if ( false === $contents ) {
-			continue;
+		// Read only the bytes before the "icons" key — fast for multi-MB manifests.
+		$parsed = spectre_icons_read_manifest_header( $file );
+
+		if ( empty( $parsed['has_icons'] ) ) {
+			continue; // Not a valid icon manifest.
 		}
 
-		$data = json_decode( $contents, true );
+		$meta = $parsed['meta'];
 
-		if ( ! is_array( $data ) || empty( $data['icons'] ) || ! is_array( $data['icons'] ) ) {
-			continue;
+		// Anchored: use locked filename + prefix; display fields come from the JSON.
+		if ( isset( $anchored[ $slug ] ) ) {
+			list( $manifest_file, $class_prefix ) = $anchored[ $slug ];
+		} else {
+			$manifest_file    = $filename;
+			$class_prefix_raw = ( ! empty( $meta['class_prefix'] ) && is_string( $meta['class_prefix'] ) )
+				? $meta['class_prefix']
+				: $slug . '-';
+			$class_prefix     = preg_replace( '/[^a-z0-9\-_]/i', '', $class_prefix_raw );
 		}
 
-		// Label: manifest field → name field → filename.
-		if ( ! empty( $data['label'] ) && is_string( $data['label'] ) ) {
-			$label = $data['label'];
-		} elseif ( ! empty( $data['name'] ) && is_string( $data['name'] ) ) {
-			$label = ucwords( str_replace( array( '-', '_' ), ' ', $data['name'] ) );
+		// Label: manifest field → name field → slug.
+		if ( ! empty( $meta['label'] ) && is_string( $meta['label'] ) ) {
+			$label = $meta['label'];
+		} elseif ( ! empty( $meta['name'] ) && is_string( $meta['name'] ) ) {
+			$label = ucwords( str_replace( array( '-', '_' ), ' ', $meta['name'] ) );
 		} else {
 			$label = ucwords( str_replace( array( '-', '_' ), ' ', $slug ) );
 		}
 
-		// Class prefix: manifest field → slug with trailing hyphen.
-		$class_prefix = ( ! empty( $data['class_prefix'] ) && is_string( $data['class_prefix'] ) )
-			? $data['class_prefix']
-			: $slug . '-';
-
-		// Style: manifest field → slug heuristic.
-		if ( ! empty( $data['style'] ) && in_array( $data['style'], array( 'outline', 'filled' ), true ) ) {
-			$style = $data['style'];
+		// Style: manifest field → slug heuristic fallback.
+		if ( ! empty( $meta['style'] ) && in_array( $meta['style'], array( 'outline', 'filled' ), true ) ) {
+			$style = $meta['style'];
 		} elseif ( false !== strpos( $slug, 'lucide' ) ) {
 			$style = 'outline';
 		} elseif ( false !== strpos( $slug, 'fontawesome' ) || false !== strpos( $slug, '-fa' ) ) {
@@ -132,23 +114,83 @@ function spectre_icons_discover_manifest_files( array $exclude_slugs = array() )
 			$style = '';
 		}
 
-		// Label icon: manifest field, validated to eicon-* format.
+		// Label icon: eicon-* tokens only.
 		$label_icon = '';
-		if ( ! empty( $data['label_icon'] ) && is_string( $data['label_icon'] )
-			&& preg_match( '/^eicon-[a-z0-9\-]+$/', $data['label_icon'] ) ) {
-			$label_icon = $data['label_icon'];
+		if ( ! empty( $meta['label_icon'] ) && is_string( $meta['label_icon'] )
+			&& preg_match( '/^eicon-[a-z0-9\-]+$/', $meta['label_icon'] ) ) {
+			$label_icon = $meta['label_icon'];
 		}
 
-		$discovered[ $slug ] = array(
+		$found[ $slug ] = array(
 			'label'         => $label,
 			'label_icon'    => $label_icon,
-			'manifest_file' => $filename,
+			'manifest_file' => $manifest_file,
 			'class_prefix'  => $class_prefix,
 			'style'         => $style,
 		);
 	}
 
-	return $discovered;
+	$definitions = $found;
+	return $definitions;
+}
+
+/**
+ * Read the JSON header of a manifest file without decoding the full icon set.
+ *
+ * Reads the file in 512-byte chunks until the "icons" key is found (or 8 KB
+ * is consumed), then parses just the header bytes as JSON.  This avoids
+ * loading several MB of SVG data when only manifest metadata is needed.
+ *
+ * @param string $path Absolute path to a manifest JSON file.
+ * @return array{has_icons: bool, meta: array}
+ *   'has_icons' — true when the file contains an "icons" key.
+ *   'meta'      — decoded top-level fields from the header (sans icons).
+ */
+function spectre_icons_read_manifest_header( $path ) {
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+	$fh = fopen( $path, 'rb' );
+
+	if ( ! $fh ) {
+		return array( 'has_icons' => false, 'meta' => array() );
+	}
+
+	$buffer    = '';
+	$has_icons = false;
+	$max_bytes = 8192;
+
+	while ( ! feof( $fh ) && strlen( $buffer ) < $max_bytes ) {
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+		$chunk = fread( $fh, 512 );
+		if ( false === $chunk ) {
+			break;
+		}
+		$buffer .= $chunk;
+		if ( false !== strpos( $buffer, '"icons"' ) ) {
+			$has_icons = true;
+			break;
+		}
+	}
+
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+	fclose( $fh );
+
+	if ( ! $has_icons ) {
+		return array( 'has_icons' => false, 'meta' => array() );
+	}
+
+	// Truncate at the "icons" key so the remainder forms valid JSON.
+	$truncated = preg_replace( '/,?\s*"icons"\s*:[\s\S]*$/u', "\n}", $buffer );
+
+	if ( null === $truncated || '' === trim( $truncated ) ) {
+		return array( 'has_icons' => true, 'meta' => array() );
+	}
+
+	$meta = json_decode( $truncated, true );
+
+	return array(
+		'has_icons' => true,
+		'meta'      => is_array( $meta ) ? $meta : array(),
+	);
 }
 
 /**

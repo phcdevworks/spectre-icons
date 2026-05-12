@@ -26,8 +26,8 @@ function spectre_icons_elementor_get_icon_library_preferences() {
 	$stored      = is_array( $stored ) ? $stored : array();
 	$prefs       = array();
 
-	foreach ( $definitions as $slug => $def ) {
-		$slug = sanitize_key( $slug );
+	foreach ( array_keys( $definitions ) as $slug ) {
+		$slug = sanitize_key( (string) $slug );
 		if ( '' === $slug ) {
 			continue;
 		}
@@ -98,7 +98,7 @@ function spectre_icons_elementor_get_icon_preview_config() {
 			'prefix'          => $class_prefix,
 			'render_callback' => array( 'Spectre_Icons_Icon_Renderer', 'render_icon' ),
 			'native'          => false,
-			'ver'             => defined( 'SPECTRE_ICONS_VERSION' ) ? SPECTRE_ICONS_VERSION : '1.1.0',
+			'ver'             => (string) filemtime( $real ),
 		);
 	}
 
@@ -164,7 +164,7 @@ function spectre_icons_elementor_register_manifest_libraries( $libraries ) {
 				'icons'           => Spectre_Icons_Manifest_Registry::get_icon_slugs( $slug ),
 				'render_callback' => array( 'Spectre_Icons_Icon_Renderer', 'render_icon' ),
 				'native'          => false,
-				'ver'             => defined( 'SPECTRE_ICONS_VERSION' ) ? SPECTRE_ICONS_VERSION : '1.1.0',
+				'ver'             => (string) filemtime( $real ),
 			),
 		);
 	}
