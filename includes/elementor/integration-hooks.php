@@ -55,6 +55,10 @@ function spectre_icons_elementor_bootstrap() {
 
 	// Admin notice for missing manifests.
 	add_action( 'admin_notices', 'spectre_icons_elementor_missing_manifest_notice' );
+
+	// Clear Elementor's file cache once after each plugin version change so
+	// icons never appear blank in the editor after an update.
+	add_action( 'elementor/init', 'spectre_icons_maybe_flush_elementor_cache', 100 );
 }
 add_action( 'plugins_loaded', 'spectre_icons_elementor_bootstrap', 20 );
 
@@ -297,4 +301,34 @@ function spectre_icons_elementor_enqueue_preview_assets() {
 
 	spectre_icons_elementor_enqueue_styles();
 	spectre_icons_elementor_enqueue_icon_scripts();
+}
+
+/**
+ * Clear Elementor's file cache once after each plugin version change.
+ *
+ * Runs on elementor/init (Elementor fully loaded) and is a no-op after the
+ * first admin request following a version bump.  This prevents blank icon
+ * previews in the Elementor editor after a plugin update.
+ *
+ * @return void
+ */
+function spectre_icons_maybe_flush_elementor_cache() {
+	if ( get_option( 'spectre_icons_version' ) === SPECTRE_ICONS_VERSION ) {
+		return;
+	}
+
+	// Record new version first so a fatal during the flush does not loop.
+	update_option( 'spectre_icons_version', SPECTRE_ICONS_VERSION, false );
+
+	if ( ! class_exists( '\Elementor\Plugin' ) ) {
+		return;
+	}
+
+	$files_manager = isset( \Elementor\Plugin::$instance->files_manager )
+		? \Elementor\Plugin::$instance->files_manager
+		: null;
+
+	if ( $files_manager && method_exists( $files_manager, 'clear_cache' ) ) {
+		$files_manager->clear_cache();
+	}
 }
