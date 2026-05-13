@@ -4,7 +4,7 @@ Tags: icons, elementor, svg, lucide, font awesome
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,15 @@ WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x.
 
 == Changelog ==
 
+= 1.2.1 =
+
+* Introduced core manifest registry and builder-agnostic SVG renderer
+* Added runtime manifest auto-discovery — drop a JSON file to add a library
+* Fixed icon SVG persisting in the editor after resetting or changing an icon
+* Fixed Elementor editor cache invalidating on every plugin update (ver now uses manifest filemtime)
+* Added automatic Elementor cache flush on first admin load after a version change
+* Bundled Lucide and Font Awesome manifests are now self-describing (metadata in JSON header)
+
 = 1.2.0 =
 
 * Added per-library enable/disable controls with reliable Elementor v4 picker hiding
@@ -79,6 +88,9 @@ WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x.
 * Cleaned up WordPress.org ZIP packaging
 
 == Upgrade Notice ==
+
+= 1.2.1 =
+Fixes blank icon previews in the Elementor editor after plugin updates. Existing icons on your site are not affected.
 
 = 1.2.0 =
 Adds reliable enable/disable controls for icon libraries. Existing icons on your site are not affected.

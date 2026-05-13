@@ -6,6 +6,46 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-05-13
+
+Release Title: Manifest Architecture, Icon Reset Fix, and Editor Stability
+
+### Added
+
+- Introduced `Spectre_Icons_Manifest_Registry` — a builder-agnostic static
+  registry for loading and caching JSON icon manifests.
+- Introduced `Spectre_Icons_Icon_Renderer` — a builder-agnostic inline SVG
+  renderer that sanitizes and wraps icon output, replacing the Elementor-coupled
+  manifest renderer.
+- Added runtime manifest discovery: any `*.json` file dropped into
+  `assets/manifests/` is automatically picked up as an icon library with no PHP
+  changes required. Metadata (label, style, label_icon, class_prefix) is read
+  from the manifest header.
+- Added `label`, `style`, and `label_icon` metadata fields to the bundled Lucide
+  and Font Awesome manifests so they are fully self-describing.
+- Added automatic Elementor file cache flush on first admin load after a plugin
+  version change — eliminates blank icon previews in the editor after updates.
+
+### Changed
+
+- Replaced hardcoded library metadata array with a serialization-anchored design:
+  `manifest_file` and `class_prefix` for bundled libraries are locked in PHP
+  (changing them would break existing saved icons); all display metadata is now
+  sourced from the manifest JSON header.
+- Library icon config version (`ver`) is now tied to the manifest file's
+  modification time instead of the plugin version string. This prevents
+  unnecessary Elementor editor cache invalidations on every plugin release.
+- Refactored manifest path resolution into a dedicated `manifest-helpers.php`
+  core helper (builder-agnostic, no Elementor dependency).
+- Renamed `Spectre_Icons_Elementor_Library_Manager` to
+  `Spectre_Icons_Elementor_Library_Adapter` for naming consistency.
+
+### Fixed
+
+- Fixed icon SVG persisting in the Elementor editor after the icon control is
+  reset or changed to a different icon — a MutationObserver now calls
+  `clearIconFromElement` to clear stale SVG before re-rendering.
+
 ## [1.2.0] - 2026-04-28
 
 Release Title: Library Controls, SVG Hardening, and Test Coverage
