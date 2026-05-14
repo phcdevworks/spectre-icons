@@ -1,9 +1,21 @@
-# Spectre Icons — Claude Code Project Guide
+# CLAUDE.md — Spectre Icons
 
-Product owner: Brad Potts (brad.potts@coastdigitalgroup.com)
-Primary developer: Claude Code (Anthropic AI)
-Plugin version: 1.2.1
-Repo: https://github.com/phcdevworks/spectre-icons
+## Project Identity
+
+**Plugin:** `spectre-icons`
+**Human owner:** Bradley Potts (brad.potts@coastdigitalgroup.com)
+**Primary AI developer:** Claude Code (claude-sonnet-4-6)
+**Plugin version:** 1.2.1
+**Repo:** https://github.com/phcdevworks/spectre-icons
+
+This file is the authoritative guide for Claude Code operating in this repository.
+Read it before touching any source file.
+
+## Commit Policy
+
+Claude Code does not create git commits in this repository. Prepare changes,
+run all validation, and leave staging, committing, tagging, and pushing to
+human review.
 
 ---
 
