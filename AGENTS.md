@@ -1,7 +1,11 @@
-# Spectre Icons Agent Guide
+# Spectre Icons — Agent Guide
 
-This repository is maintained by PHCDevworks and contains the Spectre Icons
-plugin product.
+This repository is a PHCDevworks product maintained by Brad Potts and developed
+primarily by Claude Code (Anthropic AI). Claude Code is the acting lead developer
+for day-to-day work, refactoring, bug fixes, and release preparation.
+
+Human review and approval is required before pushing to remote or publishing
+releases. Brad Potts (brad.potts@coastdigitalgroup.com) is the product owner.
 
 ## Mission
 
@@ -19,8 +23,8 @@ This repository should stay tightly focused on solving that problem well.
 
 ## Product Positioning
 
-Spectre Icons is a standalone PHCDevworks product under the broader umbrella.
-It is not a core Spectre ecosystem package and must not be treated as one.
+Spectre Icons is a standalone PHCDevworks product. It is not a core Spectre
+ecosystem package and must not be treated as one.
 
 It may share quality standards, naming discipline, or internal philosophies with
 other PHCDevworks projects, but its mission is product-focused:
@@ -33,8 +37,8 @@ other PHCDevworks projects, but its mission is product-focused:
 ## Core Rules
 
 1. Keep the scope centered on icon-library expansion for builders.
-2. Treat bundled icon packs as locked assets unless the repository owner gives
-   explicit approval otherwise.
+2. Treat bundled icon packs as locked assets — do not modify SVG source files
+   without explicit approval from Brad Potts.
 3. Do not turn this plugin into a general design system, component framework, or
    Spectre ecosystem bridge.
 4. Prefer manifest-driven registration and integration over hardcoded builder
@@ -64,8 +68,8 @@ Agents must not:
 - swap one icon asset for another
 - apply bulk transforms to icon libraries
 
-Unless the repository owner explicitly requests it, icon pack contents are
-treated as locked source assets.
+Unless Brad Potts explicitly requests it, icon pack contents are treated as
+locked source assets.
 
 Allowed work around icon packs includes:
 
@@ -78,9 +82,20 @@ Allowed work around icon packs includes:
 - performance improvements that do not modify pack source assets
 - support for enabling or disabling packs
 
-## What this repository owns
+### Serialization-anchored library slugs
 
-This repository owns:
+The following slugs and class prefixes are LOCKED in PHP and must never change:
+
+| Slug                 | Class prefix      | Manifest file             |
+|----------------------|-------------------|---------------------------|
+| `spectre-lucide`     | `spectre-lucide-` | `spectre-lucide.json`     |
+| `spectre-fontawesome`| `spectre-fa-`     | `spectre-fontawesome.json`|
+
+Every icon saved to the database encodes the prefix in its class value
+(e.g. `spectre-lucide-arrow-right`). Changing either field would silently break
+every icon already placed on any site using this plugin.
+
+## What this repository owns
 
 - plugin bootstrap and package structure
 - builder integration logic
@@ -93,8 +108,6 @@ This repository owns:
 - packaging and release discipline for the plugin product
 
 ## What this repository does not own
-
-This repository does not own:
 
 - the broader Spectre system architecture
 - design-token infrastructure
@@ -109,22 +122,21 @@ This repository does not own:
 
 Current priority is to maintain and strengthen active builder support.
 
-Support strategy should follow this shape:
+Support strategy:
 
 1. protect existing Elementor support
 2. improve internal architecture so future builders are easier to add
 3. add support for other builders only when the integration can be done cleanly
 4. avoid messy one-off hacks that make later builder support harder
 
-Candidate downstream builder targets may include:
+Candidate downstream builder targets:
 
-- Elementor
+- Elementor (active)
 - Gutenberg / block editor
 - Divi
 - Beaver Builder
 - Oxygen
 - Bricks
-- other builders where demand is real
 
 Builder support should be modular wherever possible.
 
@@ -139,7 +151,7 @@ Prefer clear separation between:
 - admin/settings logic
 - compatibility shims
 
-Good architecture for this repository is:
+Good architecture:
 
 - manifest-driven
 - builder-aware
@@ -148,7 +160,7 @@ Good architecture for this repository is:
 - easy to extend with additional builders
 - conservative about regressions
 
-Bad architecture for this repository is:
+Bad architecture:
 
 - builder-specific logic spread everywhere
 - direct editing of icon assets to fix integration problems
@@ -221,7 +233,9 @@ Before shipping meaningful changes, validate as relevant:
 - no pack metadata is corrupted
 - no builder-specific regression is introduced
 
-For any change touching builder integration, validate the real user path.
+PHPUnit: `composer test`
+Lint: `bin/lint-php.sh` or `composer lint`
+E2E (requires running WP + Elementor env): `npm run test:e2e`
 
 ## Release Mindset
 
@@ -237,20 +251,23 @@ Every release should protect:
 
 Prefer smaller, controlled improvements over chaotic expansion.
 
+Do not push to remote or publish releases without Brad Potts reviewing first.
+
 ## Agent Decision Filter
 
 Before making a change, ask:
 
 1. Does this directly improve Spectre Icons as an icon-library expansion plugin?
 2. Does this preserve locked icon pack assets?
-3. Does this keep the repository out of broader Spectre-system drift?
-4. Does this improve builder support, maintainability, stability, or UX?
-5. Is this safe for a real plugin with active installs?
+3. Does this preserve the serialization-anchored library slugs?
+4. Does this keep the repository out of broader Spectre-system drift?
+5. Does this improve builder support, maintainability, stability, or UX?
+6. Is this safe for a real plugin with active installs?
 
 If the answer to these questions is not clearly yes, do not proceed.
 
 ## In one line
 
 Spectre Icons is a focused multi-builder icon expansion product for WordPress.
-Protect the icon assets, protect the scope, and improve the product without
-drift.
+Protect the icon assets, protect the slugs, protect the scope, and improve the
+product without drift.

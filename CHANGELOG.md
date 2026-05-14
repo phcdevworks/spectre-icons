@@ -189,7 +189,8 @@ Release Title: Initial Public Foundation
 - Improved editor tooling support with updated local diagnostics and stub
   configuration for PHP development.
 
-[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.2.0...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.2.1...HEAD
+[1.2.1]: https://github.com/phcdevworks/spectre-icons/compare/1.2.0...1.2.1
 [1.2.0]: https://github.com/phcdevworks/spectre-icons/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/phcdevworks/spectre-icons/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/phcdevworks/spectre-icons/compare/0.0.1...1.0.0
