@@ -289,6 +289,10 @@ if ( ! class_exists( 'Spectre_Icons_Icon_Renderer' ) ) :
 				$parts[] = sprintf( '%s="%s"', $name, $value );
 			}
 
+			if ( empty( $parts ) ) {
+				return '';
+			}
+
 			return ' ' . implode( ' ', $parts );
 		}
 
