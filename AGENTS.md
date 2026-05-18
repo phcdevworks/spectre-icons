@@ -11,6 +11,17 @@ guide. Human final review and commit authority rests with Bradley Potts.
 Claude Code does not create git commits. Changes are prepared and validated,
 then handed off for human review and commit.
 
+## Codex Release Agent
+
+Codex may be looped in as the production-readiness, release, review, refactor,
+and documentation-standardization agent. Codex operates from `CODEX.md` and the
+supporting files in `.codex/`, but those files do not replace Claude Code's
+primary developer role or the authority of this guide.
+
+Codex should keep changes release-safe, identify blockers before Bradley Potts
+reviews, and preserve the same product scope, locked icon assets, and
+serialization-anchored slugs defined here.
+
 ## Mission
 
 Expand native icon library support for WordPress builders through a clean,

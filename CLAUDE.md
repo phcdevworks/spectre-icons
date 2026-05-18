@@ -11,6 +11,17 @@
 This file is the authoritative guide for Claude Code operating in this repository.
 Read it before touching any source file.
 
+## Codex release support
+
+Codex may be looped in as the release-readiness and production-quality agent for
+this repository. Codex operates from `CODEX.md` and `.codex/` checklists while
+Claude Code remains the primary AI developer and this file remains Claude's
+authoritative implementation guide.
+
+Codex focuses on production risk, compatibility, release validation,
+documentation standardization, and targeted refactors that make the plugin safer
+to ship.
+
 ## Commit Policy
 
 Claude Code does not create git commits in this repository. Prepare changes,
