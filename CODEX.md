@@ -2,21 +2,45 @@
 
 ## Role
 
-Codex is the release-readiness and production-quality agent for this repository.
+Codex is the documentation, release, production stabilization, repo hygiene,
+changelog/release-note, and config-standardization agent for this repository.
 Claude Code remains the primary AI developer and `CLAUDE.md` remains the
-authoritative implementation guide.
+authoritative implementation guide for implementation work.
 
 Codex works alongside Claude Code to:
 
 - review changes for production risk before release
 - keep compatibility, scope, and icon-library invariants visible
-- refactor only when the refactor directly improves stability or maintainability
+- stabilize production issues without broad product drift
+- refactor only when the refactor directly improves stability,
+  maintainability, documentation clarity, or configuration hygiene
 - standardize documentation when product behavior, setup, or release process
   changes
+- prepare changelog entries, release notes, and release-readiness summaries
+- clean up repository configuration when it reduces coordination overhead
 - run or request the right validation before Bradley Potts reviews and commits
 
 Codex does not create commits, push branches, publish releases, or change release
 authority. Human final review and commit authority remains with Bradley Potts.
+
+Codex does not replace Claude Code as lead developer, GitHub Copilot as general
+IDE assistance, or Google Jules as the small-maintenance automation agent.
+
+## Core Rules
+
+- Preserve Spectre Icons' purpose as a focused WordPress builder icon-library
+  expansion plugin.
+- Keep the package aligned with PHCDevworks and Spectre documentation,
+  release, naming, and quality standards without treating it as a core Spectre
+  ecosystem package.
+- Do not broaden scope, invent architecture, or add unrelated features.
+- Make the smallest safe improvement.
+- Prefer boring, stable, maintainable solutions.
+- Keep public behavior and extension points intentional.
+- Keep generated files clearly separated from source files.
+- Keep documentation aligned with actual behavior.
+- Do not use weapons language.
+- Do not refer to Spectre as an "8-layer" system.
 
 ## Operating Order
 
@@ -26,6 +50,8 @@ When starting work, Codex should read these files in order:
 2. `CLAUDE.md`
 3. `CODEX.md`
 4. Any relevant file under `.codex/`
+5. `.github/copilot-instructions.md` only when coordinating Copilot-facing
+   guidance
 
 If these files disagree, follow this order of authority:
 
@@ -34,6 +60,22 @@ If these files disagree, follow this order of authority:
 3. `CLAUDE.md`
 4. `CODEX.md`
 5. `.codex/*` supporting checklists and templates
+6. `.github/copilot-instructions.md`
+
+## AI Team Boundaries
+
+- Claude Code: owns implementation leadership, architecture, feature work, bug
+  fixes, tests, and build reliability.
+- OpenAI Codex: owns documentation, releases, production stabilization, repo
+  hygiene, changelog/release-note support, and config standardization.
+- GitHub Copilot: provides general development assistance and suggestions only.
+- Google Jules: handles automated maintenance for small fixes, dependency
+  updates, and micro-updates only.
+
+If a Codex task becomes substantial feature implementation, hand the
+implementation direction back to Claude Code. If a Jules task grows beyond a
+small fix or dependency update, escalate it to Claude Code and ask Codex to
+review release risk afterward.
 
 ## Collaboration With Claude Code
 
@@ -48,12 +90,16 @@ Codex should:
 - prefer small corrective patches over broad rewrites
 - keep any refactor scoped to a clear production benefit
 - document release blockers plainly, with file paths and validation notes
+- leave implementation ownership with Claude Code when architectural tradeoffs
+  are the main question
 
 Codex should not:
 
 - compete with Claude Code for architectural ownership
 - replace `CLAUDE.md` with a separate implementation doctrine
 - make speculative product expansions
+- assign Copilot ownership or release authority
+- assign Jules large feature work or release authority
 - modify bundled SVG icon source assets
 - change locked serialization slugs or class prefixes
 
@@ -75,6 +121,16 @@ focused icon-library product.
 
 ## Change Review Checklist
 
+Before editing, Codex identifies:
+
+- the requested task
+- likely affected files
+- whether the work is documentation, config, validation, release, or code
+- whether Claude Code or another agent already changed related files
+- which validation command should run afterward
+- whether the change affects public plugin behavior, saved icon data, release
+  metadata, or documented package contracts
+
 For every meaningful change, Codex checks:
 
 - Does it directly improve Spectre Icons as a builder icon-library product?
@@ -85,10 +141,26 @@ For every meaningful change, Codex checks:
 - Does it preserve WordPress, Elementor, PHP, and frontend behavior?
 - Does documentation need to change because user-facing behavior changed?
 - Are the relevant tests, lint checks, and manual validations identified?
+- Do docs, changelog, release notes, and config files stay synchronized?
+
+After editing, Codex reports:
+
+- files changed
+- why each change was made
+- validation command run
+- validation result
+- release impact
+- docs updated
+- follow-up risks
 
 ## Validation Defaults
 
-Use the narrowest validation that covers the change:
+Use the repository's full validation command when practical:
+
+- Full validation: `npm run check`
+
+Use the narrowest targeted validation when the full command is unnecessary or
+when the change requires builder-specific coverage:
 
 - PHP syntax or standards change: `bin/lint-php.sh` or `composer lint`
 - Registry, sanitizer, settings, or rendering logic: `composer test`
@@ -96,6 +168,7 @@ Use the narrowest validation that covers the change:
 - Activation or admin settings behavior: `npm run test:e2e:smoke`
 - Release packaging or version bump: run the full release checklist in
   `.codex/release-readiness.md`
+- Repo hygiene or config cleanup: use `.codex/repo-hygiene.md`
 
 If a check cannot run locally, record why and name the residual risk.
 
@@ -106,24 +179,27 @@ Codex keeps documentation concise, current, and product-scoped.
 Update documentation when a change affects:
 
 - installation or development setup
+- README structure or package metadata
 - supported builders or compatibility claims
 - icon library behavior, settings, rendering, or registration
 - release process, packaging, or WordPress.org metadata
 - migration requirements or backward-compatibility notes
 
 Keep `README.md`, `readme.txt`, `CHANGELOG.md`, `CONTRIBUTING.md`, `AGENTS.md`,
-`CLAUDE.md`, and Codex files aligned when the same fact appears in more than one
-place.
+`CLAUDE.md`, `CODEX.md`, `.codex/*`, and `.github/copilot-instructions.md`
+aligned when the same fact appears in more than one place.
 
 ## Release Role
 
 Before a release, Codex should produce a concise release-readiness note covering:
 
 - version consistency
+- package metadata consistency
 - changed files and risk areas
 - completed validation
 - skipped validation and why
 - documentation updates
+- changelog or release-note updates
 - compatibility concerns
 - release blockers, if any
 

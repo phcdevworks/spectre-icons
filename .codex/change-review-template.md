@@ -9,6 +9,7 @@ candidate.
 - Requested outcome:
 - Files changed:
 - Product area:
+- Agent boundary touched:
 
 ## Findings
 
@@ -48,6 +49,8 @@ Severity guide:
 - Docs updated:
 - Docs still needed:
 - Changelog needed:
+- Release note needed:
+- Config cleanup needed:
 
 ## Recommendation
 

@@ -1,61 +1,48 @@
 # Spectre Icons — Agent Guide
 
-## Primary AI Developer
+## AI Coordination Model
 
-**Claude Code** (`claude-sonnet-4-6`) is the designated primary AI developer for
-this repository, maintained on behalf of Bradley Potts
-(brad.potts@coastdigitalgroup.com) at PHCDevworks. All development is driven
-through Claude Code operating from `CLAUDE.md` as the authoritative working
-guide. Human final review and commit authority rests with Bradley Potts.
+This is the central coordination document for AI agents working in this
+repository. Agent-specific files may add operating details, but they must not
+override the roles or hard boundaries defined here.
 
-Claude Code does not create git commits. Changes are prepared and validated,
-then handed off for human review and commit.
+| Agent | Role | Primary files |
+|---|---|---|
+| Claude Code (`claude-sonnet-4-6`) | Lead developer | `CLAUDE.md`, `.claude/settings.json` |
+| OpenAI Codex | Documentation, releases, stabilization, repo hygiene | `CODEX.md`, `.codex/*` |
+| GitHub Copilot | General development assistance | `.github/copilot-instructions.md` |
+| Google Jules | Small automated maintenance | `AGENTS.md` |
 
-## Codex Release Agent
+Human final review and commit authority rests with Bradley Potts
+(brad.potts@coastdigitalgroup.com) at PHCDevworks. No AI agent creates git
+commits, pushes branches, tags releases, publishes to WordPress.org, or changes
+release authority.
 
-Codex may be looped in as the production-readiness, release, review, refactor,
-and documentation-standardization agent. Codex operates from `CODEX.md` and the
-supporting files in `.codex/`, but those files do not replace Claude Code's
-primary developer role or the authority of this guide.
+## Agent Boundaries
 
-Codex should keep changes release-safe, identify blockers before Bradley Potts
-reviews, and preserve the same product scope, locked icon assets, and
-serialization-anchored slugs defined here.
+Claude Code is the designated primary AI developer. All implementation work is
+driven through Claude Code operating from `CLAUDE.md` as the authoritative
+working guide.
 
-## GitHub Copilot Support Assistant
+OpenAI Codex keeps the repository production-ready. Codex reviews release risk,
+standardizes documentation and configuration, supports changelogs and release
+notes, performs targeted repo-hygiene cleanup, and stabilizes production issues
+without weakening Claude Code's implementation lead.
 
-GitHub Copilot is the general development support assistant for this repository.
-Copilot focuses on in-IDE productivity support such as:
+GitHub Copilot is support-only. Copilot may suggest code, tests, TypeScript
+changes, APIs, and small refactors, but it does not own implementation
+leadership, architecture direction, release coordination, production
+stabilization, repository AI governance, or automated maintenance workflows.
 
-- inline code completion
-- small code suggestions
-- test suggestions
-- TypeScript assistance
-- API usage hints
-- refactor suggestions
-- pattern-aware implementation help
+Google Jules is maintenance-only. Jules may handle small fixes, dependency
+updates, and micro-updates, but it must not take on large feature work,
+architecture direction, release coordination, production stabilization
+ownership, repository AI governance, or lead implementation decisions.
 
-Copilot does not own implementation leadership, architecture direction, release
-coordination, production stabilization ownership, repository AI governance, or
-automated maintenance workflows.
-
-## Google Jules Maintenance Agent
-
-Google Jules may be used for automated maintenance tasks such as small fixes,
-dependency updates, and micro-updates.
-
-Jules does not own architecture direction, release coordination, production
-stabilization ownership, repository AI governance, or lead implementation
-decisions.
-
-## Agent Boundary Snapshot
-
-- Claude Code: lead developer and primary implementation owner.
-- OpenAI Codex: documentation, releases, production stabilization, repo
-   hygiene, and config standardization.
-- GitHub Copilot: general development support.
-- Google Jules: automated maintenance for small fixes, dependency updates, and
-   micro-updates.
+When an agent's task crosses role boundaries, hand off instead of expanding the
+role. Claude resolves implementation questions. Codex resolves release,
+documentation, stabilization, and configuration questions. Brad resolves final
+shipping decisions.
 
 ## Mission
 
@@ -98,6 +85,10 @@ other PHCDevworks projects, but its mission is product-focused:
 6. Preserve backward compatibility for existing installs whenever reasonably
    possible.
 7. Optimize for stability, maintainability, builder UX, and product growth.
+8. Align with PHCDevworks and Spectre documentation, release, naming, and
+   quality standards without treating this plugin as a core Spectre ecosystem
+   package.
+9. Do not use weapons language or refer to Spectre as an "8-layer" system.
 
 ## Hard Boundaries
 

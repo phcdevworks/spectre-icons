@@ -1,9 +1,34 @@
 {
   "permissions": {
+    "allow": [
+      "Bash(composer test*)",
+      "Bash(composer lint*)",
+      "Bash(composer validate*)",
+      "Bash(npm run check*)",
+      "Bash(npm run test*)",
+      "Bash(vendor/bin/phpunit*)",
+      "Bash(vendor/bin/phpcs*)",
+      "Bash(bin/lint-php.sh*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(rg*)",
+      "Bash(find*)",
+      "Bash(ls*)",
+      "Bash(sed*)",
+      "Bash(cat*)",
+      "Bash(wc*)"
+    ],
     "deny": [
       "Bash(git commit*)",
       "Bash(git push*)",
-      "Bash(git tag*)"
+      "Bash(git tag*)",
+      "Bash(git merge*)",
+      "Bash(git reset*)",
+      "Bash(git checkout*)",
+      "Bash(git clean*)",
+      "Bash(rm -rf*)"
     ]
   }
 }
