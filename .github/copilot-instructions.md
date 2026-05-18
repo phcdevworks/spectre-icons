@@ -1,93 +1,61 @@
 # GitHub Copilot Instructions - Spectre Icons
 
 `AGENTS.md` is the central AI coordination document for this repository. This
-file provides Copilot-specific support guidance only.
+file defines Copilot support behavior only.
+
+## First Read Order
+
+Before making suggestions or edits, read:
+
+1. `AGENTS.md`
+2. `CLAUDE.md`
+3. `CODEX.md`
+4. `package.json`
+5. this file
 
 ## Role
 
-GitHub Copilot is the general development support assistant for this repository.
-Copilot improves developer productivity inside the IDE with inline suggestions,
-small code edits, test hints, refactor ideas, TypeScript support, and API usage
-hints.
+GitHub Copilot is the general development support assistant. Copilot supports
+inline suggestions, small code changes, test hints, TypeScript help, API usage
+hints, and focused refactor ideas.
 
-Copilot is support-only and does not own:
+Copilot is support-only and does not own architecture, implementation
+leadership, release decisions, production stabilization ownership,
+repository-wide governance, or automated maintenance ownership.
 
-- lead implementation decisions
-- architecture direction
-- release coordination
-- production stabilization ownership
-- repository-wide AI governance
-- automated maintenance workflows
-- git commits, pushes, tags, or release decisions
+## Team Boundaries
 
-## Agent Boundaries
+- Bradley Potts: human owner and final release authority.
+- Claude Code: lead implementation and architecture owner.
+- OpenAI Codex: documentation, release-readiness, stabilization, repo hygiene,
+  changelog/release-note, and configuration-standardization owner.
+- GitHub Copilot: development support assistant.
+- Google Jules: small automated maintenance and dependency micro-updates.
 
-- Claude Code is the lead developer and primary implementation owner.
-- OpenAI Codex owns documentation, releases, production stabilization, repo
-  hygiene, changelog/release-note support, and config standardization.
-- GitHub Copilot provides general development support.
-- Google Jules handles automated maintenance for small fixes, dependency
-  updates, and micro-updates.
+When instructions conflict, follow: Bradley -> `AGENTS.md` -> `CLAUDE.md` ->
+`CODEX.md` -> this file.
 
-When guidance appears to conflict, follow this order:
+## Repository Guardrails
 
-1. direct human instruction from Bradley Potts
-2. `AGENTS.md`
-3. `CLAUDE.md`
-4. `CODEX.md`
-5. this file
+- Preserve locked identifiers: `spectre-lucide`/`spectre-lucide-` and
+  `spectre-fontawesome`/`spectre-fa-`.
+- Do not edit bundled SVG source assets under `assets/iconpacks/`.
+- Keep builder-agnostic logic in `includes/core/`.
+- Keep Elementor-specific logic in `includes/elementor/`.
+- Prefer manifest-driven registration over hardcoded mappings.
+- Keep changes small, production-safe, and backward-compatible.
 
-## Repository Coding Conventions
-
-- Preserve serialization-anchored slugs and class prefixes:
-  - spectre-lucide / spectre-lucide-
-  - spectre-fontawesome / spectre-fa-
-- Do not edit bundled SVG source assets under assets/iconpacks/.
-- Keep builder-agnostic logic in includes/core/.
-- Keep Elementor-specific logic in includes/elementor/.
-- Prefer manifest-driven registration over hardcoded library mappings.
-- Preserve backward compatibility for existing installs unless an explicit,
-  documented migration is requested.
-
-## PHP And WordPress Standards
+## Coding And Test Expectations
 
 - Follow WordPress sanitization, escaping, nonce, and capability-check patterns.
-- Keep render paths defensive and preserve SVG sanitizer usage.
-- Use small, targeted patches instead of broad rewrites.
-
-## TypeScript And E2E Standards
-
-- Prefer explicit typing; avoid introducing unnecessary any.
-- Reuse helpers in tests/e2e/support/ before adding duplicate logic.
-- Prefer deterministic waits (expect, waitForURL, waitForResponse) instead of
-  waitForTimeout.
-- Keep Playwright changes focused on user-visible icon flows.
-
-## Validation Expectations
-
-Pick the narrowest checks that cover the change:
-
-- PHP lint and standards: composer lint or bin/lint-php.sh
-- PHP behavior and registry/sanitizer/settings logic: composer test
-- Elementor integration changes: npm run test:e2e:elementor
-- Activation and settings behavior: npm run test:e2e:smoke
-
-CI currently validates:
-
-- composer validate --no-check-lock
-- composer test
-- composer lint
+- Reuse existing test helpers in `tests/e2e/support/`.
+- Prefer deterministic Playwright waits (`expect`, `waitForURL`,
+  `waitForResponse`) over timeout-based waits.
+- Run the narrowest relevant checks, or `npm run check` when broad validation
+  is needed.
 
 ## Documentation Expectations
 
-When behavior, setup, compatibility, or release flow changes, keep related docs
-in sync as needed:
-
-- README.md
-- readme.txt
-- CHANGELOG.md
-- CONTRIBUTING.md
-- AGENTS.md, CLAUDE.md, CODEX.md
-
-Do not create release notes, version bumps, or coordination-policy changes as a
-Copilot-owned decision. Suggest them for Claude Code or Codex review.
+When behavior, setup, compatibility, or validation flow changes, update related
+docs (`README.md`, `readme.txt`, `CHANGELOG.md`, and `CONTRIBUTING.md`) and
+defer release-readiness sign-off to Codex.
