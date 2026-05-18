@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "en-US"
+early_access: false
+reviews:
+  profile: "assertive"
+  request_changes_workflow: false
+  high_level_summary: true
+  high_level_summary_placeholder: "@coderabbitai summary"
+  auto_title_placeholder: "@coderabbitai"
+  review_status: true
+  commit_status: true
+  collapse_walkthrough: false
+  changed_files_summary: true
+  sequence_diagrams: true
+  assess_linked_issues: true
+  related_issues: true
+  related_prs: true
+  suggested_labels: true
+  auto_apply_labels: false
+  suggested_reviewers: false
+  poem: false
+  abort_on_close: true
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    drafts: false
+  finishing_touches:
+    docstrings:
+      enabled: true
+  tools:
+    phpstan:
+      enabled: true
+      level: default
+    markdownlint:
+      enabled: true
+    gitleaks:
+      enabled: true
+    github-checks:
+      enabled: true
+      timeout_ms: 90000
+    yamllint:
+      enabled: true
+    languagetool:
+      enabled: true
+      level: default
+    actionlint:
+      enabled: true
+    semgrep:
+      enabled: true
+  path_instructions:
+    - path: "**/*.php"
+      instructions: "Apply WordPress Coding Standards. Verify: all user-facing strings use __() or esc_html__() for i18n; user input is sanitized (sanitize_text_field, absint, etc.); all output is escaped with esc_html(), esc_attr(), or esc_url(); nonce verification before processing any form or AJAX submission; capability checks (current_user_can()) before privilege operations; all database queries use $wpdb->prepare(). Flag direct SQL without prepare() and any deprecated WordPress functions."
+    - path: "includes/**"
+      instructions: "Core plugin logic. Verify hooks use correct priority and argument counts, plugin data uses the appropriate WordPress APIs (options, post meta, user meta), and deactivation/uninstall hooks properly clean up plugin data."
+    - path: "assets/**"
+      instructions: "Icon assets and compiled frontend code. Verify SVG files are sanitized (no embedded scripts or event handlers), compiled JS is properly enqueued via wp_enqueue_script with correct dependencies and version strings."
+    - path: "tests/**"
+      instructions: "Playwright E2E tests. Verify coverage for icon insertion in the block editor, Elementor widget rendering, and cross-browser behavior. Flag hardcoded waitForTimeout() calls — use waitForSelector(), waitForResponse(), or expect().toBeVisible() instead."
+    - path: "composer.json"
+      instructions: "PHP dependencies. Flag overly permissive version constraints and any new packages that could introduce security vulnerabilities or conflict with WordPress core."
+    - path: "package.json"
+      instructions: "Node.js dev tooling. Flag unpinned versions for @playwright/test and @wordpress/env, which directly affect test environment reproducibility."
+    - path: "phpcs.xml.dist"
+      instructions: "PHP CodeSniffer configuration. Verify the WordPress coding standard ruleset is applied and no critical rules are excluded without justification."
+chat:
+  auto_reply: true
+knowledge_base:
+  opt_out: false
+  learnings:
+    scope: auto
+  issues:
+    scope: auto
+  pull_requests:
+    scope: auto

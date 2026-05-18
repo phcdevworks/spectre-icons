@@ -4,15 +4,24 @@
 - [ ] Summary of changes
 - [ ] Rationale/context
 
-## Testing
+## Type of Change
 
-- [ ] `bin/lint-php.sh`
-- [ ] `composer test`
+- [ ] Bug fix / patch
+- [ ] New icon or plugin feature
+- [ ] Breaking change
+- [ ] Documentation / config only
+- [ ] Refactor (no behavior change)
+
+## Checklist
+
+- [ ] `bin/lint-php.sh` passes
+- [ ] `composer test` passes
 - [ ] `vendor/bin/phpcs --standard=WordPress spectre-icons.php includes/`
+      passes
 - [ ] Tested in WordPress environment
 - [ ] Tested in Elementor editor and frontend
-- [ ] Other (describe):
+- [ ] `CHANGELOG.md` updated
 
-## Screenshots (if UI)
+## Screenshots (if applicable)
 
-## Notes for reviewers
+## Notes for Reviewers
