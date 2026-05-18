@@ -10,6 +10,7 @@ override the roles or hard boundaries defined here.
 |---|---|---|
 | Claude Code (`claude-sonnet-4-6`) | Lead developer | `CLAUDE.md`, `.claude/settings.json` |
 | OpenAI Codex | Documentation, releases, stabilization, repo hygiene | `CODEX.md`, `.codex/*` |
+| ChatGPT | Strategy, coordination, prompt design, external review | — |
 | GitHub Copilot | General development assistance | `.github/copilot-instructions.md` |
 | Google Jules | Small automated maintenance | `AGENTS.md` |
 
@@ -28,6 +29,10 @@ OpenAI Codex keeps the repository production-ready. Codex reviews release risk,
 standardizes documentation and configuration, supports changelogs and release
 notes, performs targeted repo-hygiene cleanup, and stabilizes production issues
 without weakening Claude Code's implementation lead.
+
+ChatGPT provides strategy, coordination, prompt design, and external review.
+ChatGPT does not own implementation work, release decisions, or commit authority.
+It informs direction; Claude Code and Brad execute.
 
 GitHub Copilot is support-only. Copilot may suggest code, tests, TypeScript
 changes, APIs, and small refactors, but it does not own implementation
