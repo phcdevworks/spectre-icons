@@ -7,10 +7,24 @@ Use this checklist before Bradley Potts reviews a release candidate.
 - [ ] `SPECTRE_ICONS_VERSION` in `spectre-icons.php` matches the release version.
 - [ ] Plugin header `Version:` in `spectre-icons.php` matches.
 - [ ] `package.json` `version` matches.
+- [ ] `package-lock.json` root package version matches.
 - [ ] `readme.txt` `Stable tag:` matches.
 - [ ] `CHANGELOG.md` has an entry for the release.
 - [ ] `readme.txt` changelog section includes the release when appropriate.
 - [ ] `CHANGELOG.md` comparison links are current.
+
+## Package Metadata And Contracts
+
+- [ ] `package.json` name, description, license, repository, bugs, homepage, and
+      scripts are accurate.
+- [ ] Public WordPress plugin behavior, hooks, settings, and saved icon class
+      contracts match documentation.
+- [ ] Public exports or generated type declarations are checked if this plugin
+      later gains a build/export surface.
+- [ ] Build output is current if build artifacts are part of the release.
+- [ ] Generated files are not stale and are clearly separated from source files.
+- [ ] Breaking changes are clearly marked, or the release is confirmed
+      backward-compatible.
 
 ## Protected Asset And Slug Check
 
@@ -43,6 +57,7 @@ git diff -- assets/manifests/spectre-lucide.json assets/manifests/spectre-fontaw
 
 ## Validation
 
+- [ ] `npm run check` passes.
 - [ ] `bin/lint-php.sh` passes.
 - [ ] `composer test` passes.
 - [ ] `vendor/bin/phpcs --standard=WordPress spectre-icons.php includes/`
@@ -65,6 +80,8 @@ git diff -- assets/manifests/spectre-lucide.json assets/manifests/spectre-fontaw
 - [ ] `AGENTS.md`, `CLAUDE.md`, `CODEX.md`, and
       `.github/copilot-instructions.md` remain aligned on agent roles and
       repository rules.
+- [ ] `.codex/*` checklists remain current for release, review, documentation,
+      and repo-hygiene workflows.
 
 ## Release Note Template
 
@@ -84,6 +101,9 @@ Status: Ready / Blocked
 - ... because ...
 
 ### Documentation
+- ...
+
+### Release Notes
 - ...
 
 ### Compatibility Notes

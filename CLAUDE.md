@@ -11,16 +11,48 @@
 This file is the authoritative guide for Claude Code operating in this repository.
 Read it before touching any source file.
 
-## Codex release support
+## AI Team
 
-Codex may be looped in as the release-readiness and production-quality agent for
-this repository. Codex operates from `CODEX.md` and `.codex/` checklists while
-Claude Code remains the primary AI developer and this file remains Claude's
-authoritative implementation guide.
+| Role | Agent | Authority |
+|---|---|---|
+| Human owner | Bradley Potts | Final authority for commits, tags, releases, and publishing |
+| Lead developer | Claude Code | Implementation, architecture, bug fixes, tests |
+| Documentation / release / stabilization | OpenAI Codex | Docs, releases, repo hygiene, config cleanup |
+| Development support | GitHub Copilot | In-IDE suggestions and inline support |
+| Maintenance | Google Jules | Small fixes, dependency updates, micro-updates |
 
-Codex focuses on production risk, compatibility, release validation,
-documentation standardization, and targeted refactors that make the plugin safer
-to ship.
+No AI agent creates git commits, pushes, or tags. All commit authority rests
+with Bradley Potts.
+
+When guidance conflicts, follow this priority order:
+
+1. Direct instruction from Bradley Potts
+2. `AGENTS.md`
+3. This file (`CLAUDE.md`)
+4. `CODEX.md` and `.codex/*` checklists
+
+## What Claude Code Owns
+
+- Feature implementation, bug fixes, and refactors
+- Architecture decisions and structural improvements
+- Code quality, PHP standards compliance, and test coverage
+- Build reliability and CI troubleshooting
+- Developer workflow and local tooling improvements
+- Resolving implementation questions escalated from Codex or Jules
+
+## Hand Off To Other Agents
+
+- Codex: documentation systems, release preparation, production stabilization,
+  repo hygiene, changelog/release-note support, and config standardization.
+- Jules: automated maintenance tasks limited to small fixes, dependency updates,
+  and micro-updates.
+- GitHub Copilot: general in-IDE suggestions and inline development support.
+- Bradley Potts: git commits, pushes, tags, WordPress.org publishing, and final
+  release decisions.
+
+Claude Code keeps implementation leadership. Hand changes off to Codex for
+release-readiness review before Brad commits; see `CODEX.md` and
+`.codex/release-readiness.md`.
 
 ## Commit Policy
 
@@ -184,17 +216,21 @@ Environment variables for e2e tests:
 
 ---
 
-## Release checklist
+## Release preparation
 
-1. Update `SPECTRE_ICONS_VERSION` constant in `spectre-icons.php`
-2. Update `Version:` in the plugin header in `spectre-icons.php`
-3. Update `Stable tag:` in `readme.txt`
-4. Update `package.json` `"version"` field
-5. Add release entry to `CHANGELOG.md` (follow Keep a Changelog format)
-6. Update comparison links at the bottom of `CHANGELOG.md`
-7. Update `readme.txt` changelog section
-8. Run `composer test` and `bin/lint-php.sh` — both must pass
-9. Commit and have Brad Potts review before pushing or publishing
+Update these files consistently for each release:
+
+1. `SPECTRE_ICONS_VERSION` constant in `spectre-icons.php`
+2. `Version:` plugin header in `spectre-icons.php`
+3. `Stable tag:` in `readme.txt`
+4. `"version"` field in `package.json`
+5. Release entry in `CHANGELOG.md` (Keep a Changelog format)
+6. Comparison links at the bottom of `CHANGELOG.md`
+7. `readme.txt` changelog section
+
+Run `composer test` and `bin/lint-php.sh` — both must pass. Then hand off to
+Codex for release-readiness review before Brad commits. See
+`.codex/release-readiness.md` for the full pre-release checklist.
 
 ---
 
@@ -225,7 +261,10 @@ Read `MEMORY.md` in that directory for ongoing project context across sessions.
 
 ## Constraints summary
 
-- Do not edit SVG files in `assets/icons/` or the icon data in the manifest JSON
+- Do not edit SVG source files under `assets/iconpacks/` without explicit
+  approval
+- Do not rewrite bundled manifest SVG payloads without explicit approval;
+  metadata corrections are allowed when they preserve locked slugs and prefixes
 - Do not rename or delete manifest files without a migration plan
 - Do not change the serialization-anchored slugs or class prefixes
 - Do not push to remote or publish releases without Brad Potts reviewing first

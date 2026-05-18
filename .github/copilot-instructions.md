@@ -1,5 +1,8 @@
 # GitHub Copilot Instructions - Spectre Icons
 
+`AGENTS.md` is the central AI coordination document for this repository. This
+file provides Copilot-specific support guidance only.
+
 ## Role
 
 GitHub Copilot is the general development support assistant for this repository.
@@ -15,12 +18,13 @@ Copilot is support-only and does not own:
 - production stabilization ownership
 - repository-wide AI governance
 - automated maintenance workflows
+- git commits, pushes, tags, or release decisions
 
 ## Agent Boundaries
 
 - Claude Code is the lead developer and primary implementation owner.
 - OpenAI Codex owns documentation, releases, production stabilization, repo
-  hygiene, and config standardization.
+  hygiene, changelog/release-note support, and config standardization.
 - GitHub Copilot provides general development support.
 - Google Jules handles automated maintenance for small fixes, dependency
   updates, and micro-updates.
@@ -28,9 +32,9 @@ Copilot is support-only and does not own:
 When guidance appears to conflict, follow this order:
 
 1. direct human instruction from Bradley Potts
-2. AGENTS.md
-3. CLAUDE.md
-4. CODEX.md
+2. `AGENTS.md`
+3. `CLAUDE.md`
+4. `CODEX.md`
 5. this file
 
 ## Repository Coding Conventions
@@ -84,3 +88,6 @@ in sync as needed:
 - CHANGELOG.md
 - CONTRIBUTING.md
 - AGENTS.md, CLAUDE.md, CODEX.md
+
+Do not create release notes, version bumps, or coordination-policy changes as a
+Copilot-owned decision. Suggest them for Claude Code or Codex review.
