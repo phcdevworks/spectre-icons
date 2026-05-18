@@ -23,6 +23,8 @@ useful.
 - `AGENTS.md`: repository-wide AI agent rules and hard boundaries.
 - `CLAUDE.md`: authoritative guide for Claude Code implementation work.
 - `CODEX.md`: Codex release-readiness, review, and documentation role.
+- `.github/copilot-instructions.md`: GitHub Copilot support-role and
+  suggestion-boundary guidance.
 - `.codex/*`: Codex checklists and templates.
 
 ## When To Update Docs
@@ -63,6 +65,7 @@ When agent roles change, update all affected files together:
 - `AGENTS.md`
 - `CLAUDE.md`
 - `CODEX.md`
+- `.github/copilot-instructions.md`
 - relevant `.codex/*` checklists
 
 Claude Code remains primary unless Bradley Potts explicitly changes that rule.
