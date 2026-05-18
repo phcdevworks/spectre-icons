@@ -62,7 +62,8 @@ git diff -- assets/manifests/spectre-lucide.json assets/manifests/spectre-fontaw
 - [ ] `readme.txt` is current for WordPress.org-facing behavior.
 - [ ] `CHANGELOG.md` summarizes user-visible changes and compatibility notes.
 - [ ] `CONTRIBUTING.md` remains accurate for setup and validation.
-- [ ] `AGENTS.md`, `CLAUDE.md`, and `CODEX.md` remain aligned on agent roles and
+- [ ] `AGENTS.md`, `CLAUDE.md`, `CODEX.md`, and
+      `.github/copilot-instructions.md` remain aligned on agent roles and
       repository rules.
 
 ## Release Note Template

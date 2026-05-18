@@ -42,7 +42,7 @@ function spectre_icons_get_library_definitions() {
 	// Slug => [ manifest_filename, class_prefix ].
 	// LOCKED — change only when migrating all serialized icon data in the database.
 	$anchored = array(
-		'spectre-lucide'      => array( 'spectre-lucide.json',      'spectre-lucide-' ),
+		'spectre-lucide'      => array( 'spectre-lucide.json', 'spectre-lucide-' ),
 		'spectre-fontawesome' => array( 'spectre-fontawesome.json', 'spectre-fa-' ),
 	);
 
@@ -164,20 +164,25 @@ function spectre_icons_read_manifest_header( $path ) {
 	$fh = fopen( $path, 'rb' );
 
 	if ( ! $fh ) {
-		return array( 'has_icons' => false, 'meta' => array() );
+		return array(
+			'has_icons' => false,
+			'meta'      => array(),
+		);
 	}
 
-	$buffer    = '';
-	$has_icons = false;
-	$max_bytes = 8192;
+	$buffer     = '';
+	$has_icons  = false;
+	$max_bytes  = 8192;
+	$buffer_len = 0;
 
-	while ( ! feof( $fh ) && strlen( $buffer ) < $max_bytes ) {
+	while ( ! feof( $fh ) && $buffer_len < $max_bytes ) {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
 		$chunk = fread( $fh, 512 );
 		if ( false === $chunk ) {
 			break;
 		}
-		$buffer .= $chunk;
+		$buffer    .= $chunk;
+		$buffer_len = strlen( $buffer );
 		if ( false !== strpos( $buffer, '"icons"' ) ) {
 			$has_icons = true;
 			break;
@@ -188,14 +193,20 @@ function spectre_icons_read_manifest_header( $path ) {
 	fclose( $fh );
 
 	if ( ! $has_icons ) {
-		return array( 'has_icons' => false, 'meta' => array() );
+		return array(
+			'has_icons' => false,
+			'meta'      => array(),
+		);
 	}
 
 	// Truncate at the "icons" key so the remainder forms valid JSON.
 	$truncated = preg_replace( '/,?\s*"icons"\s*:[\s\S]*$/u', "\n}", $buffer );
 
 	if ( null === $truncated || '' === trim( $truncated ) ) {
-		return array( 'has_icons' => true, 'meta' => array() );
+		return array(
+			'has_icons' => true,
+			'meta'      => array(),
+		);
 	}
 
 	$meta = json_decode( $truncated, true );

@@ -22,6 +22,41 @@ Codex should keep changes release-safe, identify blockers before Bradley Potts
 reviews, and preserve the same product scope, locked icon assets, and
 serialization-anchored slugs defined here.
 
+## GitHub Copilot Support Assistant
+
+GitHub Copilot is the general development support assistant for this repository.
+Copilot focuses on in-IDE productivity support such as:
+
+- inline code completion
+- small code suggestions
+- test suggestions
+- TypeScript assistance
+- API usage hints
+- refactor suggestions
+- pattern-aware implementation help
+
+Copilot does not own implementation leadership, architecture direction, release
+coordination, production stabilization ownership, repository AI governance, or
+automated maintenance workflows.
+
+## Google Jules Maintenance Agent
+
+Google Jules may be used for automated maintenance tasks such as small fixes,
+dependency updates, and micro-updates.
+
+Jules does not own architecture direction, release coordination, production
+stabilization ownership, repository AI governance, or lead implementation
+decisions.
+
+## Agent Boundary Snapshot
+
+- Claude Code: lead developer and primary implementation owner.
+- OpenAI Codex: documentation, releases, production stabilization, repo
+   hygiene, and config standardization.
+- GitHub Copilot: general development support.
+- Google Jules: automated maintenance for small fixes, dependency updates, and
+   micro-updates.
+
 ## Mission
 
 Expand native icon library support for WordPress builders through a clean,
