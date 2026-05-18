@@ -130,7 +130,20 @@ function spectre_icons_get_library_definitions() {
 		);
 	}
 
-	$definitions = $found;
+	// Anchored libraries first (in declaration order), then any non-anchored ones.
+	$ordered = array();
+	foreach ( array_keys( $anchored ) as $slug ) {
+		if ( isset( $found[ $slug ] ) ) {
+			$ordered[ $slug ] = $found[ $slug ];
+		}
+	}
+	foreach ( $found as $slug => $def ) {
+		if ( ! isset( $ordered[ $slug ] ) ) {
+			$ordered[ $slug ] = $def;
+		}
+	}
+
+	$definitions = $ordered;
 	return $definitions;
 }
 
