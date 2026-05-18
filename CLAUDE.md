@@ -15,9 +15,10 @@ Read it before touching any source file.
 
 | Role | Agent | Authority |
 |---|---|---|
-| Human owner | Bradley Potts | Final authority for commits, tags, releases, and publishing |
+| Human owner | Bradley Potts | Final authority — commits, tags, releases, publishing |
+| Strategy / external review | ChatGPT | Strategy, coordination, prompt design, external review |
 | Lead developer | Claude Code | Implementation, architecture, bug fixes, tests |
-| Documentation / release / stabilization | OpenAI Codex | Docs, releases, repo hygiene, config cleanup |
+| Release / production readiness | OpenAI Codex | Docs, releases, production readiness, repo hygiene, config |
 | Development support | GitHub Copilot | In-IDE suggestions and inline support |
 | Maintenance | Google Jules | Small fixes, dependency updates, micro-updates |
 
@@ -42,6 +43,8 @@ When guidance conflicts, follow this priority order:
 
 ## Hand Off To Other Agents
 
+- ChatGPT: strategy questions, coordination decisions, prompt design, and
+  external review when broad direction or cross-project context is needed.
 - Codex: documentation systems, release preparation, production stabilization,
   repo hygiene, changelog/release-note support, and config standardization.
 - Jules: automated maintenance tasks limited to small fixes, dependency updates,
@@ -191,6 +194,9 @@ The registry handles three manifest shapes:
 ## Development commands
 
 ```bash
+# Full validation — mirrors CI exactly
+npm run check       # composer validate + composer test + composer lint
+
 # PHP lint
 bin/lint-php.sh
 composer lint
@@ -228,8 +234,8 @@ Update these files consistently for each release:
 6. Comparison links at the bottom of `CHANGELOG.md`
 7. `readme.txt` changelog section
 
-Run `composer test` and `bin/lint-php.sh` — both must pass. Then hand off to
-Codex for release-readiness review before Brad commits. See
+Run `npm run check` to validate against the full CI suite before handing off.
+Then pass to Codex for release-readiness review before Brad commits. See
 `.codex/release-readiness.md` for the full pre-release checklist.
 
 ---
