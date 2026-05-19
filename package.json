@@ -1,8 +1,8 @@
 {
   "name": "spectre-icons",
   "version": "1.2.1",
-  "description": "Spectre Icons brings modern SVG icon libraries like Lucide and Font Awesome into WordPress builders.",
-  "main": "index.js",
+  "private": true,
+  "description": "WordPress plugin that adds Lucide and Font Awesome Free to Elementor's icon picker as inline SVG, with per-library enable/disable controls.",
   "directories": {
     "test": "tests"
   },
@@ -23,10 +23,21 @@
     "type": "git",
     "url": "git+https://github.com/phcdevworks/spectre-icons.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "wordpress",
+    "elementor",
+    "icons",
+    "svg",
+    "lucide",
+    "font-awesome",
+    "icon-picker",
+    "plugin"
+  ],
+  "author": "PHCDevworks",
   "license": "GPL-2.0-or-later",
-  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
   "bugs": {
     "url": "https://github.com/phcdevworks/spectre-icons/issues"
   },

@@ -40,7 +40,7 @@ Clone the repository and install PHP tooling:
 ```bash
 git clone https://github.com/phcdevworks/spectre-icons.git
 cd spectre-icons
-composer update
+composer install
 ```
 
 Run the baseline checks:
