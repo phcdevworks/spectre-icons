@@ -68,6 +68,8 @@ If these files disagree, follow this order of authority:
   fixes, tests, and build reliability.
 - OpenAI Codex: owns documentation, releases, production stabilization, repo
   hygiene, changelog/release-note support, and config standardization.
+- ChatGPT: provides strategy, coordination, prompt design, and external review.
+  Does not own implementation work, release decisions, or commit authority.
 - GitHub Copilot: provides general development assistance and suggestions only.
 - Google Jules: handles automated maintenance for small fixes, dependency
   updates, and micro-updates only.
