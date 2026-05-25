@@ -378,3 +378,39 @@ if ( ! function_exists( 'wp_json_encode' ) ) {
 		return json_encode( $value, $flags, $depth );
 	}
 }
+
+if ( ! defined( 'FS_CHMOD_FILE' ) ) {
+	define( 'FS_CHMOD_FILE', 0644 );
+}
+
+if ( ! function_exists( 'wp_mkdir_p' ) ) {
+	function wp_mkdir_p( $target ) {
+		return is_dir( $target ) || mkdir( $target, 0755, true );
+	}
+}
+
+if ( ! class_exists( 'WP_Filesystem_Base' ) ) {
+	class WP_Filesystem_Base {
+		public function get_contents( $file ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			return file_get_contents( $file );
+		}
+		public function put_contents( $file, $contents, $mode = false ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+			return false !== file_put_contents( $file, $contents );
+		}
+		public function exists( $file ) {
+			return file_exists( $file );
+		}
+	}
+}
+
+if ( ! function_exists( 'WP_Filesystem' ) ) {
+	// phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid -- stub for WP core function.
+	function WP_Filesystem() {
+		global $wp_filesystem;
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- intentional stub that mirrors WP core behaviour.
+		$wp_filesystem = new WP_Filesystem_Base();
+		return true;
+	}
+}

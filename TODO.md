@@ -127,6 +127,25 @@ library growth.
 
 - [ ] Per-page or per-post library scoping
 
+- [ ] Font Awesome Pro — bring-your-own-license integration
+  - Approach TBD. Three realistic options:
+    1. **FA Kit (CDN)** — user pastes their Kit URL from fontawesome.com into
+       settings; the plugin injects the kit script. Simplest, no file hosting,
+       but icons load from FA CDN (not inline SVG). Works out of the box with
+       any Pro plan.
+    2. **Self-hosted manifest upload** — user downloads their FA Pro package,
+       runs a bundled CLI/script to generate a Spectre-format manifest, then
+       uploads it via the existing My Icons upload flow or a dedicated importer.
+       Keeps everything inline SVG and self-hosted. Requires a one-time export
+       step from the user.
+    3. **FA GraphQL API** — user provides their FA Pro API token; the plugin
+       queries FA's API to fetch icon SVGs on demand. Fully automated but
+       requires server-side HTTP requests and token storage.
+  - Decision needed: which approach fits the product and user skill level.
+  - FA Pro icons are licensed — never bundle them; user must supply their own
+    credentials or package. Serialization slug and prefix must be locked before
+    any icon data is saved to the database.
+
 ---
 
 ## Recommended Execution Order
