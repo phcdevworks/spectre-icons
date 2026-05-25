@@ -272,7 +272,7 @@ final class Spectre_Icons_Upload_Page {
 					<?php foreach ( $icons as $slug => $svg ) : ?>
 						<?php
 						/* translators: %s: icon slug */
-						$delete_label = esc_attr( sprintf( __( 'Remove %s', 'spectre-icons' ), $slug ) );
+						$delete_label = sprintf( __( 'Remove %s', 'spectre-icons' ), $slug );
 						?>
 						<div class="spectre-icons-tile" data-slug="<?php echo esc_attr( $slug ); ?>">
 							<div class="spectre-icons-tile__preview">
@@ -286,7 +286,7 @@ final class Spectre_Icons_Upload_Page {
 								type="button"
 								class="spectre-icons-tile__delete"
 								data-slug="<?php echo esc_attr( $slug ); ?>"
-								aria-label="<?php echo $delete_label; ?>">
+								aria-label="<?php echo esc_attr( $delete_label ); ?>">
 								<span class="dashicons dashicons-trash" aria-hidden="true"></span>
 							</button>
 						</div>
