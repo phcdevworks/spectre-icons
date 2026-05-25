@@ -2,7 +2,7 @@
 Contributors: phcdevworks
 Tags: icons, elementor, svg, lucide, font awesome
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 7.0
 Requires PHP: 7.4
 Stable tag: 1.3.0
 License: GPLv2 or later
@@ -42,7 +42,7 @@ Supported widgets: Icon, Icon Box, Icon List, Social Icons.
 
 = Which page builders are supported? =
 
-Elementor 3.x and 4.x. The architecture is built to support additional builders in future releases.
+Elementor 3.x and 4.x, tested through Elementor 4.x. The architecture is built to support additional builders in future releases.
 
 = Can I disable individual icon libraries? =
 
@@ -54,7 +54,7 @@ Yes. Upload SVG files from Settings → My Icons. Uploaded icons are sanitized, 
 
 = What are the system requirements? =
 
-WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x.
+WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x tested through Elementor 4.x.
 
 == Changelog ==
 
@@ -67,6 +67,7 @@ WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x.
 * Hardened custom library manifest handling with WordPress filesystem APIs
 * Escaped upload delete button labels and tightened empty attribute rendering
 * Added Font Awesome Elementor e2e coverage and release/version proposal tooling
+* Updated compatibility metadata for WordPress 7.0 and Elementor 4.x
 
 = 1.2.1 =
 
