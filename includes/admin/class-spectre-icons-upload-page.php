@@ -147,8 +147,8 @@ final class Spectre_Icons_Upload_Page {
 			wp_send_json_error(
 				array(
 					'message' => sprintf(
-						/* translators: %d: icon limit */
-						__( 'You have reached the %d icon limit. Upgrade to pro for unlimited icons.', 'spectre-icons' ),
+						/* translators: %d: maximum number of icons allowed */
+						__( 'You have reached the %d icon limit. Remove an existing icon to upload a new one.', 'spectre-icons' ),
 						Spectre_Icons_User_Library_Manager::get_limit()
 					),
 					'code'    => 'limit_reached',

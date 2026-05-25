@@ -120,7 +120,7 @@
   "intelephense.diagnostics.undefinedProperties": true,
   "intelephense.diagnostics.undefinedTypes": true,
   "intelephense.format.braces": "k&r",
-  "php.validate.executablePath": "/usr/local/bin/php",
+  "php.validate.executablePath": "/usr/bin/php",
   "php.suggest.basic": false,
   // PHP Language Settings
   "[php]": {

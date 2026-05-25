@@ -34,6 +34,25 @@ final class Spectre_Icons_User_Library_Manager {
 	}
 
 	/**
+	 * Return the initialized WP Filesystem instance.
+	 *
+	 * @return \WP_Filesystem_Base|null
+	 */
+	private static function filesystem() {
+		global $wp_filesystem;
+		if ( empty( $wp_filesystem ) ) {
+			$fs_file = ABSPATH . 'wp-admin/includes/file.php';
+			if ( file_exists( $fs_file ) ) {
+				require_once $fs_file;
+			}
+			if ( function_exists( 'WP_Filesystem' ) ) {
+				WP_Filesystem();
+			}
+		}
+		return ( $wp_filesystem instanceof WP_Filesystem_Base ) ? $wp_filesystem : null;
+	}
+
+	/**
 	 * Absolute filesystem path to the plugin's upload directory.
 	 *
 	 * @return string
@@ -83,10 +102,16 @@ final class Spectre_Icons_User_Library_Manager {
 			return false;
 		}
 
+		$fs = self::filesystem();
+
 		$silence = trailingslashit( $dir ) . 'index.php';
-		if ( ! file_exists( $silence ) ) {
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
-			file_put_contents( $silence, "<?php\n// Silence is golden.\n" );
+		if ( $fs && ! $fs->exists( $silence ) ) {
+			$fs->put_contents( $silence, "<?php\n// Silence is golden.\n", FS_CHMOD_FILE );
+		}
+
+		$htaccess = trailingslashit( $dir ) . '.htaccess';
+		if ( $fs && ! $fs->exists( $htaccess ) ) {
+			$fs->put_contents( $htaccess, "Options -Indexes\n", FS_CHMOD_FILE );
 		}
 
 		return true;
@@ -104,8 +129,12 @@ final class Spectre_Icons_User_Library_Manager {
 			return array();
 		}
 
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		$raw = file_get_contents( $path );
+		$fs = self::filesystem();
+		if ( ! $fs ) {
+			return array();
+		}
+
+		$raw = $fs->get_contents( $path );
 
 		if ( false === $raw || '' === trim( $raw ) ) {
 			return array();
@@ -191,8 +220,8 @@ final class Spectre_Icons_User_Library_Manager {
 			return new WP_Error(
 				'spectre_icons_limit_reached',
 				sprintf(
-					/* translators: %d: icon limit */
-					__( 'You have reached the %d icon limit. Upgrade to pro for unlimited icons.', 'spectre-icons' ),
+					/* translators: %d: maximum number of icons allowed */
+					__( 'You have reached the %d icon limit. Remove an existing icon to upload a new one.', 'spectre-icons' ),
 					self::get_limit()
 				)
 			);
@@ -256,12 +285,17 @@ final class Spectre_Icons_User_Library_Manager {
 			);
 		}
 
-		$path = self::get_manifest_path();
+		$fs = self::filesystem();
+		if ( ! $fs ) {
+			return new WP_Error(
+				'spectre_icons_fs_error',
+				__( 'WordPress filesystem is unavailable.', 'spectre-icons' )
+			);
+		}
 
-		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
-		$written = file_put_contents( $path, $json, LOCK_EX );
+		$written = $fs->put_contents( self::get_manifest_path(), $json, FS_CHMOD_FILE );
 
-		if ( false === $written ) {
+		if ( ! $written ) {
 			return new WP_Error(
 				'spectre_icons_write_error',
 				__( 'Failed to write icon manifest.', 'spectre-icons' )
