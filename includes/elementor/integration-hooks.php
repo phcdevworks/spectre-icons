@@ -181,16 +181,20 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 	foreach ( $definitions as $slug => $def ) {
 		$slug = sanitize_key( $slug );
 
-		if ( '' === $slug || empty( $def['manifest_file'] ) ) {
-			continue;
-		}
-		$manifest_file = sanitize_file_name( (string) $def['manifest_file'] );
-		if ( '' === $manifest_file ) {
+		if ( '' === $slug ) {
 			continue;
 		}
 
-		$manifest_path = spectre_icons_resolve_manifest_path( $manifest_file );
-		if ( ! $manifest_path ) {
+		// Support manifest_url (absolute URL) for external manifests, e.g. user-uploaded icons.
+		if ( ! empty( $def['manifest_url'] ) ) {
+			$json_url = esc_url_raw( (string) $def['manifest_url'] );
+		} elseif ( ! empty( $def['manifest_file'] ) ) {
+			$manifest_file = sanitize_file_name( (string) $def['manifest_file'] );
+			if ( '' === $manifest_file || ! spectre_icons_resolve_manifest_path( $manifest_file ) ) {
+				continue;
+			}
+			$json_url = SPECTRE_ICONS_URL . 'assets/manifests/' . $manifest_file;
+		} else {
 			continue;
 		}
 
@@ -208,7 +212,7 @@ function spectre_icons_elementor_enqueue_icon_scripts() {
 		}
 
 		$libraries[ $slug ] = array(
-			'json'     => SPECTRE_ICONS_URL . 'assets/manifests/' . $manifest_file,
+			'json'     => $json_url,
 			'label'    => $label,
 			'prefix'   => $prefix,
 			'selector' => $prefix ? '[class*="' . $prefix . '"]' : '',
@@ -241,6 +245,11 @@ function spectre_icons_elementor_manifests_available() {
 	}
 
 	foreach ( spectre_icons_get_library_definitions() as $def ) {
+		// Support manifest_path for external manifests (e.g. user-uploaded icons).
+		if ( ! empty( $def['manifest_path'] ) && is_file( (string) $def['manifest_path'] ) ) {
+			$cache = true;
+			return $cache;
+		}
 		$file = isset( $def['manifest_file'] ) ? (string) $def['manifest_file'] : '';
 		if ( '' !== $file && null !== spectre_icons_resolve_manifest_path( $file ) ) {
 			$cache = true;

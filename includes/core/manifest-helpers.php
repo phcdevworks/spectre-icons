@@ -143,6 +143,12 @@ function spectre_icons_get_library_definitions() {
 		}
 	}
 
+	/**
+	 * Allow additional library definitions to be injected (e.g. user-uploaded icons).
+	 * Applied before caching so the full result is consistent within a request.
+	 */
+	$ordered = apply_filters( 'spectre_icons_library_definitions', $ordered );
+
 	$definitions = $ordered;
 	return $definitions;
 }

@@ -123,11 +123,18 @@ function spectre_icons_elementor_register_manifest_libraries( $libraries ) {
 		if ( '' === $slug ) {
 			continue;
 		}
-		$manifest_file = isset( $def['manifest_file'] ) ? (string) $def['manifest_file'] : '';
-		$real          = spectre_icons_resolve_manifest_path( $manifest_file );
-
-		if ( ! $real ) {
-			continue;
+		// Support manifest_path (absolute path) for external manifests, e.g. user-uploaded icons.
+		if ( ! empty( $def['manifest_path'] ) ) {
+			$real = wp_normalize_path( (string) $def['manifest_path'] );
+			if ( ! is_file( $real ) ) {
+				continue;
+			}
+		} else {
+			$manifest_file = isset( $def['manifest_file'] ) ? (string) $def['manifest_file'] : '';
+			$real          = spectre_icons_resolve_manifest_path( $manifest_file );
+			if ( ! $real ) {
+				continue;
+			}
 		}
 
 		$label = isset( $def['label'] ) ? (string) $def['label'] : $slug;
