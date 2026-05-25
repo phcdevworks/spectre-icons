@@ -92,9 +92,11 @@ library growth.
   - Record anything in `includes/elementor/` that a future builder adapter
   must account for.
 
-- [ ] Confirm adapter boundary is clean enough to template a second builder
-  - Review `includes/core/` vs `includes/elementor/` split and confirm no
-  Elementor assumptions leak into core.
+- [x] Confirm adapter boundary is clean enough to template a second builder
+  - `includes/core/` contains exactly three builder-agnostic files
+  (manifest-registry, icon-renderer, manifest-helpers) with no page-builder
+  imports. The Elementor adapter is fully contained in `includes/elementor/`.
+  The boundary is clean.
 
 ### P1: Additional Builder Support
 
