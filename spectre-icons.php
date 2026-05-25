@@ -48,6 +48,10 @@ $spectre_icons_includes = array(
 	'includes/core/class-spectre-icons-manifest-registry.php',
 	'includes/core/class-spectre-icons-icon-renderer.php',
 	'includes/core/manifest-helpers.php',
+	'includes/core/class-spectre-icons-user-library-manager.php',
+
+	// Admin — builder-agnostic.
+	'includes/admin/class-spectre-icons-upload-page.php',
 
 	// Elementor integration — depends on core.
 	'includes/elementor/class-spectre-icons-elementor-settings.php',
@@ -59,3 +63,6 @@ $spectre_icons_includes = array(
 foreach ( $spectre_icons_includes as $spectre_icons_file ) {
 	require_once SPECTRE_ICONS_PATH . $spectre_icons_file;
 }
+
+Spectre_Icons_User_Library_Manager::init();
+Spectre_Icons_Upload_Page::init();
