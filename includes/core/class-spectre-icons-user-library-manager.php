@@ -59,7 +59,7 @@ final class Spectre_Icons_User_Library_Manager {
 	 * @return string
 	 */
 	public static function get_manifest_path() {
-		return trailingslashit( static::get_upload_dir() ) . 'manifest.json';
+		return trailingslashit( self::get_upload_dir() ) . 'manifest.json';
 	}
 
 	/**
@@ -68,7 +68,7 @@ final class Spectre_Icons_User_Library_Manager {
 	 * @return string
 	 */
 	public static function get_manifest_url() {
-		return trailingslashit( static::get_upload_url() ) . 'manifest.json';
+		return trailingslashit( self::get_upload_url() ) . 'manifest.json';
 	}
 
 	/**
@@ -77,7 +77,7 @@ final class Spectre_Icons_User_Library_Manager {
 	 * @return bool True on success, false if the directory could not be created.
 	 */
 	public static function ensure_dirs() {
-		$dir = static::get_upload_dir();
+		$dir = self::get_upload_dir();
 
 		if ( ! wp_mkdir_p( $dir ) ) {
 			return false;
@@ -98,7 +98,7 @@ final class Spectre_Icons_User_Library_Manager {
 	 * @return array<string,string> Slug => sanitized SVG string.
 	 */
 	public static function get_icons() {
-		$path = static::get_manifest_path();
+		$path = self::get_manifest_path();
 
 		if ( ! is_file( $path ) ) {
 			return array();
@@ -126,7 +126,7 @@ final class Spectre_Icons_User_Library_Manager {
 	 * @return int
 	 */
 	public static function get_icon_count() {
-		return count( static::get_icons() );
+		return count( self::get_icons() );
 	}
 
 	/**
@@ -147,7 +147,7 @@ final class Spectre_Icons_User_Library_Manager {
 	 * @return bool
 	 */
 	public static function is_at_limit() {
-		return static::get_icon_count() >= static::get_limit();
+		return self::get_icon_count() >= self::get_limit();
 	}
 
 	/**
@@ -185,23 +185,23 @@ final class Spectre_Icons_User_Library_Manager {
 	 * @return string|\WP_Error Slug on success, WP_Error on failure.
 	 */
 	public static function add_icon( $sanitized_svg, $original_filename ) {
-		$icons = static::get_icons();
+		$icons = self::get_icons();
 
-		if ( static::is_at_limit() ) {
+		if ( self::is_at_limit() ) {
 			return new WP_Error(
 				'spectre_icons_limit_reached',
 				sprintf(
 					/* translators: %d: icon limit */
 					__( 'You have reached the %d icon limit. Upgrade to pro for unlimited icons.', 'spectre-icons' ),
-					static::get_limit()
+					self::get_limit()
 				)
 			);
 		}
 
-		$slug          = static::derive_slug( $original_filename, $icons );
+		$slug           = self::derive_slug( $original_filename, $icons );
 		$icons[ $slug ] = $sanitized_svg;
 
-		$result = static::write_manifest( $icons );
+		$result = self::write_manifest( $icons );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -218,7 +218,7 @@ final class Spectre_Icons_User_Library_Manager {
 	 */
 	public static function delete_icon( $slug ) {
 		$slug  = sanitize_key( $slug );
-		$icons = static::get_icons();
+		$icons = self::get_icons();
 
 		if ( ! isset( $icons[ $slug ] ) ) {
 			return new WP_Error(
@@ -229,7 +229,7 @@ final class Spectre_Icons_User_Library_Manager {
 
 		unset( $icons[ $slug ] );
 
-		return static::write_manifest( $icons );
+		return self::write_manifest( $icons );
 	}
 
 	/**
@@ -239,7 +239,7 @@ final class Spectre_Icons_User_Library_Manager {
 	 * @return true|\WP_Error
 	 */
 	public static function write_manifest( array $icons ) {
-		if ( ! static::ensure_dirs() ) {
+		if ( ! self::ensure_dirs() ) {
 			return new WP_Error(
 				'spectre_icons_dir_error',
 				__( 'Could not create upload directory.', 'spectre-icons' )
@@ -256,7 +256,7 @@ final class Spectre_Icons_User_Library_Manager {
 			);
 		}
 
-		$path = static::get_manifest_path();
+		$path = self::get_manifest_path();
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 		$written = file_put_contents( $path, $json, LOCK_EX );
@@ -281,8 +281,8 @@ final class Spectre_Icons_User_Library_Manager {
 			'label'         => __( 'My Icons', 'spectre-icons' ),
 			'label_icon'    => 'eicon-upload',
 			'manifest_file' => null,
-			'manifest_path' => static::get_manifest_path(),
-			'manifest_url'  => static::get_manifest_url(),
+			'manifest_path' => self::get_manifest_path(),
+			'manifest_url'  => self::get_manifest_url(),
 			'class_prefix'  => 'spectre-user-',
 			'style'         => '',
 		);
@@ -298,15 +298,15 @@ final class Spectre_Icons_User_Library_Manager {
 	 * @return array
 	 */
 	public static function inject_definition( $definitions ) {
-		if ( ! is_file( static::get_manifest_path() ) ) {
+		if ( ! is_file( self::get_manifest_path() ) ) {
 			return $definitions;
 		}
 
-		if ( empty( static::get_icons() ) ) {
+		if ( empty( self::get_icons() ) ) {
 			return $definitions;
 		}
 
-		$definitions['spectre-user'] = static::library_definition();
+		$definitions['spectre-user'] = self::library_definition();
 
 		return $definitions;
 	}
