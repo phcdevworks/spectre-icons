@@ -38,6 +38,8 @@ Release Title: My Icons Uploads, Safer Manifests, and Release Tooling
   file operations.
 - Updated package tooling and dependency locks for the current validation and
   release workflow.
+- Updated compatibility metadata for WordPress `7.0` and documented Elementor
+  `4.x` support for the `1.3.0` release.
 
 ### Fixed
 

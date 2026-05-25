@@ -6,12 +6,18 @@ Use this checklist before Bradley Potts reviews a release candidate.
 
 - [ ] `SPECTRE_ICONS_VERSION` in `spectre-icons.php` matches the release version.
 - [ ] Plugin header `Version:` in `spectre-icons.php` matches.
+- [ ] Plugin header `Tested up to:` in `spectre-icons.php` matches the latest
+      verified WordPress version.
 - [ ] `package.json` `version` matches.
 - [ ] `package-lock.json` root package version matches.
 - [ ] `readme.txt` `Stable tag:` matches.
+- [ ] `readme.txt` `Tested up to:` matches the latest verified WordPress
+      version.
 - [ ] `CHANGELOG.md` has an entry for the release.
 - [ ] `readme.txt` changelog section includes the release when appropriate.
 - [ ] `CHANGELOG.md` comparison links are current.
+- [ ] README and WordPress.org docs state the verified Elementor support range,
+      including Elementor 4.x when tested.
 
 ## Package Metadata And Contracts
 
