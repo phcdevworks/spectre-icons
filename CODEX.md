@@ -39,8 +39,6 @@ IDE assistance, or Google Jules as the small-maintenance automation agent.
 - Keep public behavior and extension points intentional.
 - Keep generated files clearly separated from source files.
 - Keep documentation aligned with actual behavior.
-- Do not use weapons language.
-- Do not refer to Spectre as an "8-layer" system.
 
 ## Operating Order
 
@@ -62,17 +60,9 @@ If these files disagree, follow this order of authority:
 5. `.codex/*` supporting checklists and templates
 6. `.github/copilot-instructions.md`
 
-## AI Team Boundaries
+## Agent Roster
 
-- Claude Code: owns implementation leadership, architecture, feature work, bug
-  fixes, tests, and build reliability.
-- OpenAI Codex: owns documentation, releases, production stabilization, repo
-  hygiene, changelog/release-note support, and config standardization.
-- ChatGPT: provides strategy, coordination, prompt design, and external review.
-  Does not own implementation work, release decisions, or commit authority.
-- GitHub Copilot: provides general development assistance and suggestions only.
-- Google Jules: handles automated maintenance for small fixes, dependency
-  updates, and micro-updates only.
+See `AGENTS.md` for the full agent roster, edit boundaries, and PR requirements.
 
 If a Codex task becomes substantial feature implementation, hand the
 implementation direction back to Claude Code. If a Jules task grows beyond a
@@ -107,15 +97,9 @@ Codex should not:
 
 ## Protected Invariants
 
-These are release-blocking if changed without explicit owner approval:
-
-- `spectre-lucide` slug
-- `spectre-lucide-` class prefix
-- `spectre-lucide.json` manifest filename
-- `spectre-fontawesome` slug
-- `spectre-fa-` class prefix
-- `spectre-fontawesome.json` manifest filename
-- bundled SVG source files under `assets/iconpacks/`
+See `AGENTS.md` -- "Serialization-anchored library slugs" and "Hard Boundaries"
+sections -- for the full list of release-blocking invariants that must not
+change without explicit owner approval.
 
 Manifest corrections, registration logic, builder adapters, rendering behavior,
 admin controls, tests, and documentation may be changed when they improve the

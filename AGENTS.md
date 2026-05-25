@@ -49,6 +49,13 @@ role. Claude resolves implementation questions. Codex resolves release,
 documentation, stabilization, and configuration questions. Brad resolves final
 shipping decisions.
 
+## Agent-Specific Guides
+
+- `CLAUDE.md` - primary development authority and implementation workflow.
+- `CODEX.md` - documentation, release, stabilization, and repo hygiene workflow.
+- `JULES.md` - bounded automated maintenance workflow.
+- `COPILOT.md` and `.github/copilot-instructions.md` - support-assistant workflow.
+
 ## Mission
 
 Expand native icon library support for WordPress builders through a clean,
@@ -94,6 +101,25 @@ other PHCDevworks projects, but its mission is product-focused:
    quality standards without treating this plugin as a core Spectre ecosystem
    package.
 9. Do not use weapons language or refer to Spectre as an "8-layer" system.
+
+## Shared Edit Boundaries
+
+These rules apply to every agent without exception.
+
+| Path | Status | Notes |
+|---|---|---|
+| `spectre-icons.php` | May edit | Plugin bootstrap, version constant, require list |
+| `includes/core/` | May edit | Builder-agnostic implementation |
+| `includes/elementor/` | May edit | Elementor adapter and integration logic |
+| `assets/manifests/*.json` | May edit | Metadata corrections only for bundled libraries; SVG payloads locked |
+| `assets/css/`, `assets/js/` | May edit | Admin and editor UI assets |
+| `tests/` | May edit | PHPUnit and Playwright test coverage |
+| `README.md`, `readme.txt`, `CHANGELOG.md`, other docs | May edit | Keep aligned with actual plugin behavior |
+| `composer.json`, `package.json`, `.github/`, `.codex/` | May edit | Config, workflow, templates, and checklists |
+| `assets/iconpacks/` | Never edit directly | Bundled SVG source assets; locked unless Brad Potts explicitly approves |
+| Serialization-anchored slugs and class prefixes | Never change | Changing silently breaks every icon saved on active installs |
+
+Full validation command: `npm run check`.
 
 ## Hard Boundaries
 
@@ -265,6 +291,25 @@ Prefer:
 - graceful degradation where possible
 
 Do not rely on brittle hacks when a stable integration path exists.
+
+## Pull Request Requirements
+
+Every agent that opens a PR must populate every section of the repo's PR
+template (`.github/pull_request_template.md`):
+
+- **Summary** - linked issue or N/A, what changed, why the change is needed.
+- **Type of Change** - exactly one of: bug fix, new feature, breaking change,
+  documentation only, or refactor.
+- **Package Boundary Check** - confirm scope stays within Spectre Icons, no
+  bundled SVG changes, locked slugs preserved, and Elementor logic contained.
+- **Public API / Behavior Impact** - note any user-visible behavior change or
+  migration requirement.
+- **Validation** - record the command run and its result.
+- **Documentation** - confirm README, readme.txt, CHANGELOG, and CONTRIBUTING
+  are updated where needed.
+- **Release Impact** and **Codex Review** - flag if a release review is needed.
+
+Never submit a PR with an empty body or only the template headings unfilled.
 
 ## Testing and Validation
 
