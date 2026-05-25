@@ -6,6 +6,17 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-05-25
+
+Release Title: Maintenance Metadata Update
+
+### Changed
+
+- Updated plugin, package, and WordPress.org release metadata for the `1.3.1`
+  maintenance release.
+- Preserved existing bundled library slugs, saved icon class prefixes, and icon
+  rendering behavior.
+
 ## [1.3.0] - 2026-05-25
 
 Release Title: My Icons Uploads, Safer Manifests, and Release Tooling
@@ -230,7 +241,8 @@ Release Title: Initial Public Foundation
 - Improved editor tooling support with updated local diagnostics and stub
   configuration for PHP development.
 
-[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.3.0...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.3.1...HEAD
+[1.3.1]: https://github.com/phcdevworks/spectre-icons/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/phcdevworks/spectre-icons/compare/1.2.1...1.3.0
 [1.2.1]: https://github.com/phcdevworks/spectre-icons/compare/1.2.0...1.2.1
 [1.2.0]: https://github.com/phcdevworks/spectre-icons/compare/1.1.0...1.2.0

@@ -4,7 +4,7 @@ Tags: icons, elementor, svg, lucide, font awesome
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -58,6 +58,11 @@ WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x tested through Elementor 4.x.
 
 == Changelog ==
 
+= 1.3.1 =
+
+* Updated release metadata for the 1.3.1 maintenance release
+* Preserved bundled library slugs, saved icon class prefixes, and existing icon rendering behavior
+
 = 1.3.0 =
 
 * Added the My Icons admin page for uploading up to 25 site-specific SVG icons
@@ -100,6 +105,9 @@ WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x tested through Elementor 4.x.
 * Cleaned up WordPress.org ZIP packaging
 
 == Upgrade Notice ==
+
+= 1.3.1 =
+Maintenance release metadata update. Existing bundled-library icons, uploaded icons, and saved icon classes are preserved.
 
 = 1.3.0 =
 Adds a My Icons upload library for site-specific SVG icons. Existing bundled-library icons and saved icon classes are preserved.
