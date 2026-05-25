@@ -41,7 +41,7 @@ final class Spectre_Icons_Upload_Page {
 			__( 'My Icons — Spectre Icons', 'spectre-icons' ),
 			__( 'My Icons', 'spectre-icons' ),
 			'manage_options',
-			static::PAGE_SLUG,
+			self::PAGE_SLUG,
 			array( __CLASS__, 'render_page' )
 		);
 	}
@@ -53,7 +53,7 @@ final class Spectre_Icons_Upload_Page {
 	 * @return void
 	 */
 	public static function enqueue_assets( $hook ) {
-		if ( 'settings_page_' . static::PAGE_SLUG !== $hook ) {
+		if ( 'settings_page_' . self::PAGE_SLUG !== $hook ) {
 			return;
 		}
 
@@ -234,10 +234,10 @@ final class Spectre_Icons_Upload_Page {
 					data-limit="<?php echo esc_attr( $limit ); ?>">
 					<?php
 					printf(
-						/* translators: 1: current count 2: limit */
+						/* translators: 1: current icon count, 2: maximum icon limit */
 						esc_html__( '%1$d / %2$d icons', 'spectre-icons' ),
-						$count,
-						$limit
+						(int) $count,
+						(int) $limit
 					);
 					?>
 				</span>
@@ -282,7 +282,9 @@ final class Spectre_Icons_Upload_Page {
 								type="button"
 								class="spectre-icons-tile__delete"
 								data-slug="<?php echo esc_attr( $slug ); ?>"
-								aria-label="<?php echo esc_attr( sprintf( __( 'Remove %s', 'spectre-icons' ), $slug ) ); ?>">
+								aria-label="<?php
+								/* translators: %s: icon slug */
+								echo esc_attr( sprintf( __( 'Remove %s', 'spectre-icons' ), $slug ) ); ?>">
 								<span class="dashicons dashicons-trash" aria-hidden="true"></span>
 							</button>
 						</div>
