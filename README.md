@@ -5,10 +5,10 @@
 [![GitHub pulls](https://img.shields.io/github/issues-pr/phcdevworks/spectre-icons)](https://github.com/phcdevworks/spectre-icons/pulls)
 [![License](https://img.shields.io/github/license/phcdevworks/spectre-icons)](LICENSE)
 
-Spectre Icons adds Lucide and Font Awesome Free to Elementor's icon picker as
-inline SVG. Libraries can be enabled or disabled individually from plugin
-settings. Disabled libraries are hidden from the picker — icons already placed
-on your site keep rendering.
+Spectre Icons adds Lucide, Font Awesome Free, and your own uploaded SVG icons to
+Elementor's icon picker as inline SVG. Libraries can be enabled or disabled
+individually from plugin settings. Disabled libraries are hidden from the picker
+— icons already placed on your site keep rendering.
 
 [Contributing](CONTRIBUTING.md) | [Changelog](CHANGELOG.md) |
 [Security Policy](SECURITY.md) |
@@ -24,21 +24,21 @@ on your site keep rendering.
   Elementor's color controls without a separate font file.
 - You want to enable or disable icon libraries individually without touching
   icons already placed on your site.
+- You want a small site-specific `My Icons` library for sanitized SVG uploads.
 
 **Do not use Spectre Icons if:**
 
 - You are not using Elementor — Gutenberg, Divi, and other builder support is
   planned but not yet available.
-- You need custom icon fonts, CSS-class icon libraries, or sprite-based
-  rendering.
-- You need to register your own icon packs — custom library registration is a
-  pro feature not included in this free release.
+- You need custom icon fonts, CSS-class icon libraries, sprite-based rendering,
+  or bulk third-party icon-pack management.
 
 ## Features
 
 - Manifest-driven icon library registration — no scattered builder-specific definitions
 - Inline SVG rendering in both editor preview and frontend
 - Enable or disable individual icon libraries from plugin settings
+- Upload up to 25 custom SVG files to a site-specific `My Icons` library
 - Disabled libraries are hidden from the picker; existing icons keep rendering
 - Theme-friendly color inheritance through builder color controls
 - Modular architecture for future builder support
@@ -69,7 +69,10 @@ bin/lint-php.sh
 
 ## Usage
 
-Go to `Settings -> Spectre Icons` and enable the libraries you want. Then open any Elementor widget that has an icon field and choose a Spectre Icons tab from the picker.
+Go to `Settings -> Spectre Icons` and enable the libraries you want. Use
+`Settings -> My Icons` to upload site-specific SVG icons. Then open any
+Elementor widget that has an icon field and choose a Spectre Icons tab from the
+picker.
 
 Supported widgets include Icon, Icon Box, Icon List, and Social Icons.
 
@@ -77,8 +80,9 @@ Supported widgets include Icon, Icon Box, Icon List, and Social Icons.
 
 - Lucide Icons
 - Font Awesome Free
+- My Icons, a site-specific library for uploaded SVG files
 
-The bundled SVG files are locked source assets. Registration, rendering, and admin controls can evolve but the icon files themselves are not modified as part of normal development.
+The bundled SVG files are locked source assets. Registration, rendering, and admin controls can evolve but the bundled icon files themselves are not modified as part of normal development.
 
 ## Requirements
 
