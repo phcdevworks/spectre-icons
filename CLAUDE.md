@@ -11,26 +11,13 @@
 This file is the authoritative guide for Claude Code operating in this repository.
 Read it before touching any source file.
 
-## AI Team
+## Multi-Agent Team
 
-| Role | Agent | Authority |
-|---|---|---|
-| Human owner | Bradley Potts | Final authority — commits, tags, releases, publishing |
-| Strategy / external review | ChatGPT | Strategy, coordination, prompt design, external review |
-| Lead developer | Claude Code | Implementation, architecture, bug fixes, tests |
-| Release / production readiness | OpenAI Codex | Docs, releases, production readiness, repo hygiene, config |
-| Development support | GitHub Copilot | In-IDE suggestions and inline support |
-| Maintenance | Google Jules | Small fixes, dependency updates, micro-updates |
-
-No AI agent creates git commits, pushes, or tags. All commit authority rests
-with Bradley Potts.
-
-When guidance conflicts, follow this priority order:
-
-1. Direct instruction from Bradley Potts
-2. `AGENTS.md`
-3. This file (`CLAUDE.md`)
-4. `CODEX.md` and `.codex/*` checklists
+`AGENTS.md` is the shared guide for agent roles, edit boundaries, and PR
+requirements. Claude Code is the lead implementation authority for feature
+work, bug fixes, architecture, tests, and build reliability. Resolve conflicts
+in this priority order: Bradley Potts -> `AGENTS.md` -> this file -> `CODEX.md`
+and `.codex/*` checklists.
 
 ## What Claude Code Owns
 
@@ -41,20 +28,13 @@ When guidance conflicts, follow this priority order:
 - Developer workflow and local tooling improvements
 - Resolving implementation questions escalated from Codex or Jules
 
-## Hand Off To Other Agents
+## Handoff
 
-- ChatGPT: strategy questions, coordination decisions, prompt design, and
-  external review when broad direction or cross-project context is needed.
-- Codex: documentation systems, release preparation, production stabilization,
-  repo hygiene, changelog/release-note support, and config standardization.
-- Jules: automated maintenance tasks limited to small fixes, dependency updates,
-  and micro-updates.
-- GitHub Copilot: general in-IDE suggestions and inline development support.
-- Bradley Potts: git commits, pushes, tags, WordPress.org publishing, and final
-  release decisions.
+When a task crosses role boundaries, hand off rather than expanding scope.
+See `AGENTS.md` for the full role and authority map.
 
-Claude Code keeps implementation leadership. Hand changes off to Codex for
-release-readiness review before Brad commits; see `CODEX.md` and
+Claude Code keeps implementation leadership. Pass completed implementation to
+Codex for release-readiness review before Brad commits. See `CODEX.md` and
 `.codex/release-readiness.md`.
 
 ## Commit Policy
@@ -267,12 +247,10 @@ Read `MEMORY.md` in that directory for ongoing project context across sessions.
 
 ## Constraints summary
 
-- Do not edit SVG source files under `assets/iconpacks/` without explicit
-  approval
-- Do not rewrite bundled manifest SVG payloads without explicit approval;
-  metadata corrections are allowed when they preserve locked slugs and prefixes
-- Do not rename or delete manifest files without a migration plan
-- Do not change the serialization-anchored slugs or class prefixes
-- Do not push to remote or publish releases without Brad Potts reviewing first
+See `AGENTS.md` for shared edit boundaries, locked slug rules, and SVG asset
+restrictions. Claude Code-specific constraints:
+
 - Do not add Elementor-specific logic outside the `includes/elementor/` directory
 - Builder-agnostic core (`includes/core/`) must stay free of page-builder imports
+- Do not rename or delete manifest files without a migration plan
+- Do not push to remote or publish releases without Brad Potts reviewing first
