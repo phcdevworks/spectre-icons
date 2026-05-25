@@ -4,18 +4,19 @@ Tags: icons, elementor, svg, lucide, font awesome
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.2.1
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Adds Lucide and Font Awesome icon libraries to Elementor's icon picker, rendered as inline SVG.
+Adds Lucide, Font Awesome, and uploaded SVG icon libraries to Elementor's icon picker.
 
 == Description ==
 
-Spectre Icons registers curated SVG icon libraries inside Elementor's icon picker and renders them as inline SVGs on the frontend.
+Spectre Icons registers curated and uploaded SVG icon libraries inside Elementor's icon picker and renders them as inline SVGs on the frontend.
 
 * Enable or disable individual libraries from Settings → Spectre Icons
-* Manifest-driven rendering for Lucide and Font Awesome Free
+* Upload up to 25 custom SVG icons from Settings → My Icons
+* Manifest-driven rendering for bundled and uploaded SVG libraries
 * Inline SVG injection in editor preview and frontend
 * Disabled libraries are hidden from the picker; existing icons keep rendering
 * Theme-friendly color inheritance through builder color controls
@@ -49,13 +50,23 @@ Yes. Uncheck a library under Settings → Spectre Icons to hide it from the Elem
 
 = Can I add my own icon packs? =
 
-Custom icon library registration is a pro feature.
+Yes. Upload SVG files from Settings → My Icons. Uploaded icons are sanitized, stored in a site-specific My Icons library, and appear in supported builder icon pickers after the first upload.
 
 = What are the system requirements? =
 
 WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x.
 
 == Changelog ==
+
+= 1.3.0 =
+
+* Added the My Icons admin page for uploading up to 25 site-specific SVG icons
+* Added the spectre-user icon library for user-uploaded icons in Elementor
+* Added upload and delete controls with SVG sanitization, file-size checks, and safe manifest storage
+* Kept bundled Lucide and Font Awesome libraries first in the picker before custom libraries
+* Hardened custom library manifest handling with WordPress filesystem APIs
+* Escaped upload delete button labels and tightened empty attribute rendering
+* Added Font Awesome Elementor e2e coverage and release/version proposal tooling
 
 = 1.2.1 =
 
@@ -88,6 +99,9 @@ WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x.
 * Cleaned up WordPress.org ZIP packaging
 
 == Upgrade Notice ==
+
+= 1.3.0 =
+Adds a My Icons upload library for site-specific SVG icons. Existing bundled-library icons and saved icon classes are preserved.
 
 = 1.2.1 =
 Fixes blank icon previews in the Elementor editor after plugin updates. Existing icons on your site are not affected.

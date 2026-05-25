@@ -6,6 +6,45 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-05-25
+
+Release Title: My Icons Uploads, Safer Manifests, and Release Tooling
+
+### Added
+
+- Added a builder-agnostic `Spectre_Icons_User_Library_Manager` for
+  user-uploaded SVG icons, stored as a site-specific manifest under
+  WordPress uploads.
+- Added the `My Icons` admin page for uploading and deleting custom SVG icons
+  with a default 25-icon limit.
+- Added the serialization-anchored `spectre-user` library with the
+  `spectre-user-` class prefix so uploaded icons can appear in supported
+  builder pickers after the first upload.
+- Added admin CSS and JavaScript for drag-and-drop uploads, upload status, icon
+  previews, delete controls, and limit handling.
+- Added Elementor support for external manifest paths and URLs so uploaded icon
+  libraries flow through the same adapter and preview pipeline as bundled
+  libraries.
+- Added Elementor e2e coverage for Font Awesome icon picker and rendering
+  behavior.
+- Added release/version proposal tooling and expanded repository governance,
+  PR, agent, roadmap, and release-readiness documentation.
+
+### Changed
+
+- Anchored bundled libraries now stay first in picker order before any
+  dynamically discovered or user-uploaded libraries.
+- Manifest header reads now use the WordPress filesystem API instead of direct
+  file operations.
+- Updated package tooling and dependency locks for the current validation and
+  release workflow.
+
+### Fixed
+
+- Escaped uploaded-icon delete button `aria-label` output in the admin grid.
+- Avoided rendering an empty attribute string when sanitized SVG attributes are
+  empty.
+
 ## [1.2.1] - 2026-05-13
 
 Release Title: Manifest Architecture, Icon Reset Fix, and Editor Stability
@@ -189,7 +228,8 @@ Release Title: Initial Public Foundation
 - Improved editor tooling support with updated local diagnostics and stub
   configuration for PHP development.
 
-[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.2.1...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.3.0...HEAD
+[1.3.0]: https://github.com/phcdevworks/spectre-icons/compare/1.2.1...1.3.0
 [1.2.1]: https://github.com/phcdevworks/spectre-icons/compare/1.2.0...1.2.1
 [1.2.0]: https://github.com/phcdevworks/spectre-icons/compare/1.1.0...1.2.0
 [1.1.0]: https://github.com/phcdevworks/spectre-icons/compare/1.0.0...1.1.0

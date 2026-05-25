@@ -1,8 +1,8 @@
 {
   "name": "spectre-icons",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "private": true,
-  "description": "WordPress plugin that adds Lucide and Font Awesome Free to Elementor's icon picker as inline SVG, with per-library enable/disable controls.",
+  "description": "WordPress plugin that adds bundled and uploaded SVG icon libraries to Elementor's icon picker, with per-library enable/disable controls.",
   "directories": {
     "test": "tests"
   },
