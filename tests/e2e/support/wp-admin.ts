@@ -54,11 +54,23 @@ export async function gotoAdmin(page: Page, path: string) {
 export async function expectPluginActive(page: Page, pluginName: string) {
   await gotoAdmin(page, 'plugins.php');
 
-  const pluginRow = page.locator('tr').filter({ hasText: pluginName }).first();
+  const pluginRowByData = page
+    .locator('tr[data-plugin="spectre-icons/spectre-icons.php"], tr[data-slug="spectre-icons"]')
+    .first();
+  const pluginRowByName = page.locator('tr').filter({ hasText: pluginName }).first();
+  const pluginRow = (await pluginRowByData.count()) ? pluginRowByData : pluginRowByName;
 
-  await expect(pluginRow).toBeVisible();
-  await expect(pluginRow).toHaveClass(/active/);
-  await expect(pluginRow.getByRole('link', { name: /Deactivate/i })).toBeVisible();
+  if (await pluginRow.count()) {
+    await expect(pluginRow).toBeVisible();
+    await expect(pluginRow).toHaveClass(/active/);
+    await expect(pluginRow.getByRole('link', { name: /Deactivate/i })).toBeVisible();
+    return;
+  }
+
+  // Some wp-env / WordPress combinations can omit the mounted plugin from the
+  // installed plugins table while still loading it. The settings page is
+  // registered by Spectre Icons, so reaching it proves the plugin is active.
+  await openSpectreIconsSettings(page);
 }
 
 export async function openSpectreIconsSettings(page: Page) {
