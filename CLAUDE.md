@@ -5,7 +5,7 @@
 **Plugin:** `spectre-icons`
 **Human owner:** Bradley Potts (brad.potts@coastdigitalgroup.com)
 **Primary AI developer:** Claude Code (claude-sonnet-4-6)
-**Plugin version:** 1.3.1
+**Plugin version:** 1.4.0
 **Repo:** https://github.com/phcdevworks/spectre-icons
 
 This file is the authoritative guide for Claude Code operating in this repository.

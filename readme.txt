@@ -4,7 +4,7 @@ Tags: icons, elementor, svg, lucide, font awesome
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,7 @@ Adds Lucide, Font Awesome, and uploaded SVG icon libraries to Elementor's icon p
 Spectre Icons registers curated and uploaded SVG icon libraries inside Elementor's icon picker and renders them as inline SVGs on the frontend.
 
 * Enable or disable individual libraries from Settings → Spectre Icons
-* Upload up to 25 custom SVG icons from Settings → My Icons
+* Upload custom SVG icons from Settings → My Icons
 * Manifest-driven rendering for bundled and uploaded SVG libraries
 * Inline SVG injection in editor preview and frontend
 * Disabled libraries are hidden from the picker; existing icons keep rendering
@@ -57,6 +57,12 @@ Yes. Upload SVG files from Settings → My Icons. Uploaded icons are sanitized, 
 WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x tested through Elementor 4.x.
 
 == Changelog ==
+
+= 1.4.0 =
+
+* Makes the My Icons upload library unlimited by default
+* Keeps support for custom limits through the spectre_icons_user_library_limit filter
+* Updates the upload page and admin JavaScript to display and enforce limits only when a numeric limit is configured
 
 = 1.3.1 =
 
@@ -105,6 +111,9 @@ WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x tested through Elementor 4.x.
 * Cleaned up WordPress.org ZIP packaging
 
 == Upgrade Notice ==
+
+= 1.4.0 =
+My Icons uploads are unlimited by default. Sites using the spectre_icons_user_library_limit filter can still enforce a custom cap.
 
 = 1.3.1 =
 Maintenance release metadata update. Existing bundled-library icons, uploaded icons, and saved icon classes are preserved.
