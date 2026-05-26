@@ -4,6 +4,19 @@ declare(strict_types=1);
 
 final class IntegrationHooksTest extends Spectre_Icons_PHPUnit_Test_Case {
 
+	public function test_admin_settings_hooks_register_without_elementor_loaded(): void {
+		$this->assertSame( 0, did_action( 'elementor/loaded' ) );
+
+		spectre_icons_elementor_register_admin_settings();
+
+		$this->assertInstanceOf(
+			Spectre_Icons_Elementor_Settings::class,
+			$GLOBALS['spectre_icons_elementor_settings_manager']
+		);
+		$this->assertArrayHasKey( 'admin_init', $GLOBALS['spectre_wp_filters'] );
+		$this->assertArrayHasKey( 'admin_menu', $GLOBALS['spectre_wp_filters'] );
+	}
+
 	public function test_enqueue_styles_adds_hide_css_for_disabled_libraries(): void {
 		update_option(
 			'spectre_icons_elementor_tabs',

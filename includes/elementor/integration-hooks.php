@@ -10,6 +10,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Return the shared Elementor settings manager.
+ *
+ * The settings page is admin UI for this plugin, so it must be registered
+ * independently of Elementor's load timing. Elementor itself can load late
+ * enough that waiting for elementor/loaded would miss admin_menu on some
+ * requests.
+ *
+ * @return Spectre_Icons_Elementor_Settings
+ */
+function spectre_icons_elementor_get_settings_manager() {
+	global $spectre_icons_elementor_settings_manager;
+
+	if ( ! $spectre_icons_elementor_settings_manager instanceof Spectre_Icons_Elementor_Settings ) {
+		$spectre_icons_elementor_settings_manager = new Spectre_Icons_Elementor_Settings();
+	}
+
+	return $spectre_icons_elementor_settings_manager;
+}
+
+/**
+ * Register Spectre Icons admin settings hooks early in the request.
+ *
+ * @return void
+ */
+function spectre_icons_elementor_register_admin_settings() {
+	spectre_icons_elementor_get_settings_manager();
+}
+add_action( 'plugins_loaded', 'spectre_icons_elementor_register_admin_settings', 5 );
+
+/**
  * Bootstrap integration ONLY when Elementor is present.
  *
  * @return void
@@ -36,7 +66,7 @@ function spectre_icons_elementor_bootstrap() {
 
 	$bootstrapped = true;
 
-	$settings = new Spectre_Icons_Elementor_Settings();
+	$settings = spectre_icons_elementor_get_settings_manager();
 	$manager  = Spectre_Icons_Elementor_Library_Adapter::instance( $settings );
 
 	// Populate the manifest registry immediately so render_icon works on the
