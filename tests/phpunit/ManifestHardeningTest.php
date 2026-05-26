@@ -116,4 +116,25 @@ final class ManifestHardeningTest extends Spectre_Icons_PHPUnit_Test_Case {
 
 		$this->assertSame( array(), $slugs );
 	}
+
+	public function test_read_manifest_header_does_not_depend_on_wp_filesystem_global(): void {
+		global $wp_filesystem;
+
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- test intentionally simulates an unavailable WP Filesystem.
+		$wp_filesystem = (object) array( 'unavailable' => true );
+		$manifest_path = $this->create_temp_manifest(
+			array(
+				'name'  => 'custom-icons',
+				'label' => 'Custom Icons',
+				'icons' => array(
+					'valid' => '<svg><path d="M0 0" /></svg>',
+				),
+			)
+		);
+
+		$header = spectre_icons_read_manifest_header( $manifest_path );
+
+		$this->assertTrue( $header['has_icons'] );
+		$this->assertSame( 'Custom Icons', $header['meta']['label'] );
+	}
 }
