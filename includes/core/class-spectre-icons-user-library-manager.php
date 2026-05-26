@@ -161,13 +161,13 @@ final class Spectre_Icons_User_Library_Manager {
 	/**
 	 * Maximum number of icons allowed.
 	 *
-	 * Defaults to 25 for the free tier. A pro extension can hook
-	 * spectre_icons_user_library_limit and return a higher value.
+	 * Returns PHP_INT_MAX (unlimited) by default. A pro extension can hook
+	 * spectre_icons_user_library_limit and return a lower value to enforce a cap.
 	 *
 	 * @return int
 	 */
 	public static function get_limit() {
-		return (int) apply_filters( 'spectre_icons_user_library_limit', 25 );
+		return (int) apply_filters( 'spectre_icons_user_library_limit', PHP_INT_MAX );
 	}
 
 	/**
