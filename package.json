@@ -18,8 +18,9 @@
     "test:e2e:headed": "playwright test --headed",
     "wp-env:start": "npx wp-env start",
     "wp-env:stop": "npx wp-env stop",
-    "wp-env:install-elementor": "npx wp-env run cli wp plugin install elementor --activate",
-    "test:e2e:setup": "npm run wp-env:start && npm run wp-env:install-elementor",
+    "wp-env:install-elementor": "npx wp-env run cli -- wp plugin install elementor --version=3.29.2 --force --activate --skip-plugins --skip-themes",
+    "wp-env:activate-plugin": "npx wp-env run cli -- wp plugin activate spectre-icons --skip-plugins --skip-themes",
+    "test:e2e:setup": "npm run wp-env:start && npm run wp-env:install-elementor && npm run wp-env:activate-plugin",
     "release:propose": "node ./node_modules/tsx/dist/cli.mjs scripts/propose-version.ts"
   },
   "repository": {

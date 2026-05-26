@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   php-tests:
@@ -45,6 +49,11 @@ jobs:
     # because they return empty string silently — only a real browser + WP
     # can verify that icons actually appear on published pages.
     needs: php-tests
+    env:
+      WP_ENV_HOME: ${{ runner.temp }}/wp-env
+      SPECTRE_E2E_BASE_URL: http://localhost:8888
+      SPECTRE_E2E_ADMIN_USER: admin
+      SPECTRE_E2E_ADMIN_PASSWORD: password
 
     steps:
       - name: Checkout
@@ -62,46 +71,52 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Verify Docker is available
+        run: |
+          docker version
+          docker compose version
+
       - name: Start wp-env
         run: npx wp-env start
-        env:
-          WP_ENV_HOME: ${{ runner.temp }}/wp-env
 
-      - name: Activate Spectre Icons plugin
-        run: npx wp-env run cli wp plugin activate spectre-icons
-        env:
-          WP_ENV_HOME: ${{ runner.temp }}/wp-env
+      - name: Wait for WordPress
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          for attempt in {1..60}; do
+            if curl --fail --silent --show-error "$SPECTRE_E2E_BASE_URL/wp-login.php" >/dev/null; then
+              echo "WordPress is responding."
+              exit 0
+            fi
+
+            echo "Waiting for WordPress... attempt ${attempt}/60"
+            sleep 2
+          done
+
+          echo "WordPress did not become ready in time."
+          npx wp-env logs --no-watch
+          exit 1
 
       - name: Install Elementor
-        run: npx wp-env run cli wp plugin install elementor --activate
-        env:
-          WP_ENV_HOME: ${{ runner.temp }}/wp-env
+        run: npx wp-env run cli -- wp plugin install elementor --version=3.29.2 --force --activate --skip-plugins --skip-themes
+
+      - name: Activate Spectre Icons plugin
+        run: npx wp-env run cli -- wp plugin activate spectre-icons --skip-plugins --skip-themes
 
       - name: Verify plugin states
-        run: npx wp-env run cli wp plugin list --skip-plugins=elementor --format=table
-        env:
-          WP_ENV_HOME: ${{ runner.temp }}/wp-env
+        run: |
+          npx wp-env run cli -- wp core version --skip-plugins --skip-themes
+          npx wp-env run cli -- wp plugin list --format=table --skip-plugins --skip-themes
 
       - name: Run smoke tests
         run: npm run test:e2e:smoke
-        env:
-          SPECTRE_E2E_BASE_URL: http://localhost:8888
-          SPECTRE_E2E_ADMIN_USER: admin
-          SPECTRE_E2E_ADMIN_PASSWORD: password
 
       - name: Run Elementor icon flow tests
         run: npm run test:e2e:elementor
-        env:
-          SPECTRE_E2E_BASE_URL: http://localhost:8888
-          SPECTRE_E2E_ADMIN_USER: admin
-          SPECTRE_E2E_ADMIN_PASSWORD: password
 
       - name: Run My Icons frontend render tests
         run: npm run test:e2e:my-icons
-        env:
-          SPECTRE_E2E_BASE_URL: http://localhost:8888
-          SPECTRE_E2E_ADMIN_USER: admin
-          SPECTRE_E2E_ADMIN_PASSWORD: password
 
       - name: Upload test artifacts on failure
         if: failure()
@@ -111,8 +126,10 @@ jobs:
           path: test-results/
           retention-days: 7
 
+      - name: Print wp-env logs on failure
+        if: failure()
+        run: npx wp-env logs --no-watch
+
       - name: Stop wp-env
         if: always()
         run: npx wp-env stop
-        env:
-          WP_ENV_HOME: ${{ runner.temp }}/wp-env
