@@ -41,6 +41,38 @@ final class IconLibrariesTest extends Spectre_Icons_PHPUnit_Test_Case {
 		$this->assertSame( 'spectre-lucide-', $config['spectre-lucide']['prefix'] );
 	}
 
+	public function test_preview_config_supports_manifest_path_libraries(): void {
+		$manifest_path = $this->create_temp_manifest(
+			array(
+				'icons' => array(
+					'custom-icon' => '<svg><path d="M0 0" /></svg>',
+				),
+			)
+		);
+
+		add_filter(
+			'spectre_icons_library_definitions',
+			static function ( $defs ) use ( $manifest_path ) {
+				$defs['custom-path'] = array(
+					'label'         => 'Custom Path',
+					'label_icon'    => 'eicon-upload',
+					'manifest_file' => null,
+					'manifest_path' => $manifest_path,
+					'class_prefix'  => 'custom-path-',
+					'style'         => '',
+				);
+				return $defs;
+			}
+		);
+		spectre_icons_reset_library_definitions_cache();
+
+		$config = spectre_icons_elementor_get_icon_preview_config();
+
+		$this->assertArrayHasKey( 'custom-path', $config );
+		$this->assertSame( wp_normalize_path( $manifest_path ), $config['custom-path']['manifest'] );
+		$this->assertSame( 'custom-path-', $config['custom-path']['prefix'] );
+	}
+
 	public function test_register_manifest_libraries_loads_icon_lists_from_bundled_manifests(): void {
 		$libraries = spectre_icons_elementor_register_manifest_libraries( array() );
 

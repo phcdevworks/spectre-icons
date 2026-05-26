@@ -180,27 +180,25 @@ function spectre_icons_get_library_definitions() {
  *   'meta'      — decoded top-level fields from the header (sans icons).
  */
 function spectre_icons_read_manifest_header( $path ) {
-	global $wp_filesystem;
-	if ( empty( $wp_filesystem ) ) {
-		$fs_file = ABSPATH . 'wp-admin/includes/file.php';
-		if ( file_exists( $fs_file ) ) {
-			require_once $fs_file;
-		}
-		if ( function_exists( 'WP_Filesystem' ) ) {
-			WP_Filesystem();
-		}
-	}
-
-	if ( ! ( $wp_filesystem instanceof WP_Filesystem_Base ) ) {
+	if ( ! is_string( $path ) || ! is_readable( $path ) ) {
 		return array(
 			'has_icons' => false,
 			'meta'      => array(),
 		);
 	}
 
-	$raw = $wp_filesystem->get_contents( $path );
+	$handle = fopen( $path, 'rb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+	if ( false === $handle ) {
+		return array(
+			'has_icons' => false,
+			'meta'      => array(),
+		);
+	}
 
-	if ( false === $raw || '' === $raw ) {
+	$buffer = fread( $handle, 8192 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+	fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+
+	if ( false === $buffer || '' === $buffer ) {
 		return array(
 			'has_icons' => false,
 			'meta'      => array(),
@@ -208,7 +206,6 @@ function spectre_icons_read_manifest_header( $path ) {
 	}
 
 	// Inspect only the first 8 KB — avoids processing multi-MB icon payloads.
-	$buffer    = substr( $raw, 0, 8192 );
 	$has_icons = false !== strpos( $buffer, '"icons"' );
 
 	if ( ! $has_icons ) {

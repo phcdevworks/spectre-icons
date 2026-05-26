@@ -76,11 +76,18 @@ function spectre_icons_elementor_get_icon_preview_config() {
 			continue;
 		}
 
-		$manifest_file = isset( $def['manifest_file'] ) ? (string) $def['manifest_file'] : '';
-		$real          = spectre_icons_resolve_manifest_path( $manifest_file );
+		if ( ! empty( $def['manifest_path'] ) ) {
+			$real = wp_normalize_path( (string) $def['manifest_path'] );
+			if ( ! is_file( $real ) ) {
+				continue;
+			}
+		} else {
+			$manifest_file = isset( $def['manifest_file'] ) ? (string) $def['manifest_file'] : '';
+			$real          = spectre_icons_resolve_manifest_path( $manifest_file );
 
-		if ( ! $real ) {
-			continue;
+			if ( ! $real ) {
+				continue;
+			}
 		}
 
 		$label_icon = ( isset( $def['label_icon'] ) && is_string( $def['label_icon'] ) && preg_match( '/^eicon-[a-z0-9\-]+$/', $def['label_icon'] ) )
