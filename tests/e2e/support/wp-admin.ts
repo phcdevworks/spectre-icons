@@ -76,7 +76,7 @@ export async function expectPluginActive(page: Page, pluginName: string) {
 export async function openSpectreIconsSettings(page: Page) {
   await gotoAdmin(page, 'options-general.php?page=spectre-icons-elementor');
   await dismissAdminOverlays(page);
-  await expect(page.getByRole('heading', { level: 1, name: /Spectre Icons/i })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Spectre Icons/i }).first()).toBeVisible();
 }
 
 export async function setLibraryEnabled(page: Page, label: string, enabled: boolean) {
@@ -121,13 +121,7 @@ export async function uploadMyIcon(page: Page, svgContent: string, filename: str
     buffer,
   });
 
-  const uploadButton = page
-    .getByRole('button', { name: /upload|add icon/i })
-    .first();
-  await expect(uploadButton).toBeVisible();
-  await uploadButton.click();
-
-  // Wait for the icon to appear in the library list.
+  // Upload starts automatically when files are selected.
   const slug = filename.replace(/\.svg$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '-');
   await page.waitForSelector(`[data-slug="${slug}"], .spectre-icon-item[data-icon="${slug}"], .spectre-icons-icon-list li`, { timeout: 10_000 });
 }
