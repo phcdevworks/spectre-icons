@@ -50,7 +50,7 @@ jobs:
     # can verify that icons actually appear on published pages.
     needs: php-tests
     env:
-      WP_ENV_HOME: ${{ runner.temp }}/wp-env
+      WP_ENV_HOME: /tmp/wp-env
       SPECTRE_E2E_BASE_URL: http://localhost:8888
       SPECTRE_E2E_ADMIN_USER: admin
       SPECTRE_E2E_ADMIN_PASSWORD: password
