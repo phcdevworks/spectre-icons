@@ -72,6 +72,11 @@ jobs:
         env:
           WP_ENV_HOME: ${{ runner.temp }}/wp-env
 
+      - name: Activate Spectre Icons plugin
+        run: npx wp-env run cli wp plugin activate spectre-icons
+        env:
+          WP_ENV_HOME: ${{ runner.temp }}/wp-env
+
       - name: Run smoke tests
         run: npm run test:e2e:smoke
         env:

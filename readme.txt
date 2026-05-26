@@ -4,7 +4,7 @@ Tags: icons, elementor, svg, lucide, font awesome
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,12 @@ Yes. Upload SVG files from Settings → My Icons. Uploaded icons are sanitized, 
 WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x tested through Elementor 4.x.
 
 == Changelog ==
+
+= 1.4.1 =
+
+* Fixes manifest header discovery so library metadata does not depend on the WordPress filesystem global
+* Reads only the small manifest header needed for icon library metadata instead of loading entire large manifest files during discovery
+* Fixes Elementor preview config support for uploaded and external manifest_path icon libraries
 
 = 1.4.0 =
 
@@ -111,6 +117,9 @@ WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x tested through Elementor 4.x.
 * Cleaned up WordPress.org ZIP packaging
 
 == Upgrade Notice ==
+
+= 1.4.1 =
+Improves manifest discovery and uploaded icon library preview reliability. Existing bundled icons, uploaded icons, and saved icon classes are preserved.
 
 = 1.4.0 =
 My Icons uploads are unlimited by default. Sites using the spectre_icons_user_library_limit filter can still enforce a custom cap.

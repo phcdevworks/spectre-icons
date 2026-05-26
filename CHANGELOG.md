@@ -6,6 +6,19 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [Unreleased]
 
+## [1.4.1] - 2026-05-27
+
+Release Title: Manifest Path Reliability
+
+### Fixed
+
+- Fixed manifest header discovery so it no longer depends on the WordPress
+  filesystem global and only reads the small manifest header needed for library
+  metadata.
+- Fixed Elementor preview config support for `manifest_path` libraries so
+  uploaded and external icon manifests stay aligned with the registration and
+  frontend render paths.
+
 ## [1.4.0] - 2026-05-26
 
 Release Title: Unlimited My Icons Uploads
@@ -254,7 +267,8 @@ Release Title: Initial Public Foundation
 - Improved editor tooling support with updated local diagnostics and stub
   configuration for PHP development.
 
-[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.4.0...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.4.1...HEAD
+[1.4.1]: https://github.com/phcdevworks/spectre-icons/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/phcdevworks/spectre-icons/compare/1.3.1...1.4.0
 [1.3.1]: https://github.com/phcdevworks/spectre-icons/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/phcdevworks/spectre-icons/compare/1.2.1...1.3.0
