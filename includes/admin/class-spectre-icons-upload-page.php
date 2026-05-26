@@ -78,7 +78,7 @@ final class Spectre_Icons_Upload_Page {
 			array(
 				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 				'nonce'   => wp_create_nonce( 'spectre_icons_upload' ),
-				'limit'   => Spectre_Icons_User_Library_Manager::get_limit(),
+				'limit'   => PHP_INT_MAX === Spectre_Icons_User_Library_Manager::get_limit() ? null : Spectre_Icons_User_Library_Manager::get_limit(),
 				'count'   => Spectre_Icons_User_Library_Manager::get_icon_count(),
 				'i18n'    => array(
 					'uploading'     => __( 'Uploading...', 'spectre-icons' ),
@@ -163,12 +163,13 @@ final class Spectre_Icons_Upload_Page {
 			wp_send_json_error( array( 'message' => $result->get_error_message() ), 500 );
 		}
 
+		$limit = Spectre_Icons_User_Library_Manager::get_limit();
 		wp_send_json_success(
 			array(
 				'slug'  => $result,
 				'svg'   => $sanitized,
 				'count' => Spectre_Icons_User_Library_Manager::get_icon_count(),
-				'limit' => Spectre_Icons_User_Library_Manager::get_limit(),
+				'limit' => PHP_INT_MAX === $limit ? null : $limit,
 			)
 		);
 	}
@@ -197,11 +198,12 @@ final class Spectre_Icons_Upload_Page {
 			wp_send_json_error( array( 'message' => $result->get_error_message() ), 404 );
 		}
 
+		$limit = Spectre_Icons_User_Library_Manager::get_limit();
 		wp_send_json_success(
 			array(
 				'slug'  => $slug,
 				'count' => Spectre_Icons_User_Library_Manager::get_icon_count(),
-				'limit' => Spectre_Icons_User_Library_Manager::get_limit(),
+				'limit' => PHP_INT_MAX === $limit ? null : $limit,
 			)
 		);
 	}
@@ -216,10 +218,11 @@ final class Spectre_Icons_Upload_Page {
 			return;
 		}
 
-		$icons    = Spectre_Icons_User_Library_Manager::get_icons();
-		$count    = count( $icons );
-		$limit    = Spectre_Icons_User_Library_Manager::get_limit();
-		$at_limit = $count >= $limit;
+		$icons     = Spectre_Icons_User_Library_Manager::get_icons();
+		$count     = count( $icons );
+		$limit     = Spectre_Icons_User_Library_Manager::get_limit();
+		$unlimited = PHP_INT_MAX === $limit;
+		$at_limit  = ! $unlimited && $count >= $limit;
 
 		?>
 		<div class="wrap spectre-icons-upload-page">
@@ -231,14 +234,22 @@ final class Spectre_Icons_Upload_Page {
 			<div class="spectre-icons-upload-status">
 				<span class="spectre-icons-upload-count"
 					data-count="<?php echo esc_attr( $count ); ?>"
-					data-limit="<?php echo esc_attr( $limit ); ?>">
+					data-limit="<?php echo $unlimited ? '' : esc_attr( $limit ); ?>">
 					<?php
-					printf(
-						/* translators: 1: current icon count, 2: maximum icon limit */
-						esc_html__( '%1$d / %2$d icons', 'spectre-icons' ),
-						(int) $count,
-						(int) $limit
-					);
+					if ( $unlimited ) {
+						printf(
+							/* translators: %d: current icon count */
+							esc_html__( '%d icons', 'spectre-icons' ),
+							(int) $count
+						);
+					} else {
+						printf(
+							/* translators: 1: current icon count, 2: maximum icon limit */
+							esc_html__( '%1$d / %2$d icons', 'spectre-icons' ),
+							(int) $count,
+							(int) $limit
+						);
+					}
 					?>
 				</span>
 				<?php if ( $at_limit ) : ?>

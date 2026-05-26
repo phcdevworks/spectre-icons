@@ -5,7 +5,7 @@
 	var ajaxUrl  = config.ajaxUrl || '';
 	var nonce    = config.nonce || '';
 	var i18n     = config.i18n || {};
-	var limit    = parseInt( config.limit, 10 ) || 25;
+	var limit    = config.limit === null || config.limit === undefined ? null : ( parseInt( config.limit, 10 ) || null );
 	var count    = parseInt( config.count, 10 ) || 0;
 
 	var dropZone  = document.getElementById( 'spectre-icons-drop-zone' );
@@ -47,16 +47,18 @@
 	function updateCount( newCount, newLimit ) {
 		count = parseInt( newCount, 10 ) || 0;
 		if ( newLimit !== undefined ) {
-			limit = parseInt( newLimit, 10 ) || limit;
+			limit = newLimit === null ? null : ( parseInt( newLimit, 10 ) || null );
 		}
 
 		if ( countEl ) {
-			countEl.textContent = count + ' / ' + limit + ' icons';
+			countEl.textContent = limit === null
+				? count + ' icons'
+				: count + ' / ' + limit + ' icons';
 			countEl.dataset.count = count;
-			countEl.dataset.limit = limit;
+			countEl.dataset.limit = limit === null ? '' : limit;
 		}
 
-		var atLimit = count >= limit;
+		var atLimit = limit !== null && count >= limit;
 		dropZone.classList.toggle( 'spectre-icons-drop-zone--disabled', atLimit );
 		fileInput.disabled = atLimit;
 
@@ -129,7 +131,7 @@
 			return;
 		}
 
-		if ( count >= limit ) {
+		if ( limit !== null && count >= limit ) {
 			showMessage( i18n.limitReached || 'Icon limit reached.', 'error' );
 			return;
 		}
