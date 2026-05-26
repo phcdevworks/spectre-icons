@@ -32,11 +32,25 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array<string,array>
  */
-function spectre_icons_get_library_definitions() {
-	static $definitions = null;
+/**
+ * Reset the library definitions cache.
+ *
+ * Call this when filters on spectre_icons_library_definitions are added or
+ * removed after the first call to spectre_icons_get_library_definitions().
+ * Primarily for test isolation — production code rarely needs this.
+ *
+ * @return void
+ */
+function spectre_icons_reset_library_definitions_cache() {
+	global $spectre_icons_library_definitions_cache;
+	$spectre_icons_library_definitions_cache = null;
+}
 
-	if ( null !== $definitions ) {
-		return $definitions;
+function spectre_icons_get_library_definitions() {
+	global $spectre_icons_library_definitions_cache;
+
+	if ( null !== $spectre_icons_library_definitions_cache ) {
+		return $spectre_icons_library_definitions_cache;
 	}
 
 	// Slug => [ manifest_filename, class_prefix ].
@@ -149,8 +163,8 @@ function spectre_icons_get_library_definitions() {
 	 */
 	$ordered = apply_filters( 'spectre_icons_library_definitions', $ordered );
 
-	$definitions = $ordered;
-	return $definitions;
+	$spectre_icons_library_definitions_cache = $ordered;
+	return $spectre_icons_library_definitions_cache;
 }
 
 /**

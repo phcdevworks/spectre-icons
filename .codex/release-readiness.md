@@ -2,6 +2,34 @@
 
 Use this checklist before Bradley Potts reviews a release candidate.
 
+## ⛔ Hard Gates — Release Is BLOCKED Until All Pass
+
+These are not optional. Every release, every time, no exceptions.
+
+- [ ] `npm run check` passes (PHP unit tests + PHPCS).
+- [ ] `npm run test:e2e:smoke` passes against a running wp-env.
+- [ ] `npm run test:e2e:elementor` passes — verifies icons render on the **published frontend**, not only in the editor.
+- [ ] `npm run test:e2e:my-icons` passes — verifies My Icons (spectre-user) uploaded SVGs render as inline SVG on the published frontend.
+
+> **Why these are hard gates:** PHPUnit cannot catch silent frontend render failures.
+> `render_icon` returns empty string with no exception when the manifest registry
+> is not populated. Only a real browser visiting a published page can confirm that
+> icons actually appear. This was the cause of the 1.4.0 production breakage on
+> 300+ sites. It will not ship broken again.
+
+To run the full gate locally:
+
+```bash
+npm run test:e2e:setup   # start wp-env + install Elementor (once per session)
+npm run check:full       # PHP tests + lint + all three E2E suites
+```
+
+CI runs all of this automatically on every PR and push to main via the
+`e2e-tests` job in `.github/workflows/tests.yml`. A PR cannot merge if the
+E2E job is red.
+
+---
+
 ## Version Consistency
 
 - [ ] `SPECTRE_ICONS_VERSION` in `spectre-icons.php` matches the release version.
@@ -11,8 +39,7 @@ Use this checklist before Bradley Potts reviews a release candidate.
 - [ ] `package.json` `version` matches.
 - [ ] `package-lock.json` root package version matches.
 - [ ] `readme.txt` `Stable tag:` matches.
-- [ ] `readme.txt` `Tested up to:` matches the latest verified WordPress
-      version.
+- [ ] `readme.txt` `Tested up to:` matches the latest verified WordPress version.
 - [ ] `CHANGELOG.md` has an entry for the release.
 - [ ] `readme.txt` changelog section includes the release when appropriate.
 - [ ] `CHANGELOG.md` comparison links are current.
@@ -42,6 +69,8 @@ Use this checklist before Bradley Potts reviews a release candidate.
 - [ ] `spectre-fontawesome` slug remains unchanged.
 - [ ] `spectre-fa-` class prefix remains unchanged.
 - [ ] `spectre-fontawesome.json` filename remains unchanged.
+- [ ] `spectre-user` slug remains unchanged.
+- [ ] `spectre-user-` class prefix remains unchanged.
 
 Suggested commands:
 
@@ -63,19 +92,10 @@ git diff -- assets/manifests/spectre-lucide.json assets/manifests/spectre-fontaw
 
 ## Validation
 
-- [ ] `npm run check` passes.
+- [ ] **`npm run check:full` passes** (PHP tests + lint + all E2E suites). This is the single command that proves the release is safe.
 - [ ] `bin/lint-php.sh` passes.
-- [ ] `composer test` passes.
-- [ ] `vendor/bin/phpcs --standard=WordPress spectre-icons.php includes/`
-      passes, or any deviation is explained.
-- [ ] `npm run test:e2e:smoke` passes when activation or settings behavior is
-      touched.
-- [ ] `npm run test:e2e:elementor` passes when Elementor picker, preview, or
-      rendering behavior is touched.
-- [ ] Manual WordPress activation check completed when release packaging or
-      bootstrap behavior changes.
-- [ ] Manual Elementor editor and frontend rendering check completed when icon
-      behavior changes.
+- [ ] `vendor/bin/phpcs --standard=WordPress spectre-icons.php includes/` passes, or any deviation is explained.
+- [ ] Manual WordPress activation check completed when release packaging or bootstrap behavior changes.
 
 ## Documentation
 
@@ -101,6 +121,8 @@ Status: Ready / Blocked
 - ...
 
 ### Validation Completed
+- [ ] npm run check:full (PHP + lint + E2E smoke + elementor + my-icons)
+- [ ] Manual activation check
 - ...
 
 ### Validation Not Run

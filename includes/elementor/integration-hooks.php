@@ -39,6 +39,15 @@ function spectre_icons_elementor_bootstrap() {
 	$settings = new Spectre_Icons_Elementor_Settings();
 	$manager  = Spectre_Icons_Elementor_Library_Adapter::instance( $settings );
 
+	// Populate the manifest registry immediately so render_icon works on the
+	// frontend even if elementor/icons_manager/additional_tabs fires too late
+	// or not at all (e.g. when Elementor has cached its tabs config).
+	spectre_icons_ensure_manifests_registered();
+
+	// Re-register on elementor/init as a safety net for edge cases where
+	// user-uploaded manifests are added after the initial plugin bootstrap.
+	add_action( 'elementor/init', 'spectre_icons_ensure_manifests_registered', 5 );
+
 	// Register Elementor icon tabs.
 	add_filter(
 		'elementor/icons_manager/additional_tabs',

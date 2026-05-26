@@ -174,25 +174,30 @@ The registry handles three manifest shapes:
 ## Development commands
 
 ```bash
-# Full validation — mirrors CI exactly
-npm run check       # composer validate + composer test + composer lint
+# ── REQUIRED before every handoff to Brad ──────────────────────────────────
+# PHPUnit + PHPCS alone are NOT sufficient. They cannot catch silent
+# render_icon failures. Always run check:full before marking work done.
+npm run test:e2e:setup   # start wp-env + install Elementor (once per session)
+npm run check:full       # PHP tests + lint + smoke + elementor + my-icons E2E
 
-# PHP lint
-bin/lint-php.sh
+# ── Individual commands ─────────────────────────────────────────────────────
+# PHP only (no WP environment needed)
+npm run check            # composer validate + composer test + composer lint
+composer test            # PHPUnit only
+bin/lint-php.sh          # PHPCS only
 composer lint
 
-# PHP unit tests (no WP environment needed)
-composer test
-
-# E2E tests (requires running WP + Elementor — see .wp-env.json)
+# E2E tests (requires running wp-env — see .wp-env.json)
 npm install
-npm run test:e2e            # full suite
-npm run test:e2e:smoke      # activation + settings smoke test
-npm run test:e2e:elementor  # icon picker + rendering flows
+npm run test:e2e             # full E2E suite
+npm run test:e2e:smoke       # activation + settings smoke test
+npm run test:e2e:elementor   # icon picker + rendering flows (bundled libraries)
+npm run test:e2e:my-icons    # My Icons upload + published frontend render
 
-# Start local WP environment
+# wp-env lifecycle
 npm run wp-env:start
 npm run wp-env:install-elementor
+npm run wp-env:stop
 ```
 
 Environment variables for e2e tests:
@@ -214,7 +219,9 @@ Update these files consistently for each release:
 6. Comparison links at the bottom of `CHANGELOG.md`
 7. `readme.txt` changelog section
 
-Run `npm run check` to validate against the full CI suite before handing off.
+Run `npm run check:full` (requires running wp-env) to validate against the full
+CI suite — PHP tests, lint, and all three E2E suites — before handing off.
+`npm run check` alone is NOT sufficient; it does not run E2E.
 Then pass to Codex for release-readiness review before Brad commits. See
 `.codex/release-readiness.md` for the full pre-release checklist.
 

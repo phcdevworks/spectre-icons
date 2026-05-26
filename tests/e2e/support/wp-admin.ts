@@ -82,3 +82,40 @@ export async function saveSettings(page: Page) {
   await page.getByRole('button', { name: /save changes|save/i }).click();
   await page.waitForLoadState('domcontentloaded');
 }
+
+export async function openMyIconsPage(page: Page) {
+  await gotoAdmin(page, 'options-general.php?page=spectre-icons-my-icons');
+  await dismissAdminOverlays(page);
+}
+
+/**
+ * Upload an SVG file to the My Icons library.
+ *
+ * @param page        Playwright page.
+ * @param svgContent  Raw SVG string to upload.
+ * @param filename    Filename to use for the upload (must end in .svg).
+ * @returns The derived icon slug shown in the UI after upload.
+ */
+export async function uploadMyIcon(page: Page, svgContent: string, filename: string): Promise<void> {
+  await openMyIconsPage(page);
+
+  const fileInput = page.locator('input[type="file"][accept*="svg"], input[type="file"][name*="svg"]').first();
+  await expect(fileInput).toBeAttached();
+
+  const buffer = Buffer.from(svgContent);
+  await fileInput.setInputFiles({
+    name: filename,
+    mimeType: 'image/svg+xml',
+    buffer,
+  });
+
+  const uploadButton = page
+    .getByRole('button', { name: /upload|add icon/i })
+    .first();
+  await expect(uploadButton).toBeVisible();
+  await uploadButton.click();
+
+  // Wait for the icon to appear in the library list.
+  const slug = filename.replace(/\.svg$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '-');
+  await page.waitForSelector(`[data-slug="${slug}"], .spectre-icon-item[data-icon="${slug}"], .spectre-icons-icon-list li`, { timeout: 10_000 });
+}
