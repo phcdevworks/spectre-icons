@@ -6,6 +6,19 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-05-26
+
+Release Title: Unlimited My Icons Uploads
+
+### Changed
+
+- Changed the `My Icons` upload library to be unlimited by default while
+  preserving the `spectre_icons_user_library_limit` filter for sites or
+  extensions that need to enforce a numeric cap.
+- Updated the upload page, AJAX responses, and admin JavaScript so unlimited
+  libraries display as a simple icon count and only enforce limits when a
+  numeric limit is configured.
+
 ## [1.3.1] - 2026-05-25
 
 Release Title: Maintenance Metadata Update
@@ -241,7 +254,8 @@ Release Title: Initial Public Foundation
 - Improved editor tooling support with updated local diagnostics and stub
   configuration for PHP development.
 
-[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.3.1...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.4.0...HEAD
+[1.4.0]: https://github.com/phcdevworks/spectre-icons/compare/1.3.1...1.4.0
 [1.3.1]: https://github.com/phcdevworks/spectre-icons/compare/1.3.0...1.3.1
 [1.3.0]: https://github.com/phcdevworks/spectre-icons/compare/1.2.1...1.3.0
 [1.2.1]: https://github.com/phcdevworks/spectre-icons/compare/1.2.0...1.2.1

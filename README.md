@@ -24,7 +24,7 @@ individually from plugin settings. Disabled libraries are hidden from the picker
   Elementor's color controls without a separate font file.
 - You want to enable or disable icon libraries individually without touching
   icons already placed on your site.
-- You want a small site-specific `My Icons` library for sanitized SVG uploads.
+- You want a site-specific `My Icons` library for sanitized SVG uploads.
 
 **Do not use Spectre Icons if:**
 
@@ -38,7 +38,7 @@ individually from plugin settings. Disabled libraries are hidden from the picker
 - Manifest-driven icon library registration — no scattered builder-specific definitions
 - Inline SVG rendering in both editor preview and frontend
 - Enable or disable individual icon libraries from plugin settings
-- Upload up to 25 custom SVG files to a site-specific `My Icons` library
+- Upload custom SVG files to a site-specific `My Icons` library
 - Disabled libraries are hidden from the picker; existing icons keep rendering
 - Theme-friendly color inheritance through builder color controls
 - Modular architecture for future builder support
