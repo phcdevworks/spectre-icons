@@ -70,15 +70,13 @@
   stroke: none !important;
 }
 
-/* Outline style icons (Lucide) */
+/* Outline style icons */
 .spectre-icon--style-outline svg,
 .spectre-icon--style-outline svg * {
   /* Elementor core forces .elementor-icon svg { fill: currentColor } so override aggressively */
   fill: none !important;
   stroke: currentColor !important;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  stroke-width: inherit;
 }
 
 /* Filled style icons (Font Awesome) */
