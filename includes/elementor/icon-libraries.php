@@ -180,3 +180,57 @@ function spectre_icons_elementor_register_manifest_libraries( $libraries ) {
 }
 
 add_filter( 'spectre_icons_elementor_icon_libraries', 'spectre_icons_elementor_register_manifest_libraries' );
+
+/**
+ * Register all known manifests with the core registry (idempotent).
+ *
+ * Bypasses the Elementor tab filter chain so the registry is populated
+ * before any render_icon call, regardless of whether the
+ * elementor/icons_manager/additional_tabs filter has fired.
+ *
+ * Safe to call multiple times — already-registered libraries are skipped.
+ *
+ * @return void
+ */
+function spectre_icons_ensure_manifests_registered() {
+	$defs = spectre_icons_get_library_definitions();
+
+	foreach ( $defs as $slug => $def ) {
+		$slug = sanitize_key( $slug );
+		if ( '' === $slug ) {
+			continue;
+		}
+
+		if ( Spectre_Icons_Manifest_Registry::has_library( $slug ) ) {
+			continue;
+		}
+
+		if ( ! empty( $def['manifest_path'] ) ) {
+			$real = wp_normalize_path( (string) $def['manifest_path'] );
+			if ( ! is_file( $real ) ) {
+				continue;
+			}
+		} else {
+			$manifest_file = isset( $def['manifest_file'] ) ? (string) $def['manifest_file'] : '';
+			$real          = spectre_icons_resolve_manifest_path( $manifest_file );
+			if ( ! $real ) {
+				continue;
+			}
+		}
+
+		$class_prefix_raw = isset( $def['class_prefix'] ) ? (string) $def['class_prefix'] : '';
+		$class_prefix     = preg_replace( '/[^a-z0-9\-_]/i', '', $class_prefix_raw );
+		$style            = isset( $def['style'] ) ? (string) $def['style'] : '';
+
+		Spectre_Icons_Manifest_Registry::register_manifest(
+			$slug,
+			$real,
+			array(
+				'prefix'  => $class_prefix,
+				'options' => array(
+					'style' => $style,
+				),
+			)
+		);
+	}
+}

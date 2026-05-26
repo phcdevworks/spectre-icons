@@ -20,24 +20,26 @@ if ( ! defined( 'SPECTRE_ICONS_VERSION' ) ) {
 	define( 'SPECTRE_ICONS_VERSION', 'test' );
 }
 
-$GLOBALS['spectre_wp_filters']           = array();
-$GLOBALS['spectre_wp_actions']           = array();
-$GLOBALS['spectre_wp_options']           = array();
-$GLOBALS['spectre_wp_styles']            = array();
-$GLOBALS['spectre_wp_scripts']           = array();
-$GLOBALS['spectre_wp_inline_styles']     = array();
-$GLOBALS['spectre_wp_localized_scripts'] = array();
-$GLOBALS['spectre_wp_current_screen']    = (object) array( 'id' => 'plugins' );
+$GLOBALS['spectre_wp_filters']                      = array();
+$GLOBALS['spectre_wp_actions']                      = array();
+$GLOBALS['spectre_wp_options']                      = array();
+$GLOBALS['spectre_wp_styles']                       = array();
+$GLOBALS['spectre_wp_scripts']                      = array();
+$GLOBALS['spectre_wp_inline_styles']                = array();
+$GLOBALS['spectre_wp_localized_scripts']            = array();
+$GLOBALS['spectre_wp_current_screen']               = (object) array( 'id' => 'plugins' );
+$GLOBALS['spectre_icons_library_definitions_cache'] = null;
 
 function spectre_icons_tests_reset_wordpress_state() {
-	$GLOBALS['spectre_wp_filters']           = array();
-	$GLOBALS['spectre_wp_actions']           = array();
-	$GLOBALS['spectre_wp_options']           = array();
-	$GLOBALS['spectre_wp_styles']            = array();
-	$GLOBALS['spectre_wp_scripts']           = array();
-	$GLOBALS['spectre_wp_inline_styles']     = array();
-	$GLOBALS['spectre_wp_localized_scripts'] = array();
-	$GLOBALS['spectre_wp_current_screen']    = (object) array( 'id' => 'plugins' );
+	$GLOBALS['spectre_wp_filters']                      = array();
+	$GLOBALS['spectre_wp_actions']                      = array();
+	$GLOBALS['spectre_wp_options']                      = array();
+	$GLOBALS['spectre_wp_styles']                       = array();
+	$GLOBALS['spectre_wp_scripts']                      = array();
+	$GLOBALS['spectre_wp_inline_styles']                = array();
+	$GLOBALS['spectre_wp_localized_scripts']            = array();
+	$GLOBALS['spectre_wp_current_screen']               = (object) array( 'id' => 'plugins' );
+	$GLOBALS['spectre_icons_library_definitions_cache'] = null;
 }
 
 if ( ! function_exists( 'add_filter' ) ) {
@@ -326,6 +328,7 @@ require_once SPECTRE_ICONS_PATH . 'includes/class-spectre-icons-svg-sanitizer.ph
 require_once SPECTRE_ICONS_PATH . 'includes/core/class-spectre-icons-manifest-registry.php';
 require_once SPECTRE_ICONS_PATH . 'includes/core/class-spectre-icons-icon-renderer.php';
 require_once SPECTRE_ICONS_PATH . 'includes/core/manifest-helpers.php';
+require_once SPECTRE_ICONS_PATH . 'includes/core/class-spectre-icons-user-library-manager.php';
 require_once SPECTRE_ICONS_PATH . 'includes/elementor/class-spectre-icons-elementor-settings.php';
 require_once SPECTRE_ICONS_PATH . 'includes/elementor/class-spectre-icons-elementor-library-adapter.php';
 require_once SPECTRE_ICONS_PATH . 'includes/elementor/icon-libraries.php';
@@ -342,6 +345,7 @@ abstract class Spectre_Icons_PHPUnit_Test_Case extends TestCase {
 		parent::setUp();
 
 		spectre_icons_tests_reset_wordpress_state();
+		spectre_icons_reset_library_definitions_cache();
 		add_filter( 'spectre_icons_elementor_icon_libraries', 'spectre_icons_elementor_register_manifest_libraries' );
 		$this->reset_static_property( 'Spectre_Icons_Manifest_Registry', 'libraries', array() );
 		$this->reset_static_property( 'Spectre_Icons_Manifest_Registry', 'icons_cache', array() );
@@ -370,6 +374,21 @@ abstract class Spectre_Icons_PHPUnit_Test_Case extends TestCase {
 		$reflection = new ReflectionProperty( $class_name, $property_name );
 		$reflection->setAccessible( true );
 		$reflection->setValue( null, $value );
+	}
+}
+
+if ( ! function_exists( 'wp_upload_dir' ) ) {
+	function wp_upload_dir( $time = null, $create_dir = true, $refresh_cache = false ) {
+		return array(
+			'basedir' => sys_get_temp_dir(),
+			'baseurl' => 'http://example.org/wp-content/uploads',
+		);
+	}
+}
+
+if ( ! function_exists( 'esc_url_raw' ) ) {
+	function esc_url_raw( $url, $protocols = null ) {
+		return filter_var( (string) $url, FILTER_SANITIZE_URL );
 	}
 }
 

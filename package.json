@@ -8,10 +8,12 @@
   },
   "scripts": {
     "check": "composer validate --no-check-lock && composer test && composer lint",
+    "check:full": "npm run check && npm run test:e2e:smoke && npm run test:e2e:elementor && npm run test:e2e:my-icons",
     "test": "npm run test:e2e",
     "test:php": "composer test",
     "test:e2e": "playwright test",
     "test:e2e:elementor": "playwright test tests/e2e/elementor",
+    "test:e2e:my-icons": "playwright test tests/e2e/elementor/my-icons.spec.ts",
     "test:e2e:smoke": "playwright test tests/e2e/smoke.spec.ts",
     "test:e2e:headed": "playwright test --headed",
     "wp-env:start": "npx wp-env start",

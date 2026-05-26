@@ -120,6 +120,9 @@ final class Spectre_Icons_User_Library_Manager {
 	/**
 	 * Read all user icons from the manifest.
 	 *
+	 * Uses native PHP for the read so this works on the frontend before
+	 * WP_Filesystem has been initialised (WP_Filesystem is for writes only).
+	 *
 	 * @return array<string,string> Slug => sanitized SVG string.
 	 */
 	public static function get_icons() {
@@ -129,12 +132,8 @@ final class Spectre_Icons_User_Library_Manager {
 			return array();
 		}
 
-		$fs = self::filesystem();
-		if ( ! $fs ) {
-			return array();
-		}
-
-		$raw = $fs->get_contents( $path );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$raw = file_get_contents( $path );
 
 		if ( false === $raw || '' === trim( $raw ) ) {
 			return array();
