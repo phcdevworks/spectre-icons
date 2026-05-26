@@ -20,26 +20,28 @@ if ( ! defined( 'SPECTRE_ICONS_VERSION' ) ) {
 	define( 'SPECTRE_ICONS_VERSION', 'test' );
 }
 
-$GLOBALS['spectre_wp_filters']                      = array();
-$GLOBALS['spectre_wp_actions']                      = array();
-$GLOBALS['spectre_wp_options']                      = array();
-$GLOBALS['spectre_wp_styles']                       = array();
-$GLOBALS['spectre_wp_scripts']                      = array();
-$GLOBALS['spectre_wp_inline_styles']                = array();
-$GLOBALS['spectre_wp_localized_scripts']            = array();
-$GLOBALS['spectre_wp_current_screen']               = (object) array( 'id' => 'plugins' );
-$GLOBALS['spectre_icons_library_definitions_cache'] = null;
+$GLOBALS['spectre_wp_filters']                       = array();
+$GLOBALS['spectre_wp_actions']                       = array();
+$GLOBALS['spectre_wp_options']                       = array();
+$GLOBALS['spectre_wp_styles']                        = array();
+$GLOBALS['spectre_wp_scripts']                       = array();
+$GLOBALS['spectre_wp_inline_styles']                 = array();
+$GLOBALS['spectre_wp_localized_scripts']             = array();
+$GLOBALS['spectre_wp_current_screen']                = (object) array( 'id' => 'plugins' );
+$GLOBALS['spectre_icons_library_definitions_cache']  = null;
+$GLOBALS['spectre_icons_elementor_settings_manager'] = null;
 
 function spectre_icons_tests_reset_wordpress_state() {
-	$GLOBALS['spectre_wp_filters']                      = array();
-	$GLOBALS['spectre_wp_actions']                      = array();
-	$GLOBALS['spectre_wp_options']                      = array();
-	$GLOBALS['spectre_wp_styles']                       = array();
-	$GLOBALS['spectre_wp_scripts']                      = array();
-	$GLOBALS['spectre_wp_inline_styles']                = array();
-	$GLOBALS['spectre_wp_localized_scripts']            = array();
-	$GLOBALS['spectre_wp_current_screen']               = (object) array( 'id' => 'plugins' );
-	$GLOBALS['spectre_icons_library_definitions_cache'] = null;
+	$GLOBALS['spectre_wp_filters']                       = array();
+	$GLOBALS['spectre_wp_actions']                       = array();
+	$GLOBALS['spectre_wp_options']                       = array();
+	$GLOBALS['spectre_wp_styles']                        = array();
+	$GLOBALS['spectre_wp_scripts']                       = array();
+	$GLOBALS['spectre_wp_inline_styles']                 = array();
+	$GLOBALS['spectre_wp_localized_scripts']             = array();
+	$GLOBALS['spectre_wp_current_screen']                = (object) array( 'id' => 'plugins' );
+	$GLOBALS['spectre_icons_library_definitions_cache']  = null;
+	$GLOBALS['spectre_icons_elementor_settings_manager'] = null;
 }
 
 if ( ! function_exists( 'add_filter' ) ) {
