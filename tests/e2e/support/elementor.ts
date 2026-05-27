@@ -89,7 +89,13 @@ export async function dismissEditorOverlays(page: Page) {
 async function waitForEditorReady(page: Page) {
   await page.locator('#elementor-loading').waitFor({ state: 'hidden', timeout: 60_000 }).catch(() => {});
   await dismissEditorOverlays(page);
-  await page.locator('.announcements-screen-overlay').waitFor({ state: 'hidden', timeout: 10_000 }).catch(() => {});
+  const overlay = page.locator('.announcements-screen-overlay');
+  const cleared = await overlay.waitFor({ state: 'hidden', timeout: 30_000 }).then(() => true).catch(() => false);
+  if (!cleared) {
+    await page.evaluate(() => {
+      document.querySelectorAll('.announcements-screen-overlay, #e-announcements-root').forEach(el => (el as HTMLElement).style.display = 'none');
+    });
+  }
 }
 
 export async function ensureLibraryTabVisible(page: Page, librarySlug: string) {
