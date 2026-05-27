@@ -6,6 +6,33 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-05-27
+
+Release Title: File-Based My Icons Storage
+
+### Added
+
+- Added file-based storage for uploaded My Icons SVGs, writing each icon to an
+  individual sanitized `.svg` file under the Spectre Icons uploads directory.
+- Added a compiled `manifest-compiled.json` for editor JavaScript while keeping
+  the PHP-facing `manifest.json` as a lightweight icon index.
+- Added a one-time admin migration for existing inline My Icons manifests from
+  `1.4.x`, preserving saved `spectre-user-*` icon classes.
+
+### Changed
+
+- Changed uploaded icon manifests to store filename references instead of full
+  inline SVG payloads after migration or new uploads.
+- Updated the manifest registry to resolve filename-based SVG entries while
+  retaining support for legacy inline SVG manifest values.
+
+### Fixed
+
+- Preserved backward-compatible rendering for pre-`1.5.0` uploaded icon
+  manifests when migration cannot fully rewrite an individual icon file.
+- Removed individual uploaded SVG files when their matching My Icons entry is
+  deleted from the library.
+
 ## [1.4.1] - 2026-05-27
 
 Release Title: Manifest Reliability and E2E Stabilization
@@ -291,7 +318,8 @@ Release Title: Initial Public Foundation
 - Improved editor tooling support with updated local diagnostics and stub
   configuration for PHP development.
 
-[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.4.1...HEAD
+[unreleased]: https://github.com/phcdevworks/spectre-icons/compare/1.5.0...HEAD
+[1.5.0]: https://github.com/phcdevworks/spectre-icons/compare/1.4.1...1.5.0
 [1.4.1]: https://github.com/phcdevworks/spectre-icons/compare/1.4.0...1.4.1
 [1.4.0]: https://github.com/phcdevworks/spectre-icons/compare/1.3.1...1.4.0
 [1.3.1]: https://github.com/phcdevworks/spectre-icons/compare/1.3.0...1.3.1
