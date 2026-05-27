@@ -104,7 +104,8 @@ npm install        # installs Playwright and wp-env
 ### Full validation (mirrors CI)
 
 ```bash
-npm run check      # composer validate + composer test + composer lint
+npm run check       # composer validate + composer test + composer lint
+npm run check:full  # PHP checks + Playwright smoke, Elementor, and My Icons e2e
 ```
 
 ### Individual commands
@@ -118,11 +119,12 @@ composer test            # PHPUnit — no WordPress environment required
 ### E2E tests (requires a running WordPress + Elementor environment)
 
 ```bash
-npm run wp-env:start              # start local WP environment
-npm run wp-env:install-elementor  # install and activate Elementor
-npm run test:e2e                  # full Playwright suite
-npm run test:e2e:smoke            # activation and settings check
-npm run test:e2e:elementor        # icon picker and rendering flows
+npm run test:e2e:setup      # start wp-env, install pinned Elementor, activate Spectre Icons
+npm run test:e2e            # full Playwright suite
+npm run test:e2e:smoke      # activation and settings check
+npm run test:e2e:elementor  # icon picker and rendering flows
+npm run test:e2e:my-icons   # uploaded icon picker, editor preview, and frontend flows
+npm run wp-env:stop         # stop the local environment
 ```
 
 Optional environment variables for remote WP targets:
