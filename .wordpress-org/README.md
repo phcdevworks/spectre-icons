@@ -5,7 +5,7 @@
 **Requires at least:** 6.0
 **Tested up to:** 7.0
 **Requires PHP:** 7.4
-**Stable tag:** 1.4.1
+**Stable tag:** 1.5.0
 **License:** GPLv2 or later
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,6 +43,14 @@ Manifests keep SVG markup out of PHP files and allow the plugin to load icons ef
 Yes. Upload SVG files from **Settings -> My Icons**. Uploaded icons are sanitized, stored in a site-specific My Icons library, and appear in supported builder icon pickers after the first upload.
 
 ## Changelog
+
+### 1.5.0
+
+- Added file-based storage for uploaded My Icons SVGs, with each icon stored as an individual sanitized .svg file.
+- Added a lightweight manifest index and compiled editor manifest for uploaded icon libraries.
+- Migrated existing 1.4.x inline My Icons manifests to the new storage layout on the next admin load.
+- Preserved saved spectre-user-* icon classes and legacy inline manifest fallback behavior during migration.
+- Removed individual uploaded SVG files when their matching My Icons entry is deleted.
 
 ### 1.4.1
 

@@ -4,7 +4,7 @@ Tags: icons, elementor, svg, lucide, font awesome
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.4.1
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,15 @@ Yes. Upload SVG files from Settings → My Icons. Uploaded icons are sanitized, 
 WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x tested through Elementor 4.x.
 
 == Changelog ==
+
+= 1.5.0 =
+
+* Adds file-based storage for uploaded My Icons SVGs, with each icon stored as an individual sanitized .svg file
+* Adds a lightweight manifest index and compiled editor manifest for uploaded icon libraries
+* Migrates existing 1.4.x inline My Icons manifests to the new storage layout on the next admin load
+* Preserves saved spectre-user-* icon classes and legacy inline manifest fallback behavior during migration
+* Resolves filename-based SVG entries in the manifest registry while keeping bundled icon slugs unchanged
+* Removes individual uploaded SVG files when their matching My Icons entry is deleted
 
 = 1.4.1 =
 
@@ -121,6 +130,9 @@ WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x tested through Elementor 4.x.
 * Cleaned up WordPress.org ZIP packaging
 
 == Upgrade Notice ==
+
+= 1.5.0 =
+Migrates uploaded My Icons storage to individual SVG files plus a compiled editor manifest. Existing uploaded icons and saved spectre-user-* icon classes are preserved.
 
 = 1.4.1 =
 Improves manifest discovery, uploaded icon preview/render reliability, and Elementor validation stability. Existing bundled icons, uploaded icons, and saved icon classes are preserved.
