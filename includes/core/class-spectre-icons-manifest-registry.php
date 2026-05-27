@@ -246,7 +246,21 @@ if ( ! class_exists( 'Spectre_Icons_Manifest_Registry' ) ) :
 						continue;
 					}
 					if ( is_string( $icon_entry ) && '' !== trim( $icon_entry ) ) {
-						$icons[ $slug ] = array( 'svg' => $icon_entry );
+						$trimmed = trim( $icon_entry );
+						// Format 4: filename reference — .svg extension with no SVG markup.
+						if ( '.svg' === substr( strtolower( $trimmed ), -4 ) && false === strpos( $trimmed, '<' ) ) {
+							$svg_file = trailingslashit( dirname( $manifest_path ) ) . basename( $trimmed );
+							if ( '' !== $manifest_path && file_exists( $svg_file ) ) {
+								// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+								$svg_content = file_get_contents( $svg_file );
+								if ( false !== $svg_content && '' !== trim( $svg_content ) ) {
+									$icons[ $slug ] = array( 'svg' => $svg_content );
+									continue;
+								}
+							}
+							continue; // File missing or unreadable — skip icon.
+						}
+						$icons[ $slug ] = array( 'svg' => $trimmed );
 						continue;
 					}
 					if ( is_array( $icon_entry ) ) {
