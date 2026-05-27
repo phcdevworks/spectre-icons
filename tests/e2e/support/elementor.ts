@@ -1,46 +1,27 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import { execFileSync } from 'node:child_process';
 import { gotoAdmin } from './wp-admin';
 
 export async function openNewPageInElementor(page: Page) {
   await gotoAdmin(page, 'index.php');
-  const postId = createElementorPage();
-  await page.goto(`/wp-admin/post.php?post=${postId}&action=elementor`, { waitUntil: 'domcontentloaded' });
-  await expect(page.getByPlaceholder('Search Widget...')).toBeVisible();
-  await waitForEditorReady(page);
-}
 
-function createElementorPage(): string {
-  const output = execFileSync(
-    'npx',
-    [
-      'wp-env',
-      'run',
-      'cli',
-      '--',
-      'wp',
-      'post',
-      'create',
-      '--post_type=page',
-      '--post_status=publish',
-      `--post_title=Elementor ${Date.now()}`,
-      '--porcelain',
-      '--skip-plugins',
-      '--skip-themes',
-    ],
-    {
-      encoding: 'utf8',
-      env: process.env,
-      stdio: ['ignore', 'pipe', 'pipe'],
-    }
+  const nonce = await page.evaluate(
+    () => (window as unknown as { wpApiSettings?: { nonce?: string } }).wpApiSettings?.nonce ?? ''
   );
 
-  const match = output.match(/^\d+$/m);
-  if (!match) {
-    throw new Error(`Could not create Elementor test page. wp-env output:\n${output}`);
+  const baseURL = process.env.SPECTRE_E2E_BASE_URL ?? 'http://localhost:8888';
+  const response = await page.request.post(`${baseURL}/wp-json/wp/v2/pages`, {
+    headers: { 'X-WP-Nonce': nonce },
+    data: { title: `Elementor Test ${Date.now()}`, status: 'publish' },
+  });
+
+  if (!response.ok()) {
+    throw new Error(`Could not create Elementor test page (HTTP ${response.status()}): ${await response.text()}`);
   }
 
-  return match[0];
+  const data = await response.json() as { id: number };
+  await page.goto(`/wp-admin/post.php?post=${data.id}&action=elementor`, { waitUntil: 'domcontentloaded' });
+  await expect(page.getByPlaceholder('Search Widget...')).toBeVisible();
+  await waitForEditorReady(page);
 }
 
 export async function addIconWidget(page: Page) {
