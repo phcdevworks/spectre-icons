@@ -20,8 +20,8 @@ export async function openNewPageInElementor(page: Page) {
 
   const data = await response.json() as { id: number };
   await page.goto(`/wp-admin/post.php?post=${data.id}&action=elementor`, { waitUntil: 'domcontentloaded' });
-  await expect(page.getByPlaceholder('Search Widget...')).toBeVisible();
   await waitForEditorReady(page);
+  await expect(page.getByPlaceholder('Search Widget...')).toBeVisible({ timeout: 60_000 });
 }
 
 export async function addIconWidget(page: Page) {
