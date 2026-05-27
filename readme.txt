@@ -63,6 +63,10 @@ WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x tested through Elementor 4.x.
 * Fixes manifest header discovery so library metadata does not depend on the WordPress filesystem global
 * Reads only the small manifest header needed for icon library metadata instead of loading entire large manifest files during discovery
 * Fixes Elementor preview config support for uploaded and external manifest_path icon libraries
+* Ensures uploaded icon manifests are available before editor and frontend render calls need them
+* Improves outline icon rendering by preserving inherited stroke behavior instead of forcing SVG fill or stroke values
+* Adds My Icons e2e coverage for uploaded icons in the Elementor picker, editor preview, and published frontend
+* Stabilizes GitHub Actions and wp-env e2e setup by pinning Elementor, activating Spectre Icons, waiting for WordPress readiness, and collecting failure logs
 
 = 1.4.0 =
 
@@ -119,7 +123,7 @@ WordPress 6.0+, PHP 7.4+, and Elementor 3.x or 4.x tested through Elementor 4.x.
 == Upgrade Notice ==
 
 = 1.4.1 =
-Improves manifest discovery and uploaded icon library preview reliability. Existing bundled icons, uploaded icons, and saved icon classes are preserved.
+Improves manifest discovery, uploaded icon preview/render reliability, and Elementor validation stability. Existing bundled icons, uploaded icons, and saved icon classes are preserved.
 
 = 1.4.0 =
 My Icons uploads are unlimited by default. Sites using the spectre_icons_user_library_limit filter can still enforce a custom cap.

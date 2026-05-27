@@ -1,46 +1,75 @@
 # Spectre Icons
 
-**Contributors:** spectre
-**Tags:** icons, elementor, svg, library
+**Contributors:** phcdevworks
+**Tags:** icons, elementor, svg, lucide, font awesome
 **Requires at least:** 6.0
-**Tested up to:** 6.7
+**Tested up to:** 7.0
 **Requires PHP:** 7.4
-**Stable tag:** 1.2.0
+**Stable tag:** 1.4.1
 **License:** GPLv2 or later
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html
 
-Curated SVG icon libraries for Elementor with fast manifests, inline rendering, and color controls.
+Adds Lucide, Font Awesome, and uploaded SVG icon libraries to Elementor's icon picker.
 
 ## Description
 
-Spectre Icons exposes Spectre's icon packs inside Elementor's icon picker, renders them as inline SVGs on the frontend, and keeps everything modular for future builder support. Key features:
+Spectre Icons registers curated and uploaded SVG icon libraries inside Elementor's icon picker and renders them as inline SVGs on the frontend. Key features:
 
-- Toggle individual libraries from **Settings → Spectre Icons**
-- Manifest-driven SVG rendering for Lucide + Font Awesome
-- Automatic inline SVG injection within Elementor
-- Translation-ready strings and clean frontend rendering
+- Enable or disable individual libraries from **Settings -> Spectre Icons**
+- Upload custom SVG icons from **Settings -> My Icons**
+- Manifest-driven rendering for bundled and uploaded SVG libraries
+- Inline SVG injection in Elementor editor preview and frontend
+- Disabled libraries stay hidden from the picker while existing icons keep rendering
+- Theme-friendly color inheritance through Elementor color controls
 
 ## Installation
 
 1. Upload the plugin folder to `/wp-content/plugins/` or install the ZIP via the WordPress dashboard.
 2. Activate **Spectre Icons** through the "Plugins" screen.
-3. Visit **Settings → Spectre Icons** and enable the icon libraries you want.
+3. Visit **Settings -> Spectre Icons** and enable the icon libraries you want.
 
 ## Frequently Asked Questions
 
 **Do I need Elementor installed?**
-Yes, the current integration targets Elementor 3.0+ and 4.x. The architecture is modular for future builder support.
+Yes, the current integration targets Elementor 3.x and 4.x. The architecture is modular for future builder support.
 
 **Can I disable individual icon libraries?**
-Yes. Uncheck a library under **Settings → Spectre Icons** to hide it from the Elementor icon picker. Icons already placed on your site will continue to render.
+Yes. Uncheck a library under **Settings -> Spectre Icons** to hide it from the Elementor icon picker. Icons already placed on your site will continue to render.
 
 **Why does the plugin use JSON manifests?**
-Manifests keep SVG markup out of PHP files and allow the plugin to load icons efficiently. The bundled manifests are locked assets — no CLI script is needed.
+Manifests keep SVG markup out of PHP files and allow the plugin to load icons efficiently. Bundled icon source files are locked assets.
 
 **Can I add my own icon packs?**
-Custom icon library registration is a pro feature.
+Yes. Upload SVG files from **Settings -> My Icons**. Uploaded icons are sanitized, stored in a site-specific My Icons library, and appear in supported builder icon pickers after the first upload.
 
 ## Changelog
+
+### 1.4.1
+
+- Fixed manifest header discovery and manifest_path preview support for uploaded and external icon libraries.
+- Ensured uploaded icon manifests are available before editor and frontend render calls need them.
+- Improved outline icon rendering by preserving inherited stroke behavior.
+- Added My Icons end-to-end coverage for picker, editor preview, and frontend rendering.
+- Stabilized GitHub Actions and wp-env e2e setup with pinned Elementor, plugin activation, readiness checks, and failure logs.
+
+### 1.4.0
+
+- Made the My Icons upload library unlimited by default.
+- Kept support for custom limits through the spectre_icons_user_library_limit filter.
+- Updated the upload page and admin JavaScript to display and enforce limits only when a numeric limit is configured.
+
+### 1.3.1
+
+- Updated release metadata for the 1.3.1 maintenance release.
+- Preserved bundled library slugs, saved icon class prefixes, and existing icon rendering behavior.
+
+### 1.3.0
+
+- Added the My Icons admin page for site-specific SVG uploads.
+- Added the spectre-user icon library for uploaded icons in Elementor.
+- Added upload and delete controls with SVG sanitization, file-size checks, and safe manifest storage.
+- Added Font Awesome Elementor e2e coverage and release/version proposal tooling.
+- Updated compatibility metadata for WordPress 7.0 and Elementor 4.x.
 
 ### 1.2.0
 
@@ -70,4 +99,4 @@ Spectre Icons plugin code is GPL-2.0-or-later. Bundled icon packs retain their u
 - Lucide — ISC (MIT-compatible): https://github.com/lucide-icons/lucide
 - Font Awesome Free — CC BY 4.0 for icons / MIT for code: https://fontawesome.com/license/free
 
-See LICENSE.md for details.
+See LICENSE for details.

@@ -8,7 +8,25 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [1.4.1] - 2026-05-27
 
-Release Title: Manifest Path Reliability
+Release Title: Manifest Reliability and E2E Stabilization
+
+### Added
+
+- Added Elementor settings-manager coverage so Spectre Icons settings hooks
+  register independently of Elementor load timing.
+- Added My Icons end-to-end coverage for uploaded SVG icons in the Elementor
+  picker, editor preview, and published frontend.
+- Added GitHub Actions diagnostics for Docker, WordPress readiness, plugin
+  activation, and wp-env logs.
+
+### Changed
+
+- Improved outline icon rendering by inheriting stroke width and avoiding
+  explicit SVG fill or stroke overrides.
+- Pinned the Elementor test install and made local e2e setup activate Spectre
+  Icons for more deterministic validation.
+- Reduced the wp-env startup scope to the development environment used by the
+  Playwright suite.
 
 ### Fixed
 
@@ -18,6 +36,12 @@ Release Title: Manifest Path Reliability
 - Fixed Elementor preview config support for `manifest_path` libraries so
   uploaded and external icon manifests stay aligned with the registration and
   frontend render paths.
+- Fixed manifest availability before frontend and editor render calls so
+  uploaded icon libraries are present when Elementor asks for preview data.
+- Fixed flaky Elementor e2e flows by creating test pages deterministically and
+  handling Elementor announcements and checklist overlays.
+- Fixed plugin activation checks and WP-CLI setup commands so Elementor cannot
+  break release diagnostics during CI.
 
 ## [1.4.0] - 2026-05-26
 
