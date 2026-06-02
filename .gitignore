@@ -10,7 +10,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # Build artifacts
-dist/
 *.local
 
 # Editor directories and files

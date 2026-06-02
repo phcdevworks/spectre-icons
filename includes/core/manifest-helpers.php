@@ -13,6 +13,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Reset the library definitions cache.
+ *
+ * Call this when filters on spectre_icons_library_definitions are added or
+ * removed after the first call to spectre_icons_get_library_definitions().
+ * Primarily for test isolation — production code rarely needs this.
+ *
+ * @return void
+ */
+function spectre_icons_reset_library_definitions_cache() {
+	global $spectre_icons_library_definitions_cache;
+	$spectre_icons_library_definitions_cache = null;
+}
+
+/**
  * Return all known icon library definitions.
  *
  * Scans assets/manifests/ for *.json files and builds library definitions
@@ -32,20 +46,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @return array<string,array>
  */
-/**
- * Reset the library definitions cache.
- *
- * Call this when filters on spectre_icons_library_definitions are added or
- * removed after the first call to spectre_icons_get_library_definitions().
- * Primarily for test isolation — production code rarely needs this.
- *
- * @return void
- */
-function spectre_icons_reset_library_definitions_cache() {
-	global $spectre_icons_library_definitions_cache;
-	$spectre_icons_library_definitions_cache = null;
-}
-
 function spectre_icons_get_library_definitions() {
 	global $spectre_icons_library_definitions_cache;
 
@@ -268,4 +268,25 @@ function spectre_icons_resolve_manifest_path( $manifest_file ) {
 	}
 
 	return $real;
+}
+
+/**
+ * Write a debug message to the error log when WP_DEBUG is enabled.
+ *
+ * Centralised so both Manifest_Registry and Icon_Renderer use the same
+ * format without duplicating the WP_DEBUG guard or scalar check.
+ *
+ * @param string $message Message to log.
+ * @param string $context Short label identifying the caller, e.g. 'Manifest Registry'.
+ * @return void
+ */
+function spectre_icons_log_debug( $message, $context ) {
+	if ( ! is_scalar( $message ) ) {
+		$message = sprintf( 'Non-scalar message type: %s', gettype( $message ) );
+	}
+
+	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		error_log( sprintf( '[Spectre Icons][%s] %s', (string) $context, (string) $message ) );
+	}
 }

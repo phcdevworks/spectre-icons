@@ -16,6 +16,54 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Resolve a library definition to its real manifest path.
+ *
+ * Supports both external manifest_path entries (absolute path supplied
+ * directly) and bundled manifest_file entries (filename resolved under the
+ * plugin's manifests directory).
+ *
+ * @param array $def Library definition from spectre_icons_get_library_definitions().
+ * @return string Absolute manifest path, or empty string when unresolvable.
+ */
+function spectre_icons_get_def_real_path( array $def ) {
+	if ( ! empty( $def['manifest_path'] ) ) {
+		$real = wp_normalize_path( (string) $def['manifest_path'] );
+		return is_file( $real ) ? $real : '';
+	}
+
+	$manifest_file = isset( $def['manifest_file'] ) ? (string) $def['manifest_file'] : '';
+	$real          = spectre_icons_resolve_manifest_path( $manifest_file );
+	return $real ? $real : '';
+}
+
+/**
+ * Extract and sanitize the CSS class prefix from a library definition.
+ *
+ * @param array $def Library definition.
+ * @return string Sanitized class prefix.
+ */
+function spectre_icons_get_def_class_prefix( array $def ) {
+	$raw = isset( $def['class_prefix'] ) ? (string) $def['class_prefix'] : '';
+	return preg_replace( '/[^a-z0-9\-_]/i', '', $raw );
+}
+
+/**
+ * Extract and validate the Elementor label icon token from a library definition.
+ *
+ * Only eicon-* tokens are allowed; anything else returns an empty string.
+ *
+ * @param array $def Library definition.
+ * @return string Validated label icon or empty string.
+ */
+function spectre_icons_get_def_label_icon( array $def ) {
+	if ( isset( $def['label_icon'] ) && is_string( $def['label_icon'] )
+		&& preg_match( '/^eicon-[a-z0-9\-]+$/', $def['label_icon'] ) ) {
+		return $def['label_icon'];
+	}
+	return '';
+}
+
+/**
  * Return stored enabled/disabled states for known icon libraries.
  *
  * @return array<string,bool>
@@ -76,33 +124,17 @@ function spectre_icons_elementor_get_icon_preview_config() {
 			continue;
 		}
 
-		if ( ! empty( $def['manifest_path'] ) ) {
-			$real = wp_normalize_path( (string) $def['manifest_path'] );
-			if ( ! is_file( $real ) ) {
-				continue;
-			}
-		} else {
-			$manifest_file = isset( $def['manifest_file'] ) ? (string) $def['manifest_file'] : '';
-			$real          = spectre_icons_resolve_manifest_path( $manifest_file );
-
-			if ( ! $real ) {
-				continue;
-			}
+		$real = spectre_icons_get_def_real_path( $def );
+		if ( '' === $real ) {
+			continue;
 		}
-
-		$label_icon = ( isset( $def['label_icon'] ) && is_string( $def['label_icon'] ) && preg_match( '/^eicon-[a-z0-9\-]+$/', $def['label_icon'] ) )
-			? $def['label_icon']
-			: '';
-
-		$class_prefix_raw = isset( $def['class_prefix'] ) ? (string) $def['class_prefix'] : '';
-		$class_prefix     = preg_replace( '/[^a-z0-9\-_]/i', '', $class_prefix_raw );
 
 		$config[ $slug ] = array(
 			'name'            => $slug,
 			'label'           => isset( $def['label'] ) ? (string) $def['label'] : $slug,
-			'labelIcon'       => $label_icon,
+			'labelIcon'       => spectre_icons_get_def_label_icon( $def ),
 			'manifest'        => $real,
-			'prefix'          => $class_prefix,
+			'prefix'          => spectre_icons_get_def_class_prefix( $def ),
 			'render_callback' => array( 'Spectre_Icons_Icon_Renderer', 'render_icon' ),
 			'native'          => false,
 			'ver'             => (string) filemtime( $real ),
@@ -130,32 +162,15 @@ function spectre_icons_elementor_register_manifest_libraries( $libraries ) {
 		if ( '' === $slug ) {
 			continue;
 		}
-		// Support manifest_path (absolute path) for external manifests, e.g. user-uploaded icons.
-		if ( ! empty( $def['manifest_path'] ) ) {
-			$real = wp_normalize_path( (string) $def['manifest_path'] );
-			if ( ! is_file( $real ) ) {
-				continue;
-			}
-		} else {
-			$manifest_file = isset( $def['manifest_file'] ) ? (string) $def['manifest_file'] : '';
-			$real          = spectre_icons_resolve_manifest_path( $manifest_file );
-			if ( ! $real ) {
-				continue;
-			}
+		$real = spectre_icons_get_def_real_path( $def );
+		if ( '' === $real ) {
+			continue;
 		}
 
-		$label = isset( $def['label'] ) ? (string) $def['label'] : $slug;
+		$label        = isset( $def['label'] ) ? (string) $def['label'] : $slug;
+		$class_prefix = spectre_icons_get_def_class_prefix( $def );
+		$style        = isset( $def['style'] ) ? (string) $def['style'] : '';
 
-		$class_prefix_raw = isset( $def['class_prefix'] ) ? (string) $def['class_prefix'] : '';
-		$class_prefix     = preg_replace( '/[^a-z0-9\-_]/i', '', $class_prefix_raw );
-
-		$label_icon = ( isset( $def['label_icon'] ) && is_string( $def['label_icon'] ) && preg_match( '/^eicon-[a-z0-9\-]+$/', $def['label_icon'] ) )
-			? $def['label_icon']
-			: '';
-
-		$style = isset( $def['style'] ) ? (string) $def['style'] : '';
-
-		// Register manifest with the core registry.
 		Spectre_Icons_Manifest_Registry::register_manifest(
 			$slug,
 			$real,
@@ -172,7 +187,7 @@ function spectre_icons_elementor_register_manifest_libraries( $libraries ) {
 			'config' => array(
 				'name'            => $slug,
 				'label'           => $label,
-				'labelIcon'       => $label_icon,
+				'labelIcon'       => spectre_icons_get_def_label_icon( $def ),
 				'manifest'        => $real,
 				'prefix'          => $class_prefix,
 				'icons'           => Spectre_Icons_Manifest_Registry::get_icon_slugs( $slug ),
@@ -212,22 +227,13 @@ function spectre_icons_ensure_manifests_registered() {
 			continue;
 		}
 
-		if ( ! empty( $def['manifest_path'] ) ) {
-			$real = wp_normalize_path( (string) $def['manifest_path'] );
-			if ( ! is_file( $real ) ) {
-				continue;
-			}
-		} else {
-			$manifest_file = isset( $def['manifest_file'] ) ? (string) $def['manifest_file'] : '';
-			$real          = spectre_icons_resolve_manifest_path( $manifest_file );
-			if ( ! $real ) {
-				continue;
-			}
+		$real = spectre_icons_get_def_real_path( $def );
+		if ( '' === $real ) {
+			continue;
 		}
 
-		$class_prefix_raw = isset( $def['class_prefix'] ) ? (string) $def['class_prefix'] : '';
-		$class_prefix     = preg_replace( '/[^a-z0-9\-_]/i', '', $class_prefix_raw );
-		$style            = isset( $def['style'] ) ? (string) $def['style'] : '';
+		$class_prefix = spectre_icons_get_def_class_prefix( $def );
+		$style        = isset( $def['style'] ) ? (string) $def['style'] : '';
 
 		Spectre_Icons_Manifest_Registry::register_manifest(
 			$slug,

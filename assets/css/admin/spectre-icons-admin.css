@@ -68,7 +68,7 @@
   /* Elementor core forces .elementor-icon svg { fill: currentColor } so override aggressively */
   fill: none !important;
   stroke: currentColor !important;
-  stroke-width: inherit;
+  /* stroke-width intentionally omitted — each SVG's own attribute controls thickness */
 }
 
 /* Filled style icons (Font Awesome) */
