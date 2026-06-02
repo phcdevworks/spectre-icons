@@ -57,7 +57,7 @@ if ( ! class_exists( 'Spectre_Icons_Icon_Renderer' ) ) :
 			if ( '' === $library_slug || ! Spectre_Icons_Manifest_Registry::has_library( $library_slug ) ) {
 				$msg_lib  = is_scalar( $library_slug ) ? (string) $library_slug : gettype( $library_slug );
 				$msg_icon = is_scalar( $icon_slug ) ? (string) $icon_slug : gettype( $icon_slug );
-				self::log_debug( sprintf( 'render_icon: unknown library "%s" for icon "%s".', $msg_lib, $msg_icon ) );
+				spectre_icons_log_debug( sprintf( 'render_icon: unknown library "%s" for icon "%s".', $msg_lib, $msg_icon ), 'Icon Renderer' );
 				return '';
 			}
 
@@ -65,19 +65,19 @@ if ( ! class_exists( 'Spectre_Icons_Icon_Renderer' ) ) :
 			$icons   = Spectre_Icons_Manifest_Registry::get_icons_for( $library_slug );
 
 			if ( empty( $icons ) || ! is_array( $icons ) ) {
-				self::log_debug( sprintf( 'render_icon: no icons loaded for library "%s".', $library_slug ) );
+				spectre_icons_log_debug( sprintf( 'render_icon: no icons loaded for library "%s".', $library_slug ), 'Icon Renderer' );
 				return '';
 			}
 
 			if ( ! isset( $icons[ $icon_slug ] ) ) {
-				self::log_debug( sprintf( 'render_icon: icon "%s" not found in library "%s".', $icon_slug, $library_slug ) );
+				spectre_icons_log_debug( sprintf( 'render_icon: icon "%s" not found in library "%s".', $icon_slug, $library_slug ), 'Icon Renderer' );
 				return '';
 			}
 
 			$icon_data = $icons[ $icon_slug ];
 
 			if ( ! is_array( $icon_data ) ) {
-				self::log_debug( sprintf( 'render_icon: icon "%s" in library "%s" has invalid data structure.', $icon_slug, $library_slug ) );
+				spectre_icons_log_debug( sprintf( 'render_icon: icon "%s" in library "%s" has invalid data structure.', $icon_slug, $library_slug ), 'Icon Renderer' );
 				return '';
 			}
 
@@ -90,7 +90,7 @@ if ( ! class_exists( 'Spectre_Icons_Icon_Renderer' ) ) :
 			$svg = self::build_svg_from_manifest_icon( $icon_data );
 
 			if ( '' === $svg ) {
-				self::log_debug( sprintf( 'render_icon: icon "%s" in library "%s" has empty SVG.', $icon_slug, $library_slug ) );
+				spectre_icons_log_debug( sprintf( 'render_icon: icon "%s" in library "%s" has empty SVG.', $icon_slug, $library_slug ), 'Icon Renderer' );
 				return '';
 			}
 
@@ -351,25 +351,6 @@ if ( ! class_exists( 'Spectre_Icons_Icon_Renderer' ) ) :
 			}
 
 			return '';
-		}
-
-		/**
-		 * Internal debug logger.
-		 *
-		 * @param string $message Message to log.
-		 * @return void
-		 */
-		private static function log_debug( $message ) {
-			if ( ! is_scalar( $message ) ) {
-				$message = sprintf( 'Non-scalar message type: %s', gettype( $message ) );
-			}
-
-			$message = (string) $message;
-
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-				error_log( '[Spectre Icons][Icon Renderer] ' . $message );
-			}
 		}
 	}
 

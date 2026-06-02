@@ -67,7 +67,7 @@ if ( ! class_exists( 'Spectre_Icons_Manifest_Registry' ) ) :
 		 */
 		public static function register_manifest( $library_slug, $manifest_path, array $args = array() ) {
 			if ( ! is_scalar( $library_slug ) ) {
-				self::log_debug( sprintf( 'register_manifest called with non-scalar library slug: %s.', gettype( $library_slug ) ) );
+				spectre_icons_log_debug( sprintf( 'register_manifest called with non-scalar library slug: %s.', gettype( $library_slug ) ), 'Manifest Registry' );
 				return;
 			}
 
@@ -75,12 +75,12 @@ if ( ! class_exists( 'Spectre_Icons_Manifest_Registry' ) ) :
 
 			if ( '' === $slug ) {
 				$msg_slug = is_scalar( $library_slug ) ? (string) $library_slug : gettype( $library_slug );
-				self::log_debug( sprintf( 'register_manifest called with invalid library slug "%s".', $msg_slug ) );
+				spectre_icons_log_debug( sprintf( 'register_manifest called with invalid library slug "%s".', $msg_slug ), 'Manifest Registry' );
 				return;
 			}
 
 			if ( ! is_string( $manifest_path ) || '' === $manifest_path ) {
-				self::log_debug( sprintf( 'Library "%s" missing manifest path.', $slug ) );
+				spectre_icons_log_debug( sprintf( 'Library "%s" missing manifest path.', $slug ), 'Manifest Registry' );
 				return;
 			}
 
@@ -119,7 +119,7 @@ if ( ! class_exists( 'Spectre_Icons_Manifest_Registry' ) ) :
 
 			if ( '' === $slug || ! isset( self::$libraries[ $slug ] ) ) {
 				$msg_slug = is_scalar( $library_slug ) ? (string) $library_slug : gettype( $library_slug );
-				self::log_debug( sprintf( 'get_icon_slugs called for unknown library "%s".', $msg_slug ) );
+				spectre_icons_log_debug( sprintf( 'get_icon_slugs called for unknown library "%s".', $msg_slug ), 'Manifest Registry' );
 				return array();
 			}
 
@@ -181,14 +181,14 @@ if ( ! class_exists( 'Spectre_Icons_Manifest_Registry' ) ) :
 			$manifest_path = isset( $library['manifest'] ) ? (string) $library['manifest'] : '';
 
 			if ( '' === $manifest_path || ! file_exists( $manifest_path ) ) {
-				self::log_debug( sprintf( 'Manifest file missing for library "%s": %s', $library_slug, $manifest_path ) );
+				spectre_icons_log_debug( sprintf( 'Manifest file missing for library "%s": %s', $library_slug, $manifest_path ), 'Manifest Registry' );
 				self::$icons_cache[ $library_slug ] = array();
 				return array();
 			}
 
 			$contents = file_get_contents( $manifest_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 			if ( false === $contents ) {
-				self::log_debug( sprintf( 'Could not read manifest file for library "%s".', $library_slug ) );
+				spectre_icons_log_debug( sprintf( 'Could not read manifest file for library "%s".', $library_slug ), 'Manifest Registry' );
 				self::$icons_cache[ $library_slug ] = array();
 				return array();
 			}
@@ -196,19 +196,20 @@ if ( ! class_exists( 'Spectre_Icons_Manifest_Registry' ) ) :
 			try {
 				$data = json_decode( $contents, true, 512, JSON_THROW_ON_ERROR );
 			} catch ( JsonException $e ) {
-				self::log_debug(
+				spectre_icons_log_debug(
 					sprintf(
 						'JSON decode error in manifest for library "%1$s": %2$s',
 						$library_slug,
 						$e->getMessage()
-					)
+					),
+					'Manifest Registry'
 				);
 				self::$icons_cache[ $library_slug ] = array();
 				return array();
 			}
 
 			if ( ! is_array( $data ) || empty( $data ) ) {
-				self::log_debug( sprintf( 'Manifest for library "%s" did not decode to an array.', $library_slug ) );
+				spectre_icons_log_debug( sprintf( 'Manifest for library "%s" did not decode to an array.', $library_slug ), 'Manifest Registry' );
 				self::$icons_cache[ $library_slug ] = array();
 				return array();
 			}
@@ -223,7 +224,7 @@ if ( ! class_exists( 'Spectre_Icons_Manifest_Registry' ) ) :
 				if ( is_array( $data['icons'] ) ) {
 					$data = $data['icons'];
 				} else {
-					self::log_debug( sprintf( 'Manifest for library "%s" has non-array "icons" key.', $library_slug ) );
+					spectre_icons_log_debug( sprintf( 'Manifest for library "%s" has non-array "icons" key.', $library_slug ), 'Manifest Registry' );
 					self::$icons_cache[ $library_slug ] = array();
 					return array();
 				}
@@ -291,31 +292,12 @@ if ( ! class_exists( 'Spectre_Icons_Manifest_Registry' ) ) :
 			}
 
 			if ( empty( $icons ) ) {
-				self::log_debug( sprintf( 'Manifest for library "%s" contained no valid icons.', $library_slug ) );
+				spectre_icons_log_debug( sprintf( 'Manifest for library "%s" contained no valid icons.', $library_slug ), 'Manifest Registry' );
 			}
 
 			self::$icons_cache[ $library_slug ] = $icons;
 
 			return $icons;
-		}
-
-		/**
-		 * Internal debug logger.
-		 *
-		 * @param string $message Message to log.
-		 * @return void
-		 */
-		private static function log_debug( $message ) {
-			if ( ! is_scalar( $message ) ) {
-				$message = sprintf( 'Non-scalar message type: %s', gettype( $message ) );
-			}
-
-			$message = (string) $message;
-
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-				error_log( '[Spectre Icons][Manifest Registry] ' . $message );
-			}
 		}
 	}
 
