@@ -29,25 +29,6 @@ public behavior or contract impact, and unresolved risks. Do not edit generated
 outputs directly. Do not update [CHANGELOG.md](CHANGELOG.md) unless the change
 is release-relevant.
 
-## AI Coordination Model
-
-This is the central coordination document for AI agents working in this
-repository. Agent-specific files may add operating details, but they must not
-override the roles or hard boundaries defined here.
-
-| Agent | Role | Primary files |
-|---|---|---|
-| Claude Code (`claude-sonnet-4-6`) | Lead developer | `CLAUDE.md`, `.claude/settings.json` |
-| OpenAI Codex | Documentation, releases, stabilization, repo hygiene | `CODEX.md`, `.codex/*` |
-| ChatGPT | Strategy, coordination, prompt design, external review | — |
-| GitHub Copilot | General development assistance | `.github/copilot-instructions.md` |
-| Google Jules | Small automated maintenance | `AGENTS.md` |
-
-Human final review and commit authority rests with Bradley Potts
-(brad.potts@coastdigitalgroup.com) at PHCDevworks. No AI agent creates git
-commits, pushes branches, tags releases, publishes to WordPress.org, or changes
-release authority.
-
 ## Agent Boundaries
 
 Claude Code is the designated primary AI developer. All implementation work is
