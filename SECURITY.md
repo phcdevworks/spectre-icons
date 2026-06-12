@@ -1,6 +1,6 @@
 # Security Policy
 
-## Supported versions
+## Supported Versions
 
 Security fixes are applied to the latest published release line of Spectre
 Icons.
@@ -13,7 +13,7 @@ Icons.
 Use the most recent plugin release whenever possible. Older releases may not
 receive security fixes.
 
-## Reporting a vulnerability
+## Reporting a Vulnerability
 
 Do not open public issues for suspected security vulnerabilities.
 
@@ -24,7 +24,7 @@ Use GitHub Security Advisories to report vulnerabilities privately:
 If GitHub Security Advisories are unavailable for your report, contact the
 maintainers privately through GitHub rather than posting details publicly.
 
-## What to include
+## What to Include
 
 Please include as much of the following as you can:
 
@@ -35,7 +35,7 @@ Please include as much of the following as you can:
   versions
 - suggested mitigations, if you have them
 
-## What to expect
+## What to Expect
 
 - acknowledgment within a reasonable time after receipt
 - review and triage of the report
@@ -59,7 +59,7 @@ This policy does not cover:
 - vulnerabilities in third-party services or projects that are not maintained in
   this repository
 
-## Security expectations for contributors
+## Security Expectations for Contributors
 
 When contributing to Spectre Icons:
 

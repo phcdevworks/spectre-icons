@@ -1,5 +1,37 @@
 # Spectre Icons
 
+## Repository Snapshot
+
+| Field | Value |
+|-------|-------|
+| Project team | `project-plugins` |
+| Repository role | WordPress and Elementor icon-library plugin |
+| Package/artifact | `spectre-icons` |
+| Current version/status | 1.5.0 |
+
+## Standard Workflow
+
+1. Read [AGENTS.md](AGENTS.md), then the agent-specific guide for the task.
+2. Check [TODO.md](TODO.md) and [ROADMAP.md](ROADMAP.md) for current scope.
+3. Make the smallest repo-local change that satisfies the task.
+4. Run `npm run check` when validation is required or practical.
+5. Update docs and [CHANGELOG.md](CHANGELOG.md) only when behavior, public
+   contracts, or release-relevant metadata changed.
+
+## Documentation Map
+
+| Guide | Path |
+|-------|------|
+| Agent rules | [AGENTS.md](AGENTS.md) |
+| Claude Code | [CLAUDE.md](CLAUDE.md) |
+| Codex | [CODEX.md](CODEX.md) |
+| Copilot | [COPILOT.md](COPILOT.md) |
+| Jules | [JULES.md](JULES.md) |
+| Roadmap | [ROADMAP.md](ROADMAP.md) |
+| Todo | [TODO.md](TODO.md) |
+| Changelog | [CHANGELOG.md](CHANGELOG.md) |
+| Security | [SECURITY.md](SECURITY.md) |
+
 [![CI](https://github.com/phcdevworks/spectre-icons/actions/workflows/tests.yml/badge.svg)](https://github.com/phcdevworks/spectre-icons/actions/workflows/tests.yml)
 [![GitHub issues](https://img.shields.io/github/issues/phcdevworks/spectre-icons)](https://github.com/phcdevworks/spectre-icons/issues)
 [![GitHub pulls](https://img.shields.io/github/issues-pr/phcdevworks/spectre-icons)](https://github.com/phcdevworks/spectre-icons/pulls)
