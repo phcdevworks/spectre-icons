@@ -1,6 +1,6 @@
 # COPILOT.md - Spectre Icons
 
-## Role
+## Role Summary
 
 GitHub Copilot is the general development support assistant for this repository.
 Copilot helps with targeted edits, refactors, TypeScript and PHP assistance,
@@ -27,7 +27,7 @@ maintenance workflows.
 
 Follow the shared PR requirements in `AGENTS.md`.
 
-## Source Of Detailed Guidance
+## Source of Detailed Guidance
 
 Primary Copilot guidance lives in `.github/copilot-instructions.md`.
 Shared repo boundaries live in `AGENTS.md`.
