@@ -32,6 +32,9 @@
 *.sql       text eol=lf
 .env*       text eol=lf
 Dockerfile  text eol=lf
+devcontainer.json text eol=lf
+vite.config.* text eol=lf
+vitest.config.* text eol=lf
 *.gradle    text eol=lf
 
 # Windows-only scripts that expect CRLF
@@ -103,6 +106,9 @@ Dockerfile  text eol=lf
 # Markdown: better prose diffs (driver required)
 *.md        text diff=markdown
 # Lockfiles: huge JSON—treat as text but favor minimal/word diffs
+package-lock.json text diff=lockfile
+pnpm-lock.yaml    text
+yarn.lock         text
 composer.lock     text
 Pipfile.lock      text
 Cargo.lock        text
@@ -133,7 +139,9 @@ docker-compose*.yml merge=union
 
 # Keep lockfiles simple (requires `git config merge.theirs.driver true` alias)
 # Uncomment if you prefer “take theirs” on lockfile conflicts:
-# composer.lock     merge=theirs
+# package-lock.json merge=theirs
+# yarn.lock         merge=theirs
+# pnpm-lock.yaml    merge=theirs
 # Cargo.lock        merge=theirs
 # go.sum            merge=theirs
 
@@ -175,6 +183,7 @@ docker-compose*.yml merge=union
 /.devcontainer/ export-ignore
 /.docker/       export-ignore
 /scripts/       export-ignore
+node_modules/   export-ignore
 *.log           export-ignore
 
 ###############################################################################
