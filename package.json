@@ -47,9 +47,13 @@
   },
   "homepage": "https://github.com/phcdevworks/spectre-icons#readme",
   "devDependencies": {
-    "@playwright/test": "^1.60.0",
-    "@wordpress/env": "^11.8.0",
+    "@playwright/test": "^1.61.0",
+    "@wordpress/env": "^11.8.1",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "fs-ext-extra-prebuilt@2.2.7": true
   }
 }
