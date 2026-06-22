@@ -115,8 +115,16 @@ test.describe('Icon reset — MutationObserver clears stale SVG', () => {
       expect(svgCount).toBe(0);
     } else {
       // None option not found in this Elementor version; close modal and skip.
-      await page.keyboard.press('Escape');
-      await expect(modal).toBeHidden();
+      // Click the dialog's own close button first — Escape requires focus to be
+      // on the top-level page/dialog, which isn't guaranteed after probing the
+      // (non-visible) "None" selector candidates above.
+      const closeButton = modal.locator('.dialog-close-button, .dialog-header [class*="close"]').first();
+      if (await closeButton.isVisible().catch(() => false)) {
+        await closeButton.click();
+      } else {
+        await page.keyboard.press('Escape');
+      }
+      await expect(modal).toBeHidden({ timeout: 10_000 });
       test.skip(true, 'None option not present in this Elementor version');
     }
   });
