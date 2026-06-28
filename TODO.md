@@ -73,6 +73,25 @@ All Phase 1 items were delivered during the v1.0.0 through v1.2.1 release cycle.
 
 ---
 
+## Requested by Downstream
+
+Entries here are external asks from other repos, kept separate from this
+repo's own self-planned queue above. See company root
+[AGENTS.md](../../AGENTS.md) "Upstream Requests and Roadmap Self-Expansion"
+for the convention this section follows.
+
+- [ ] **Beaver Builder support** — requested by
+      `project-design/spectre-base` (added 2026-06-27). `spectre-base` Phase 4
+      P1 (Page Builder Compatibility) is gated on this repo selecting and
+      shipping a Beaver Builder adapter; see
+      `project-design/spectre-base/TODO.md` Phase 4 P1 and
+      `project-design/spectre-base/ROADMAP.md`. This is the same item as
+      Phase 2 P1 below ("Select next builder target") if Beaver Builder ends
+      up being the builder selected — do not open a second, separate effort;
+      resolve by selecting a builder and checking off both entries together.
+
+---
+
 ## Phase 2 - Mature Operations
 
 All items below are forward-looking. This phase starts from the stable v1.2.1
