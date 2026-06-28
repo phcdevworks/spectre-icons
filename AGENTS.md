@@ -112,6 +112,30 @@ other PHCDevworks projects, but its mission is product-focused:
    package.
 9. Do not use weapons language or refer to Spectre as an "8-layer" system.
 
+## Upstream Requests and Roadmap Self-Expansion
+
+Full directive: project-team [AGENTS.md](../AGENTS.md) "Upstream Requests and
+Roadmap Self-Expansion." Applied to this repo:
+
+- This repo has no upstream dependency within this workspace — it is
+  WordPress-native and does not consume `spectre-tokens` or any other Spectre
+  design package; do not invent one.
+- Downstream repo `project-design/spectre-base` depends on this plugin for its
+  Elementor and (planned) Beaver Builder integration. It may append builder-
+  support requests (e.g. "add Beaver Builder support") to this repo's own
+  `TODO.md` under `## Requested by Downstream`, dated and linked back to
+  `spectre-base`'s own TODO.md/ROADMAP.md. Keep that section visible and
+  separate from this repo's self-planned product roadmap.
+- This repo's own `ROADMAP.md` may be proactively expanded with new or
+  reordered phases by the agent's own analysis — but never mark a phase
+  delivered without `npm run check` (and `npm run check:full` for E2E-relevant
+  builder work) passing, and never claim a candidate builder (Beaver Builder,
+  Divi, Oxygen, Bricks, Gutenberg) is supported until it has actually shipped
+  — see Supported and Target Builder Strategy above.
+- Surface any new TODO request or roadmap expansion in the handoff for Bradley
+  Potts in the same change it was made, and reflect cross-repo-relevant
+  changes in the project-team's own ROADMAP.md/TODO.md.
+
 ## Shared Edit Boundaries
 
 These rules apply to every agent without exception.
