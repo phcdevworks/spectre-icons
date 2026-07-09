@@ -10,7 +10,7 @@ final class VersionSyncTest extends TestCase {
 		$root = dirname( __DIR__, 2 ) . '/';
 
 		$package_json = json_decode( file_get_contents( $root . 'package.json' ), true );
-		$expected      = $package_json['version'];
+		$expected     = $package_json['version'];
 
 		$plugin_file = file_get_contents( $root . 'spectre-icons.php' );
 		preg_match( '/^\s*\*\s*Version:\s*(\S+)/m', $plugin_file, $header_match );
