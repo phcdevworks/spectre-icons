@@ -192,10 +192,11 @@ Allowed work around icon packs includes:
 
 The following slugs and class prefixes are LOCKED in PHP and must never change:
 
-| Slug                 | Class prefix      | Manifest file             |
-|----------------------|-------------------|---------------------------|
-| `spectre-lucide`     | `spectre-lucide-` | `spectre-lucide.json`     |
-| `spectre-fontawesome`| `spectre-fa-`     | `spectre-fontawesome.json`|
+| Slug                  | Class prefix      | Manifest file                                    |
+|-----------------------|-------------------|--------------------------------------------------|
+| `spectre-lucide`      | `spectre-lucide-` | `spectre-lucide.json`                            |
+| `spectre-fontawesome` | `spectre-fa-`     | `spectre-fontawesome.json`                       |
+| `spectre-user`        | `spectre-user-`   | per-site generated manifest (`My Icons` uploads) |
 
 Every icon saved to the database encodes the prefix in its class value
 (e.g. `spectre-lucide-arrow-right`). Changing either field would silently break

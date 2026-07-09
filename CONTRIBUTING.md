@@ -67,8 +67,11 @@ Playwright suites are grouped by product area:
 ## Key source areas
 
 - `spectre-icons.php` for plugin bootstrap and shared constants
+- `includes/core/` for builder-agnostic registration, rendering, manifest
+  helpers, and the `My Icons` user library manager
 - `includes/elementor/` for Elementor registration, rendering, settings, and
   integration hooks
+- `includes/admin/` for the `My Icons` upload/delete admin page
 - `includes/class-spectre-icons-svg-sanitizer.php` for SVG sanitization logic
 - `assets/manifests/` for bundled icon library manifests
 - `assets/iconpacks/` for locked bundled icon assets

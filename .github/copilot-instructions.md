@@ -37,8 +37,9 @@ When instructions conflict, follow: Bradley -> `AGENTS.md` -> `CLAUDE.md` ->
 
 ## Repository Guardrails
 
-- Preserve locked identifiers: `spectre-lucide`/`spectre-lucide-` and
-  `spectre-fontawesome`/`spectre-fa-`.
+- Preserve locked identifiers: `spectre-lucide`/`spectre-lucide-`,
+  `spectre-fontawesome`/`spectre-fa-`, and `spectre-user`/`spectre-user-`
+  (the `My Icons` upload library).
 - Do not edit bundled SVG source assets under `assets/iconpacks/`.
 - Keep builder-agnostic logic in `includes/core/`.
 - Keep Elementor-specific logic in `includes/elementor/`.
