@@ -10,7 +10,9 @@ and product growth. It is not a dumping ground for speculative ideas.
 
 ## Phase 1 - Foundation: Completed
 
-All Phase 1 items were delivered during the v1.0.0 through v1.2.1 release cycle.
+All Phase 1 items were delivered during the v1.0.0 through v1.5.0 release
+cycle (My Icons landed in v1.3.0-v1.5.0, interleaved with the Phase 2 P0
+Elementor-hardening work below).
 
 ### P0: Core Product
 
@@ -35,6 +37,13 @@ All Phase 1 items were delivered during the v1.0.0 through v1.2.1 release cycle.
 - [x] SVG sanitizer
   - DOM-based sanitizer with an explicit allowlist of allowed tags and
   attributes. Never bypassed for inline SVG output.
+
+- [x] My Icons — user-uploaded SVG library (v1.3.0-v1.5.0)
+  - Site-specific `spectre-user` library with `spectre-user-` prefix, admin
+  upload/delete page, unlimited-by-default uploads (`spectre_icons_user_library_limit`
+  filter for sites that want a cap), file-based SVG storage under the Spectre
+  Icons uploads directory, and a one-time migration from the legacy `1.4.x`
+  inline-manifest format.
 
 ### P1: Architecture and Safety
 
@@ -94,9 +103,9 @@ for the convention this section follows.
 
 ## Phase 2 - Mature Operations
 
-All items below are forward-looking. This phase starts from the stable v1.2.1
-foundation and focuses on builder hardening, multi-builder expansion, and
-library growth.
+All items below are forward-looking. This phase starts from the stable v1.5.0
+foundation (including the shipped My Icons upload library) and focuses on
+builder hardening, multi-builder expansion, and library growth.
 
 ### P0: Elementor Integration Hardening
 
@@ -149,7 +158,8 @@ library growth.
 
 - [ ] Confirm commercial delivery path with Bradley Potts before any work starts
 
-- [ ] Custom icon library registration (user-supplied manifests)
+- [x] ~~Custom icon library registration (user-supplied manifests)~~ — shipped
+  free-tier as `My Icons` (v1.3.0-v1.5.0); no longer a pro candidate.
 
 - [ ] Per-page or per-post library scoping
 
