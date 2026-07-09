@@ -23,11 +23,11 @@ async function dismissAdminOverlays(page: Page) {
   }
 }
 
-export async function loginToWordPress(page: Page) {
+async function attemptLogin(page: Page) {
   await page.goto('/wp-admin/', { waitUntil: 'domcontentloaded' });
 
   if (page.url().includes('/wp-admin') && !page.url().includes('/wp-login.php')) {
-    return;
+    return true;
   }
 
   await page.waitForURL(/wp-login\.php/);
@@ -36,13 +36,26 @@ export async function loginToWordPress(page: Page) {
   await page.click('#wp-submit');
   await page.waitForLoadState('domcontentloaded');
 
-  if (page.url().includes('/wp-login.php')) {
-    throw new Error(
-      'WordPress login failed. Check SPECTRE_E2E_ADMIN_USER and SPECTRE_E2E_ADMIN_PASSWORD.'
-    );
-  }
+  return !page.url().includes('/wp-login.php');
+}
 
-  await page.waitForURL(/wp-admin/);
+export async function loginToWordPress(page: Page) {
+  const maxAttempts = 3;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    if (await attemptLogin(page)) {
+      await page.waitForURL(/wp-admin/);
+      return;
+    }
+
+    if (attempt === maxAttempts) {
+      throw new Error(
+        'WordPress login failed. Check SPECTRE_E2E_ADMIN_USER and SPECTRE_E2E_ADMIN_PASSWORD.'
+      );
+    }
+
+    await page.waitForTimeout(1_000 * attempt);
+  }
 }
 
 export async function gotoAdmin(page: Page, path: string) {

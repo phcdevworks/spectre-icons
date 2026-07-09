@@ -4,6 +4,7 @@ export default defineConfig({
   testDir: './tests/e2e',
   timeout: 90_000,
   workers: 1,
+  retries: process.env.CI ? 1 : 0,
   outputDir: 'test-results',
   use: {
     baseURL: process.env.SPECTRE_E2E_BASE_URL ?? 'http://localhost:8888',
