@@ -118,7 +118,7 @@ The bundled SVG files are locked source assets. Registration, rendering, and adm
 
 ## Requirements
 
-- WordPress 6.0+
+- WordPress 6.0+, tested up to 7.0
 - PHP 7.4+
 - Elementor 3.x / 4.x, tested through Elementor 4.x
 

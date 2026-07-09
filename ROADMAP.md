@@ -12,7 +12,7 @@ design system or site-builder framework.
 
 ## 1. Foundation Status - Delivered
 
-All foundation work is complete as of v1.2.1. The plugin is stable and in
+All foundation work is complete as of v1.5.0. The plugin is stable and in
 active use.
 
 ### What is in place
@@ -24,12 +24,16 @@ active use.
   for already-placed icons.
 - Lucide Icons (1545 icons) and Font Awesome Free bundled as locked source
   assets.
+- `My Icons` — a site-specific, unlimited-by-default user upload library
+  (`spectre-user` slug, `spectre-user-` prefix) with file-based SVG storage,
+  an admin upload/delete page, and a one-time migration from the legacy
+  `1.4.x` inline-manifest format.
 - Builder-agnostic core (`includes/core/`) with Elementor adapter in
   `includes/elementor/`.
 - SVG sanitizer using DOM traversal with an explicit tag and attribute allowlist.
 - PHP unit tests with no real WordPress environment required.
-- Playwright end-to-end tests for activation, settings, icon picker, and
-  rendering flows.
+- Playwright end-to-end tests for activation, settings, icon picker, My Icons
+  uploads, and rendering flows.
 - CI pipeline running full validation on every push and pull request.
 - Serialization-safe library slugs and class prefixes locked and protected.
 - Elementor file cache flush on first admin load after version bump.
@@ -145,14 +149,17 @@ features that demand ongoing investment.
 
 **Candidate pro capabilities**:
 
-- Custom icon library registration (drop your own manifest)
 - Per-page or per-post library scoping
-- Import tools for user-supplied SVG sets
+- Font Awesome Pro bring-your-own-license integration (see `TODO.md` P3 for
+  the three candidate approaches)
 
 **Dependency notes**
 
 - Requires a clear commercial delivery path from Bradley Potts before
   implementation begins.
+- Custom icon library registration and user-supplied SVG import already
+  shipped free-tier as `My Icons` (v1.3.0-v1.5.0) — do not re-propose these as
+  pro candidates.
 
 ---
 
