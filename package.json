@@ -2,7 +2,7 @@
   "name": "spectre-icons",
   "version": "1.5.0",
   "private": true,
-  "description": "WordPress plugin that adds bundled and uploaded SVG icon libraries to Elementor's icon picker, with per-library enable/disable controls.",
+  "description": "Spectre Icons is a WordPress plugin that adds bundled and uploaded SVG icon libraries to Elementor's icon picker, with per-library enable/disable controls.",
   "directories": {
     "test": "tests"
   },
