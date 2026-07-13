@@ -117,14 +117,11 @@ The JS in `spectre-icons-elementor.js` runs in the Elementor editor iframe:
 
 ## Serialization-anchored slugs — NEVER CHANGE THESE
 
-| Slug                  | Class prefix       | Manifest file              |
-|-----------------------|--------------------|----------------------------|
-| `spectre-lucide`      | `spectre-lucide-`  | `spectre-lucide.json`      |
-| `spectre-fontawesome` | `spectre-fa-`      | `spectre-fontawesome.json` |
-
-These values are baked into every icon saved to the WordPress database. Changing
-them silently breaks every existing page that uses Spectre Icons. They are locked
-in `manifest-helpers.php` `$anchored` array. Display metadata (label, style,
+See `AGENTS.md` ("Serialization-anchored library slugs") for the authoritative
+table of locked slugs, class prefixes, and manifest files. These values are
+baked into every icon saved to the WordPress database. Changing them silently
+breaks every existing page that uses Spectre Icons. They are locked in
+`manifest-helpers.php` `$anchored` array. Display metadata (label, style,
 label_icon) may be updated in the manifest JSON.
 
 ---
