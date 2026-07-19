@@ -91,22 +91,15 @@ reduce dependency on Elementor and expand the plugin's user base.
 multiple builders. Proving that design with a second integration validates the
 approach and increases the plugin's value.
 
-**Candidate builders** (in rough priority order):
-
-- Gutenberg / block editor
-- Bricks
-- Beaver Builder
-- Divi
-- Oxygen
+**Selected target: Divi** (2026-07-19). Remaining candidates (Gutenberg,
+Bricks, Oxygen) are deferred, not ruled out, for a future P1 iteration.
 
 **Deliverables**
 
-- Select the next builder target based on user demand and integration
-  complexity.
 - Implement a new adapter in the pattern of `includes/elementor/`, keeping all
-  builder-specific logic contained.
-- Add E2E coverage for the new builder's icon picker and rendering flows.
-- Document the new builder's setup and compatibility requirements.
+  builder-specific logic contained in `includes/divi/`.
+- Add E2E coverage for the Divi icon picker and rendering flows.
+- Document Divi's setup and compatibility requirements.
 
 **Dependency notes**
 

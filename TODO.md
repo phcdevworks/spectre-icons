@@ -89,15 +89,10 @@ repo's own self-planned queue above. See company root
 [AGENTS.md](../../AGENTS.md) "Upstream Requests and Roadmap Self-Expansion"
 for the convention this section follows.
 
-- [ ] **Beaver Builder support** — requested by
-      `project-design/spectre-base` (added 2026-06-27). `spectre-base` Phase 4
-      P1 (Page Builder Compatibility) is gated on this repo selecting and
-      shipping a Beaver Builder adapter; see
-      `project-design/spectre-base/TODO.md` Phase 4 P1 and
-      `project-design/spectre-base/ROADMAP.md`. This is the same item as
-      Phase 2 P1 below ("Select next builder target") if Beaver Builder ends
-      up being the builder selected — do not open a second, separate effort;
-      resolve by selecting a builder and checking off both entries together.
+(No open downstream requests. Beaver Builder support, previously requested by
+`project-design/spectre-base` on 2026-06-27, was withdrawn — `spectre-base`
+is not adopting a page builder; see its `TODO.md` "Do not add page builder
+... integration" note.)
 
 ---
 
@@ -135,11 +130,14 @@ builder hardening, multi-builder expansion, and library growth.
 
 ### P1: Additional Builder Support
 
-- [ ] Select next builder target based on demand and integration complexity
-  - Candidates: Gutenberg, Bricks, Beaver Builder, Divi, Oxygen.
+- [x] Select next builder target based on demand and integration complexity
+  - Selected: Divi (2026-07-19). Independent of the agency dashboard (which
+    is builder-agnostic — it hosts/manages icon sets centrally and has no
+    Elementor/Divi-specific logic). Other candidates (Gutenberg, Bricks,
+    Oxygen) deferred, not ruled out.
 
 - [ ] Implement a new builder adapter following the Elementor adapter pattern
-  - All builder-specific logic inside a new `includes/<builder>/` directory.
+  - All builder-specific logic inside a new `includes/divi/` directory.
 
 - [ ] Add E2E coverage for the new builder's icon picker and rendering flows
 
