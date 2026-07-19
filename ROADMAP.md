@@ -91,19 +91,44 @@ reduce dependency on Elementor and expand the plugin's user base.
 multiple builders. Proving that design with a second integration validates the
 approach and increases the plugin's value.
 
-**Selected target: Divi** (2026-07-19). Remaining candidates (Gutenberg,
-Bricks, Oxygen) are deferred, not ruled out, for a future P1 iteration.
+**Status: On hold (2026-07-19).** Divi was selected as the target, but
+research before implementation found it has no documented, stable, first-
+party filter for registering third-party icon libraries into its native
+picker — unlike Elementor's `additional_tabs`. Real-world Divi integrations
+either override undocumented internal functions (Divi 4, fragile across
+updates) or ship a separate custom module alongside Divi's picker rather
+than extending it (the pattern used by Divi 5 third-party icon plugins).
+Neither is a stable foundation for an adapter using the Elementor pattern.
 
-**Deliverables**
+A follow-up survey of the other three candidates found the same gap
+everywhere:
+
+| Candidate | Native picker | Documented registration hook | Rewrite risk |
+|---|---|---|---|
+| Divi | Font (v4) / SVG (v5) | None — internal-function override or separate module only | High (Divi 4→5 React rewrite) |
+| Gutenberg | No native icon picker exists | None (only a third-party plugin's own filter) | N/A — no real target |
+| Bricks | SVG-native | None shipped yet; active community request for exactly this filter, no official commitment | Low — stable core, no rewrite in progress |
+| Oxygen | SVG-native | None found | High — mid-rewrite onto the Breakdance engine |
+
+Bricks is the least-bad option (SVG-native storage, stable core, real user
+demand for this exact filter) but has not shipped one. Decision: do not
+commit adapter engineering time until a candidate ships a documented,
+stable icon-registration API comparable to Elementor's. Periodically
+re-check `academy.bricksbuilder.io/developer/hooks/filters` for Bricks
+before re-opening this phase.
+
+**Deliverables (once a viable target ships a stable API)**
 
 - Implement a new adapter in the pattern of `includes/elementor/`, keeping all
-  builder-specific logic contained in `includes/divi/`.
-- Add E2E coverage for the Divi icon picker and rendering flows.
-- Document Divi's setup and compatibility requirements.
+  builder-specific logic contained in `includes/<builder>/`.
+- Add E2E coverage for the new builder's icon picker and rendering flows.
+- Document the new builder's setup and compatibility requirements.
 
 **Dependency notes**
 
-- Requires clean adapter boundary from P0 before starting.
+- Requires clean adapter boundary from P0 before starting (satisfied).
+- Requires the target builder to expose a documented, stable icon-
+  registration hook — not currently true for any candidate.
 
 ---
 

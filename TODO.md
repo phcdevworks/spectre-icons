@@ -128,19 +128,30 @@ builder hardening, multi-builder expansion, and library growth.
   imports. The Elementor adapter is fully contained in `includes/elementor/`.
   The boundary is clean.
 
-### P1: Additional Builder Support
+### P1: Additional Builder Support — ON HOLD (2026-07-19)
 
 - [x] Select next builder target based on demand and integration complexity
   - Selected: Divi (2026-07-19). Independent of the agency dashboard (which
     is builder-agnostic — it hosts/manages icon sets centrally and has no
-    Elementor/Divi-specific logic). Other candidates (Gutenberg, Bricks,
-    Oxygen) deferred, not ruled out.
+    Elementor/Divi-specific logic).
+
+- [x] Pre-implementation research: does the target expose a stable,
+      documented icon-registration hook like Elementor's `additional_tabs`?
+  - Divi: no. Real integrations override undocumented internals (Divi 4,
+    breaks across updates) or ship a separate module alongside Divi's
+    picker (Divi 5 pattern) — neither fits the Elementor adapter pattern.
+  - Surveyed remaining candidates for the same gap: Gutenberg has no native
+    icon picker at all; Bricks is SVG-native with a stable core but no
+    shipped filter (active community request, no ET/Bricks commitment);
+    Oxygen is SVG-native but mid-rewrite onto the Breakdance engine (same
+    instability class as Divi 4→5). None currently qualifies.
+  - Decision: hold P1 until a candidate (most likely Bricks) ships a
+    documented, stable registration hook. See `ROADMAP.md` P1 for the full
+    comparison table.
 
 - [ ] Implement a new builder adapter following the Elementor adapter pattern
-  - All builder-specific logic inside a new `includes/divi/` directory.
-
+  — blocked until a viable target is confirmed
 - [ ] Add E2E coverage for the new builder's icon picker and rendering flows
-
 - [ ] Document the new builder's setup and compatibility requirements
 
 ### P2: Icon Library Expansion
