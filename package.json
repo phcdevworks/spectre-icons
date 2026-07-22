@@ -7,10 +7,11 @@
     "test": "tests"
   },
   "scripts": {
-    "check": "composer validate --no-check-lock && composer test && composer lint",
+    "check": "composer validate --no-check-lock && composer test && composer lint && npm run lint:ts",
     "check:full": "npm run check && npm run test:e2e:smoke && npm run test:e2e:elementor && npm run test:e2e:my-icons",
     "test": "npm run test:e2e",
     "test:php": "composer test",
+    "lint:ts": "eslint .",
     "test:e2e": "playwright test",
     "test:e2e:elementor": "playwright test tests/e2e/elementor",
     "test:e2e:my-icons": "playwright test tests/e2e/elementor/my-icons.spec.ts",
@@ -48,9 +49,14 @@
   "homepage": "https://github.com/phcdevworks/spectre-icons#readme",
   "devDependencies": {
     "@playwright/test": "^1.61.1",
-    "@wordpress/env": "^11.10.0",
-    "tsx": "^4.23.0",
-    "typescript": "^7.0.2"
+    "@types/node": "^26.1.1",
+    "@typescript/native": "npm:typescript@^7.0.2",
+    "@wordpress/env": "^11.11.0",
+    "eslint": "^10.7.0",
+    "jiti": "^2.7.0",
+    "tsx": "^4.23.1",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "typescript-eslint": "^8.65.0"
   },
   "allowScripts": {
     "esbuild@0.28.1": true,
