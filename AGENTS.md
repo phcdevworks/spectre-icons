@@ -19,8 +19,16 @@
 | GitHub Copilot | Development assistance | [COPILOT.md](COPILOT.md) |
 | Google Jules | Bounded automated maintenance | [JULES.md](JULES.md) |
 
-Bradley Potts holds final authority for commits, merges, tags, publishing, and
-releases.
+**All AI agents in this roster** — Claude Code, OpenAI Codex, GitHub Copilot,
+and Google Jules — have full commit, push, and tag authority in this
+repository, effective 2026-07-25 by explicit direction from Bradley Potts —
+see the Commit Policy section in each agent's own guide
+([CLAUDE.md](CLAUDE.md), [CODEX.md](CODEX.md), [COPILOT.md](COPILOT.md),
+[JULES.md](JULES.md)). Bradley Potts retains ultimate ownership, can revoke
+or narrow this at any time, and still holds sole authority for publishing
+and releases. This grant covers git operations within each agent's own scope
+of work as defined above — it does not expand what any agent is authorized
+to decide. ChatGPT has no repository access and is excluded.
 
 ## Cross-Repo Access
 
@@ -39,32 +47,13 @@ still governs what changes make sense there (design-token authority, layer
 boundaries, etc.) — being able to open and edit a file is not the same as it
 being this repo's job to change it.
 
-**Cross-repo changelog sync.** When a change in this repo has direct
-downstream or upstream impact on another present repo (e.g. a breaking token
-rename, an API contract change), an agent may append a `CHANGELOG.md
-[Unreleased]` entry directly into that other repo's own changelog — not just
-leave a note asking its owner to add it. Rules:
-
-1. Only append new `[Unreleased]` entries — never edit, reorder, or remove
-   another repo's existing changelog entries, version headers, or release
-   history.
-2. Every cross-repo entry must be self-contained and attributed: which repo
-   caused it and why, what changed from the affected repo's perspective, and
-   the date added.
-3. Add it in the same change that produced the impact, not a later session.
-4. This never grants release authority — cutting a release, bumping a version
-   header, or publishing a package stays gated by that repo's own release
-   process and the human owner's final sign-off.
-
-**TODO/roadmap requests.** When work here surfaces a need that belongs to
-another repo, an agent may append the request directly to that repo's own
-`TODO.md` under a clearly labeled "Requested by Downstream" section (create
-it if absent), stating which repo is requesting it, why, the date, and a
-link back if the other repo's `TODO.md`/`ROADMAP.md` is reachable.
-
-No AI agent creates commits, tags, publishes packages, or merges changes in
-this repo or any other unless that repo's own agent guide explicitly grants
-that authority or the human owner has explicitly requested the action.
+**Cross-repo changelog and TODO/roadmap requests.** Full rules: company root
+[AGENTS.md](../../AGENTS.md) § "Cross-Repo Changelog Sync" and § "Upstream
+Requests and Roadmap Self-Expansion." Applied here without exception — this
+repo may append `[Unreleased]` changelog entries and downstream TODO requests
+to other present repos per those rules, and no AI agent creates commits, tags,
+publishes packages, or merges changes in this repo or any other unless that
+repo's own agent guide explicitly grants that authority.
 
 ## Standard Handoff
 
@@ -75,33 +64,10 @@ is release-relevant.
 
 ## Agent Boundaries
 
-Claude Code is the designated primary AI developer. All implementation work is
-driven through Claude Code operating from `CLAUDE.md` as the authoritative
-working guide.
-
-OpenAI Codex keeps the repository production-ready. Codex reviews release risk,
-standardizes documentation and configuration, supports changelogs and release
-notes, performs targeted repo-hygiene cleanup, and stabilizes production issues
-without weakening Claude Code's implementation lead.
-
-ChatGPT provides strategy, coordination, prompt design, and external review.
-ChatGPT does not own implementation work, release decisions, or commit authority.
-It informs direction; Claude Code and Brad execute.
-
-GitHub Copilot is support-only. Copilot may suggest code, tests, TypeScript
-changes, APIs, and small refactors, but it does not own implementation
-leadership, architecture direction, release coordination, production
-stabilization, repository AI governance, or automated maintenance workflows.
-
-Google Jules is maintenance-only. Jules may handle small fixes, dependency
-updates, and micro-updates, but it must not take on large feature work,
-architecture direction, release coordination, production stabilization
-ownership, repository AI governance, or lead implementation decisions.
-
-When an agent's task crosses role boundaries, hand off instead of expanding the
-role. Claude resolves implementation questions. Codex resolves release,
-documentation, stabilization, and configuration questions. Brad resolves final
-shipping decisions.
+When an agent's task crosses role boundaries, hand off instead of expanding
+the role. Claude resolves implementation questions. Codex resolves release,
+documentation, stabilization, and configuration questions. Brad resolves
+final shipping decisions.
 
 ## Agent-Specific Guides
 

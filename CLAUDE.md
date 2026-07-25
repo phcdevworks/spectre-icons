@@ -39,9 +39,9 @@ Codex for release-readiness review before Brad commits. See `CODEX.md` and
 
 ## Commit Policy
 
-Claude Code does not create git commits in this repository. Prepare changes,
-run all validation, and leave staging, committing, tagging, and pushing to
-human review.
+See [AGENTS.md](AGENTS.md) for the full grant of authority. Claude Code
+applies it here: run all validation before committing, then stage, commit,
+tag, and push without per-action confirmation.
 
 ---
 
