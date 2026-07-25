@@ -24,11 +24,17 @@ and Google Jules — have full commit, push, and tag authority in this
 repository, effective 2026-07-25 by explicit direction from Bradley Potts —
 see the Commit Policy section in each agent's own guide
 ([CLAUDE.md](CLAUDE.md), [CODEX.md](CODEX.md), [COPILOT.md](COPILOT.md),
-[JULES.md](JULES.md)). Bradley Potts retains ultimate ownership, can revoke
-or narrow this at any time, and still holds sole authority for publishing
-and releases. This grant covers git operations within each agent's own scope
+[JULES.md](JULES.md)). **OpenAI Codex** additionally has release authority:
+Codex cuts releases autonomously — version bump across all sync points,
+changelog versioning, `v<version>` git tag, and GitHub Release publish via
+`gh` — for every release-ready `CHANGELOG.md [Unreleased]` section, without
+waiting for per-release approval; see `CODEX.md` "Release Role" for the full
+procedure. **WordPress.org plugin submission remains Bradley Potts's sole
+authority** — no agent submits or updates the plugin listing. Bradley Potts
+retains ultimate ownership and can revoke or narrow any of this at any time.
+This grant covers git and release operations within each agent's own scope
 of work as defined above — it does not expand what any agent is authorized
-to decide. ChatGPT has no repository access and is excluded.
+to decide otherwise. ChatGPT has no repository access and is excluded.
 
 ## Cross-Repo Access
 

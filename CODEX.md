@@ -179,16 +179,38 @@ aligned when the same fact appears in more than one place.
 
 ## Release Role
 
-Before a release, Codex should produce a concise release-readiness note covering:
+Before cutting a release, Codex verifies:
 
-- version consistency
+- version consistency across `SPECTRE_ICONS_VERSION`, the `Version:` plugin
+  header, `Stable tag:` in `readme.txt`, and `"version"` in `package.json`
 - package metadata consistency
 - changed files and risk areas
-- completed validation
+- completed validation (`npm run check:full`, not just `npm run check`)
 - skipped validation and why
 - documentation updates
 - changelog or release-note updates
 - compatibility concerns
 - release blockers, if any
+
+### Release Mechanics
+
+1. Bump the version in all four sync points listed above to the same value.
+2. Move `[Unreleased]` notes in `CHANGELOG.md` into a new versioned entry:
+   `## [<version>] - <YYYY-MM-DD>`, with a release title line in the format
+   `**Release Title:** Phase <N> - <short title>`, where `Phase <N>` is the
+   active phase name from this repo's own `ROADMAP.md` and `<short title>`
+   is a concise summary of what shipped. If the release spans no single
+   ROADMAP phase, state that explicitly instead of inventing one.
+3. Update comparison links at the bottom of `CHANGELOG.md` and the
+   `readme.txt` changelog section.
+4. Confirm `npm run check:full` passes on the release-ready state.
+5. Stage and commit the version bump and changelog update.
+6. Create the git tag: `git tag v<version>` (matching the plugin header
+   version exactly), then push the commit and tag.
+7. Publish the GitHub Release from that tag: `gh release create v<version>
+   --title "v<version>: Phase <N> - <short title>" --notes-file` (extract the
+   new version's changelog section, or `--notes` inline for a short release).
+8. WordPress.org plugin submission/update is **not** done by Codex — that
+   stays with Bradley Potts.
 
 Use `.codex/release-readiness.md` as the working checklist.
