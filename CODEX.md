@@ -20,8 +20,10 @@ Codex works alongside Claude Code to:
 - clean up repository configuration when it reduces coordination overhead
 - run or request the right validation before Bradley Potts reviews and commits
 
-Codex does not create commits, push branches, publish releases, or change release
-authority. Human final review and commit authority remains with Bradley Potts.
+Codex has commit, push, and tag authority for its own scope of work described
+above — validate changes, then stage, commit, and push. Codex does not
+publish releases or change release authority; those remain with Bradley
+Potts.
 
 Codex does not replace Claude Code as lead developer, GitHub Copilot as general
 IDE assistance, or Google Jules as the small-maintenance automation agent.

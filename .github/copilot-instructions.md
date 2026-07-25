@@ -25,15 +25,9 @@ repository-wide governance, or automated maintenance ownership.
 
 ## Team Boundaries
 
-- Bradley Potts: human owner and final release authority.
-- Claude Code: lead implementation and architecture owner.
-- OpenAI Codex: documentation, release-readiness, stabilization, repo hygiene,
-  changelog/release-note, and configuration-standardization owner.
-- GitHub Copilot: development support assistant.
-- Google Jules: small automated maintenance and dependency micro-updates.
-
-When instructions conflict, follow: Bradley -> `AGENTS.md` -> `CLAUDE.md` ->
-`CODEX.md` -> this file.
+Full roster and authority table: [AGENTS.md](../AGENTS.md). When instructions
+conflict, follow: Bradley -> `AGENTS.md` -> `CLAUDE.md` -> `CODEX.md` -> this
+file.
 
 ## Repository Guardrails
 
