@@ -206,21 +206,16 @@ Environment variables for e2e tests:
 
 ## Release preparation
 
-Update these files consistently for each release:
+Claude Code implements features and fixes with a `CHANGELOG.md [Unreleased]`
+entry per change. Run `npm run check:full` (requires running wp-env) to
+validate against the full CI suite — PHP tests, lint, and all three E2E
+suites — before flagging work release-ready. `npm run check` alone is NOT
+sufficient; it does not run E2E.
 
-1. `SPECTRE_ICONS_VERSION` constant in `spectre-icons.php`
-2. `Version:` plugin header in `spectre-icons.php`
-3. `Stable tag:` in `readme.txt`
-4. `"version"` field in `package.json`
-5. Release entry in `CHANGELOG.md` (Keep a Changelog format)
-6. Comparison links at the bottom of `CHANGELOG.md`
-7. `readme.txt` changelog section
-
-Run `npm run check:full` (requires running wp-env) to validate against the full
-CI suite — PHP tests, lint, and all three E2E suites — before handing off.
-`npm run check` alone is NOT sufficient; it does not run E2E.
-Then pass to Codex for release-readiness review before Brad commits. See
-`.codex/release-readiness.md` for the full pre-release checklist.
+Cutting the release itself — version bump across all sync points, changelog
+versioning, `v<version>` tag, and GitHub Release — is Codex's job; see
+`CODEX.md` "Release Role" and `.codex/release-readiness.md` for the full
+procedure. WordPress.org plugin submission stays with Bradley Potts.
 
 ---
 
