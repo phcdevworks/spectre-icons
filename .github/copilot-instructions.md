@@ -25,7 +25,8 @@ repository-wide governance, or automated maintenance ownership.
 
 ## Team Boundaries
 
-Full roster and authority table: [AGENTS.md](../AGENTS.md). When instructions
+Copilot has commit, push, and tag authority per the companywide grant. Full
+roster and authority table: [AGENTS.md](../AGENTS.md). When instructions
 conflict, follow: Bradley -> `AGENTS.md` -> `CLAUDE.md` -> `CODEX.md` -> this
 file.
 
