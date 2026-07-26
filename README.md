@@ -57,7 +57,7 @@ individually from plugin settings. Disabled libraries are hidden from the picker
 [Security Policy](SECURITY.md) |
 [WordPress Plugin Directory](https://wordpress.org/plugins/spectre-icons/)
 
-## When to use this plugin
+## When To Use This Plugin
 
 **Use Spectre Icons if:**
 
@@ -119,7 +119,7 @@ picker.
 
 Supported widgets include Icon, Icon Box, Icon List, and Social Icons.
 
-## Included icon libraries
+## Included Icon Libraries
 
 - Lucide Icons
 - Font Awesome Free
@@ -191,6 +191,24 @@ Run `composer install` to install dev dependencies before running tests.
 
 **`npm run check` fails on `composer validate`**
 Run `composer install` to bring `composer.lock` in sync before validating.
+
+## AI And Automation Boundaries
+
+Claude Code (`claude-sonnet-4-6`) is the primary development agent for this
+repository. Codex handles releases, including version sync across all sync
+points, cutting tagged releases, and GitHub Releases. GitHub Copilot provides
+development support.
+
+All AI agents with repository access (Claude Code, Codex, Copilot, Jules)
+have commit, push, and tag authority in this repository. WordPress.org
+plugin submission remains Bradley Potts's sole authority. See
+[AGENTS.md](AGENTS.md) for the full commit-policy and release-authority
+grant.
+
+**Protected from automated change:** serialization-anchored library slugs,
+class prefixes, and manifest files (see `AGENTS.md`), and the bundled SVG
+icon assets, which are locked source files. See [AGENTS.md](AGENTS.md) for
+full agent governance and boundary rules.
 
 ## Contributing
 
