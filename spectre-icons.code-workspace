@@ -1,0 +1,135 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "workbench.colorTheme": "Solarized Dark",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.startupEditor": "none",
+    "workbench.editor.enablePreview": false,
+    "breadcrumbs.enabled": true,
+    "editor.fontFamily": "'Fira Code', 'Cascadia Code', 'JetBrains Mono', Consolas, 'Courier New', monospace",
+    "editor.fontLigatures": true,
+    "editor.fontSize": 14,
+    "editor.lineHeight": 1.6,
+    "editor.cursorBlinking": "smooth",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.smoothScrolling": true,
+    "editor.minimap.enabled": false,
+    "editor.renderWhitespace": "boundary",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": "active",
+    "editor.inlineSuggest.enabled": true,
+    "editor.linkedEditing": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": true,
+    "editor.trimAutoWhitespace": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "files.eol": "\n",
+    "files.associations": {
+      "*.php": "php"
+    },
+    "files.exclude": {
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/node_modules": true,
+      "**/vendor": true,
+      "**/wp-content/uploads": true,
+      "**/wp-content/cache": true
+    },
+    "files.watcherExclude": {
+      "**/node_modules/**": true,
+      "**/vendor/**": true
+    },
+    "search.smartCase": true,
+    "php.suggest.basic": false,
+    "npm.packageManager": "npm",
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.enableSmartCommit": true,
+    "scm.defaultViewMode": "tree",
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "explorer.compactFolders": false,
+    "[php]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.wordWrap": "off"
+    },
+    "[markdown]": {
+      "editor.wordWrap": "on",
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.quickSuggestions": {
+        "comments": "off",
+        "strings": "off",
+        "other": "off"
+      }
+    }
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Run E2E Smoke",
+        "type": "node-terminal",
+        "request": "launch",
+        "command": "npm run test:e2e:smoke"
+      }
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "bmewburn.vscode-intelephense-client",
+      "editorconfig.editorconfig",
+      "esbenp.prettier-vscode",
+      "ms-vscode-remote.remote-wsl",
+      "pkief.material-icon-theme",
+      "yzhang.markdown-all-in-one"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "check",
+        "command": "npm run check",
+        "type": "shell",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      },
+      {
+        "label": "check:full",
+        "command": "npm run check:full",
+        "type": "shell"
+      },
+      {
+        "label": "test",
+        "command": "npm test",
+        "type": "shell"
+      },
+      {
+        "label": "test:php",
+        "command": "npm run test:php",
+        "type": "shell"
+      },
+      {
+        "label": "lint:ts",
+        "command": "npm run lint:ts",
+        "type": "shell"
+      },
+      {
+        "label": "test:e2e",
+        "command": "npm run test:e2e",
+        "type": "shell"
+      }
+    ]
+  }
+}
