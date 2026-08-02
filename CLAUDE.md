@@ -252,4 +252,3 @@ restrictions. Claude Code-specific constraints:
 - Do not add Elementor-specific logic outside the `includes/elementor/` directory
 - Builder-agnostic core (`includes/core/`) must stay free of page-builder imports
 - Do not rename or delete manifest files without a migration plan
-- Do not push to remote or publish releases without Brad Potts reviewing first

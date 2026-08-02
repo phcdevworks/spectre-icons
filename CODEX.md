@@ -21,9 +21,11 @@ Codex works alongside Claude Code to:
 - run or request the right validation before Bradley Potts reviews and commits
 
 Codex has commit, push, and tag authority for its own scope of work described
-above — validate changes, then stage, commit, and push. Codex does not
-publish releases or change release authority; those remain with Bradley
-Potts.
+above — validate changes, then stage, commit, and push. Codex additionally
+has release authority: Codex cuts releases autonomously (version bump,
+`CHANGELOG.md` versioning, git tag, GitHub Release) per the "Release
+Mechanics" procedure below, without waiting for per-release approval.
+Publishing to the WordPress.org plugin directory remains with Bradley Potts.
 
 Codex does not replace Claude Code as lead developer, GitHub Copilot as general
 IDE assistance, or Google Jules as the small-maintenance automation agent.
