@@ -48,13 +48,13 @@
   },
   "homepage": "https://github.com/phcdevworks/spectre-icons#readme",
   "devDependencies": {
-    "@playwright/test": "^1.61.1",
-    "@types/node": "^26.1.1",
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.1.2",
     "@typescript/native": "npm:typescript@^7.0.2",
-    "@wordpress/env": "^11.11.0",
-    "eslint": "^10.7.0",
+    "@wordpress/env": "^11.12.0",
+    "eslint": "^10.8.0",
     "jiti": "^2.7.0",
-    "tsx": "^4.23.1",
+    "tsx": "^4.23.5",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-eslint": "^8.65.0"
   },
