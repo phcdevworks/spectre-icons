@@ -6,6 +6,14 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [Unreleased]
 
+### Fixed
+
+- Resolved two high-severity Dependabot alerts: `adm-zip` (transitive via
+  `@wordpress/env`, DoS via unbounded ZIP expansion) pinned to `^0.6.0` via
+  an npm `overrides` entry, and `wp-coding-standards/wpcs` (arbitrary code
+  execution) updated to `3.4.1`. Both are dev-tooling dependencies, not
+  shipped runtime plugin code.
+
 ## [1.5.0] - 2026-05-27
 
 Release Title: File-Based My Icons Storage
