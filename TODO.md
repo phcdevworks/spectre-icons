@@ -6,86 +6,17 @@ This list is aligned to the current repository and the roadmap in `ROADMAP.md`.
 It is scoped to plugin stability, builder integration, icon-library expansion,
 and product growth. It is not a dumping ground for speculative ideas.
 
----
-
-## Phase 1 - Foundation: Completed
-
-All Phase 1 items were delivered during the v1.0.0 through v1.5.0 release
-cycle (My Icons landed in v1.3.0-v1.5.0, interleaved with the Phase 2 P0
-Elementor-hardening work below).
-
-### P0: Core Product
-
-- [x] Manifest-driven icon library registration
-  - Libraries discovered from `assets/manifests/` with no scattered
-  builder-specific definitions.
-
-- [x] Inline SVG rendering in Elementor editor and frontend
-  - PHP render callback for frontend and saved views; JS MutationObserver for
-  live editor preview.
-
-- [x] Per-library enable/disable controls
-  - Settings page at Settings -> Spectre Icons. Disabled libraries hide from
-  the picker; existing placed icons keep rendering.
-
-- [x] Lucide Icons library (1545 icons)
-  - Bundled as a locked source asset with serialization-safe slug and prefix.
-
-- [x] Font Awesome Free library
-  - Bundled as a locked source asset with serialization-safe slug and prefix.
-
-- [x] SVG sanitizer
-  - DOM-based sanitizer with an explicit allowlist of allowed tags and
-  attributes. Never bypassed for inline SVG output.
-
-- [x] My Icons — user-uploaded SVG library (v1.3.0-v1.5.0)
-  - Site-specific `spectre-user` library with `spectre-user-` prefix, admin
-  upload/delete page, unlimited-by-default uploads (`spectre_icons_user_library_limit`
-  filter for sites that want a cap), file-based SVG storage under the Spectre
-  Icons uploads directory, and a one-time migration from the legacy `1.4.x`
-  inline-manifest format.
-
-### P1: Architecture and Safety
-
-- [x] Builder-agnostic core separated from Elementor adapter
-  - `includes/core/` stays free of page-builder imports. Elementor logic lives
-  in `includes/elementor/`.
-
-- [x] Serialization-anchored library slugs and class prefixes locked
-  - Slugs and prefixes are locked in `$anchored` in `manifest-helpers.php`
-  and documented in `AGENTS.md` and `CLAUDE.md`.
-
-- [x] Elementor file cache flush on version bump
-  - First admin load after a version bump flushes the Elementor cache once.
-  Tracked via `spectre_icons_version` WP option.
-
-- [x] JS icon reset fix
-  - MutationObserver clears stale SVG content before re-injecting after a
-  widget icon reset (v1.2.0 regression fix).
-
-### P2: Testing and CI
-
-- [x] PHP unit tests with no WordPress environment required
-  - PHPUnit bootstrap stubs WP functions. Run with `composer test`.
-
-- [x] Playwright E2E tests
-  - Covers activation, settings, icon picker, and rendering flows. Grouped by
-  product area.
-
-- [x] CI pipeline
-  - Full `npm run check` gate on every push and pull request.
-
-- [x] Multi-agent governance docs
-  - `AGENTS.md`, `CLAUDE.md`, `CODEX.md`, `COPILOT.md`, `JULES.md`,
-  `ROADMAP.md`, `TODO.md` with documented roles, edit boundaries, and PR
-  requirements.
+Phase 1 (Foundation) and Phase 2 P0 (Elementor Integration Hardening) are
+complete — see [ROADMAP.md](ROADMAP.md) "Delivered Phases" for the summary and
+[CHANGELOG.md](CHANGELOG.md) for release-by-release detail. This file only
+tracks what is still open.
 
 ---
 
 ## Requested by Downstream
 
 Entries here are external asks from other repos, kept separate from this
-repo's own self-planned queue above. See company root
+repo's own self-planned queue below. See company root
 [AGENTS.md](../../AGENTS.md) "Upstream Requests and Roadmap Self-Expansion"
 for the convention this section follows.
 
@@ -96,65 +27,21 @@ is not adopting a page builder; see its `TODO.md` "Do not add page builder
 
 ---
 
-## Phase 2 - Mature Operations
+## P1: Additional Builder Support — ON HOLD (2026-07-19)
 
-All items below are forward-looking. This phase starts from the stable v1.5.0
-foundation (including the shipped My Icons upload library) and focuses on
-builder hardening, multi-builder expansion, and library growth.
-
-### P0: Elementor Integration Hardening
-
-- [x] Close E2E coverage gaps for icon picker, rendering, and settings flows
-  - Added `tests/e2e/elementor/icon-reset.spec.ts`: MutationObserver regression
-  coverage (v1.2.0 fix), None-selection UI flow, settings persistence across
-  reloads, and both-libraries-disabled picker verification.
-
-- [x] Validate editor preview behavior across Elementor 3.x and 4.x
-  - Code requires Elementor ≥ 3.0.0 (bootstrap guard). Known version-specific
-  divergences (3.x data attributes vs 4.x text matching in `hideDisabledTabs`,
-  `files_manager->clear_cache()` existence check) are handled in PHP and JS.
-  The E2E suite validates against the installed version; compatibility matrix
-  and version-specific code paths are documented in
-  `docs/elementor-extension-points.md`.
-
-- [x] Document Elementor-specific extension points and lifecycle dependencies
-  - Created `docs/elementor-extension-points.md`: WP hooks, Elementor filters,
-  enqueue hooks, JS localization contract, 3.x vs 4.x handling, and adapter
-  boundary guide for a second builder.
-
-- [x] Confirm adapter boundary is clean enough to template a second builder
-  - `includes/core/` contains exactly three builder-agnostic files
-  (manifest-registry, icon-renderer, manifest-helpers) with no page-builder
-  imports. The Elementor adapter is fully contained in `includes/elementor/`.
-  The boundary is clean.
-
-### P1: Additional Builder Support — ON HOLD (2026-07-19)
-
-- [x] Select next builder target based on demand and integration complexity
-  - Selected: Divi (2026-07-19). Independent of the agency dashboard (which
-    is builder-agnostic — it hosts/manages icon sets centrally and has no
-    Elementor/Divi-specific logic).
-
-- [x] Pre-implementation research: does the target expose a stable,
-      documented icon-registration hook like Elementor's `additional_tabs`?
-  - Divi: no. Real integrations override undocumented internals (Divi 4,
-    breaks across updates) or ship a separate module alongside Divi's
-    picker (Divi 5 pattern) — neither fits the Elementor adapter pattern.
-  - Surveyed remaining candidates for the same gap: Gutenberg has no native
-    icon picker at all; Bricks is SVG-native with a stable core but no
-    shipped filter (active community request, no ET/Bricks commitment);
-    Oxygen is SVG-native but mid-rewrite onto the Breakdance engine (same
-    instability class as Divi 4→5). None currently qualifies.
-  - Decision: hold P1 until a candidate (most likely Bricks) ships a
-    documented, stable registration hook. See `ROADMAP.md` P1 for the full
-    comparison table.
+Divi was selected as the target, then research found it has no documented,
+stable icon-registration hook comparable to Elementor's `additional_tabs`.
+A follow-up survey of Gutenberg, Bricks, and Oxygen found the same gap
+everywhere. Decision: hold until a candidate (most likely Bricks) ships a
+documented, stable registration hook. Full comparison table in
+[ROADMAP.md](ROADMAP.md) P1.
 
 - [ ] Implement a new builder adapter following the Elementor adapter pattern
   — blocked until a viable target is confirmed
 - [ ] Add E2E coverage for the new builder's icon picker and rendering flows
 - [ ] Document the new builder's setup and compatibility requirements
 
-### P2: Icon Library Expansion
+## P2: Icon Library Expansion
 
 - [ ] Evaluate candidate libraries for quality, license, and downstream demand
   - Candidates: Phosphor Icons, Tabler Icons, Heroicons.
@@ -163,12 +50,9 @@ builder hardening, multi-builder expansion, and library growth.
 
 - [ ] Document new slugs in the anchored registry in `manifest-helpers.php`
 
-### P3: Pro Features
+## P3: Pro Features
 
 - [ ] Confirm commercial delivery path with Bradley Potts before any work starts
-
-- [x] ~~Custom icon library registration (user-supplied manifests)~~ — shipped
-  free-tier as `My Icons` (v1.3.0-v1.5.0); no longer a pro candidate.
 
 - [ ] Per-page or per-post library scoping
 
@@ -190,17 +74,18 @@ builder hardening, multi-builder expansion, and library growth.
   - FA Pro icons are licensed — never bundle them; user must supply their own
     credentials or package. Serialization slug and prefix must be locked before
     any icon data is saved to the database.
+  - Custom icon library registration (user-supplied manifests) already shipped
+    free-tier as `My Icons` (v1.3.0-v1.5.0); do not re-propose it here.
 
 ---
 
 ## Recommended Execution Order
 
-1. Elementor hardening - close test gaps and confirm adapter boundary before
-   adding a second builder.
-2. Additional builder support - validate multi-builder architecture with a
-   second adapter.
-3. Icon library expansion - grow catalog after the builder model is proven.
-4. Pro features - only after free-tier product is mature and commercial path is
+1. Additional builder support - resume once a candidate builder ships a
+   documented, stable icon-registration hook.
+2. Icon library expansion - grow catalog; independent of builder support, can
+   start any time.
+3. Pro features - only after free-tier product is mature and commercial path is
    confirmed.
 
 ## Explicitly Out of Scope
