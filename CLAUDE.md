@@ -37,11 +37,18 @@ Claude Code keeps implementation leadership. Pass completed implementation to
 Codex for release-readiness review before Brad commits. See `CODEX.md` and
 `.codex/release-readiness.md`.
 
-## Commit Policy
+## Git Access — Denied
 
-See [AGENTS.md](AGENTS.md) for the full grant of authority. Claude Code
-applies it here: run all validation before committing, then stage, commit,
-tag, and push without per-action confirmation.
+**Claude Code has zero git access in this repo, as part of a companywide
+policy.** Claude Code must not run `git commit`, `git push`, `git tag`, or
+any other git command — read-only or mutating — here. This supersedes the
+prior commit/push/tag grant described in [AGENTS.md](AGENTS.md). OpenAI Codex
+now executes all git operations for this repo; see [AGENTS.md](AGENTS.md)
+and [CODEX.md](CODEX.md).
+
+When work is ready, Claude Code runs all validation, then stops short of any
+git command and hands off to Codex (or Bradley Potts) with a summary of files
+changed and validation performed.
 
 ---
 

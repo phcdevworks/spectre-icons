@@ -27,6 +27,13 @@ has release authority: Codex cuts releases autonomously (version bump,
 Mechanics" procedure below, without waiting for per-release approval.
 Publishing to the WordPress.org plugin directory remains with Bradley Potts.
 
+Codex is additionally responsible for executing git operations on behalf of
+Claude Code's handed-off work in this repository — Claude Code has no git
+access as of the companywide policy in the root `AGENTS.md`, so when it hands
+off a validated, ready-to-commit change, Codex is the agent that runs the
+actual git commands for it, not just for Codex's own
+documentation/release/hygiene commits.
+
 Codex does not replace Claude Code as lead developer, GitHub Copilot as general
 IDE assistance, or Google Jules as the small-maintenance automation agent.
 
