@@ -207,7 +207,9 @@ Before cutting a release, Codex verifies:
 2. Move `[Unreleased]` notes in `CHANGELOG.md` into a new versioned entry:
    `## [<version>] - <YYYY-MM-DD>`, with a release title line in the format
    `**Release Title:** <short title>`, where `<short title>` is a concise
-   summary of what shipped without a roadmap phase or version prefix.
+   summary of what shipped without a roadmap phase or version prefix. Confirm
+   a `Contract change type: <additive|semantic change|breaking>`
+   classification line is present and accurate for the release.
 3. Update comparison links at the bottom of `CHANGELOG.md` and the
    `readme.txt` changelog section.
 4. Confirm `npm run check:full` passes on the release-ready state.
@@ -215,9 +217,13 @@ Before cutting a release, Codex verifies:
 6. Create the git tag: `git tag v<version>` (matching the plugin header
    version exactly), then push the commit and tag.
 7. Publish the GitHub Release from that tag: `gh release create v<version>
-   --title "<short title>" --notes-file` (extract the new version's changelog
-   section, or `--notes` inline for a short release). The GitHub Release title
-   must match the changelog release title exactly.
+   --title "<short title>" --notes-file`. The notes file must contain the
+   full versioned `CHANGELOG.md` entry verbatim except for the version
+   heading and `Release Title` line, which GitHub already displays. Preserve
+   section headings and every bullet. Never summarize, condense, paraphrase,
+   add to, or omit the remaining changelog content — `--notes` inline
+   freeform text is never used, even for a short release. The GitHub Release
+   title must match the changelog release title exactly.
 8. WordPress.org plugin submission/update is **not** done by Codex — that
    stays with Bradley Potts.
 
