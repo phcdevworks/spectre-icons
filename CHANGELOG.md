@@ -6,6 +6,11 @@ reflects WordPress plugin releases for Spectre Icons.
 
 ## [Unreleased]
 
+### Changed
+
+- Standardized the product summary against the approved PHCDevworks product
+  description.
+
 ### Fixed
 
 - Resolved two high-severity Dependabot alerts: `adm-zip` (transitive via

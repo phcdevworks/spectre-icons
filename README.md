@@ -1,10 +1,13 @@
 # Spectre Icons
 
-Spectre Icons is a WordPress plugin that adds bundled and uploaded SVG icon
-libraries to Elementor's icon picker, with per-library enable/disable
-controls. Icons render as inline SVG so they inherit theme colors through
-builder color controls, and uploaded icons are sanitized and stored in a
-site-specific My Icons library.
+Spectre Icons is PHCDevworks' WordPress icon-management product. It brings
+bundled and custom SVG libraries into WordPress workflows while serving as the
+public entry point to the wider Spectre ecosystem.
+
+The plugin adds bundled and uploaded SVG icon libraries to Elementor's icon
+picker, with per-library enable/disable controls. Icons render as inline SVG so
+they inherit theme colors through builder color controls, and uploaded icons
+are sanitized and stored in a site-specific My Icons library.
 
 Maintained by [PHCDevworks](https://go.phcdev.co). It ships bundled SVG icon
 libraries (Lucide and Font Awesome Free) and per-library enable/disable
