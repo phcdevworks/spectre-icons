@@ -22,9 +22,10 @@ Codex works alongside Claude Code to:
 
 Codex has commit, push, and tag authority for its own scope of work described
 above — validate changes, then stage, commit, and push. Codex additionally
-has release authority: Codex cuts releases autonomously (version bump,
-`CHANGELOG.md` versioning, git tag, GitHub Release) per the "Release
-Mechanics" procedure below, without waiting for per-release approval.
+has release authority, on request only: when Bradley Potts says to get this
+repo ready for release, Codex cuts the release (version bump, `CHANGELOG.md`
+versioning, git tag, GitHub Release) per the "Release Mechanics" procedure
+below. A commit request commits and pushes only.
 Publishing to the WordPress.org plugin directory remains with Bradley Potts.
 
 Codex is additionally responsible for executing git operations on behalf of

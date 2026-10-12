@@ -4,7 +4,7 @@
 
 This list is aligned to the current repository and the roadmap in `ROADMAP.md`.
 It is scoped to plugin stability, builder integration, icon-library expansion,
-and product growth. It is not a dumping ground for speculative ideas.
+and product growth. New ideas are welcome; write each one as a concrete, actionable item.
 
 Phase 1 (Foundation) and Phase 2 P0 (Elementor Integration Hardening) are
 complete — see [ROADMAP.md](ROADMAP.md) "Delivered Phases" for the summary and
@@ -20,7 +20,17 @@ repo's own self-planned queue below. See company root
 [AGENTS.md](../../AGENTS.md) "Upstream Requests and Roadmap Self-Expansion"
 for the convention this section follows.
 
-(No open downstream requests. Beaver Builder support, previously requested by
+- **`[spectre-icon]` shortcode** — requested by `project-design/spectre-base`,
+  2026-09-27. The theme renders footer social and contact icons with
+  `do_shortcode('[spectre-icon name="…" size="…"]')` and gates them on
+  `shortcode_exists('spectre-icon')`, but this plugin registers no shortcode
+  (its integration is Elementor-only), so those icons never render on any
+  site. Add a builder-independent `[spectre-icon name size]` shortcode that
+  outputs an accessible inline SVG (decorative by default, `aria-hidden`),
+  with unknown names rendering nothing. Theme usage is documented in
+  [spectre-base/README.md](../../project-design/spectre-base/README.md#footer-social-icons).
+
+(Beaver Builder support, previously requested by
 `project-design/spectre-base` on 2026-06-27, was withdrawn — `spectre-base`
 is not adopting a page builder; see its `TODO.md` "Do not add page builder
 ... integration" note.)
@@ -43,7 +53,7 @@ documented, stable registration hook. Full comparison table in
 
 ## P2: Icon Library Expansion
 
-- [ ] Evaluate candidate libraries for quality, license, and downstream demand
+- [ ] Evaluate candidate libraries for quality, license, and fit with Spectre deliverables
   - Candidates: Phosphor Icons, Tabler Icons, Heroicons.
 
 - [ ] Add at least one new bundled library with serialization-safe slug and prefix

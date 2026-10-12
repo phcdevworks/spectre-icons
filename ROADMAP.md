@@ -30,8 +30,7 @@ Full history is in [CHANGELOG.md](CHANGELOG.md).
 ## What's Next
 
 The foundation and Elementor integration are stable and complete. Remaining
-work is demand- or decision-gated — see [TODO.md](TODO.md) for the actionable
-queue.
+work can start proactively — see [TODO.md](TODO.md) for the actionable queue.
 
 ### P1: Additional Builder Support — ON HOLD (2026-07-19)
 
@@ -94,8 +93,8 @@ adding libraries low-risk.
 
 **Deliverables**
 
-- Evaluate candidate libraries for quality, license compatibility, and
-  downstream demand.
+- Evaluate candidate libraries for quality, license compatibility, and fit
+  with Spectre deliverables.
 - Add new libraries as bundled manifests with appropriate serialization-safe
   slugs and class prefixes.
 - Document any new slugs in the anchored registry.
