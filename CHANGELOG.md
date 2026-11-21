@@ -18,6 +18,13 @@ reflects WordPress plugin releases for Spectre Icons.
   an npm `overrides` entry, and `wp-coding-standards/wpcs` (arbitrary code
   execution) updated to `3.4.1`. Both are dev-tooling dependencies, not
   shipped runtime plugin code.
+- Cleared the remaining 11 `npm audit` findings (1 high, 10 moderate), all
+  transitive via `@wordpress/env`, with npm `overrides` for `isomorphic-git`
+  (`^1.44.17`), `qs` (`^6.17.1`), and `rimraf` (`^6.1.4`, which also pulls a
+  patched `glob`/`minimatch`). Dev tooling only, no shipped runtime code.
+- Corrected the `allowScripts` approval for `fs-ext-extra-prebuilt` from
+  `2.2.7` to the installed `2.2.17`, so its install script is no longer
+  blocked during `npm install`.
 
 ## [1.5.0] - 2026-05-27
 
