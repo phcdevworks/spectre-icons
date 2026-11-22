@@ -10,6 +10,10 @@ reflects WordPress plugin releases for Spectre Icons.
 
 - Standardized the product summary against the approved PHCDevworks product
   description.
+- Widened the `phpunit/phpunit` dev constraint to `^9.6 || ^12.5`. PHP 8.3+
+  environments (including the committed `composer.lock`) now run PHPUnit
+  12.5, while the PHP 7.4 CI job still resolves PHPUnit 9.6, keeping the
+  plugin's `Requires PHP: 7.4` floor covered. No test changes were required.
 
 ### Fixed
 
@@ -25,6 +29,12 @@ reflects WordPress plugin releases for Spectre Icons.
 - Corrected the `allowScripts` approval for `fs-ext-extra-prebuilt` from
   `2.2.7` to the installed `2.2.17`, so its install script is no longer
   blocked during `npm install`.
+- Refreshed `composer.lock` within existing constraints, updating
+  `squizlabs/php_codesniffer` to `3.13.6` to resolve a high-severity OS
+  command injection advisory (CVE-2026-67434), plus compatible PHPUnit and
+  supporting-package updates. The committed PHP 8.3+ lockfile uses PHPUnit
+  12.5, while PHP 7.4 CI resolves the supported PHPUnit 9.6 line. Dev tooling
+  only.
 
 ## [1.5.0] - 2026-05-27
 
