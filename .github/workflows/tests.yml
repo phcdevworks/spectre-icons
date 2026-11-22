@@ -71,6 +71,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
+      # Node 22 bundles npm 10, which rejects package-lock.json: it tries to
+      # satisfy typescript-eslint's optional `@typescript/native` peer
+      # (>=7.1.0-dev) with a nightly that newer npm correctly leaves
+      # unresolved. @wp-playground (via @wordpress/env) also declares
+      # npm >=11.16. Pin npm 11 on every matrix leg so `npm ci` behaves the same.
+      - name: Upgrade npm
+        run: npm install -g npm@^11.16.0
+
       - name: Install Node dependencies
         run: npm ci
 

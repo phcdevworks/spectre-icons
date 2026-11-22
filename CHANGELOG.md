@@ -35,6 +35,10 @@ reflects WordPress plugin releases for Spectre Icons.
   supporting-package updates. The committed PHP 8.3+ lockfile uses PHPUnit
   12.5, while PHP 7.4 CI resolves the supported PHPUnit 9.6 line. Dev tooling
   only.
+- Fixed the Node 22.x E2E CI job failing at `npm ci`: Node 22's bundled
+  npm 10 treated `package-lock.json` as out of sync over typescript-eslint's
+  optional `@typescript/native` peer. The workflow now upgrades to npm
+  `^11.16.0` before installing on every matrix leg.
 
 ## [1.5.0] - 2026-05-27
 
